@@ -1,0 +1,7 @@
+firebaseServiceAccount.json
+.env
+node_modules/
+dist/
+
+.env.*  # in case you use .env.dev, .env.prod etc.
+logs/
