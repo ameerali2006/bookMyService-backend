@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(morganLogger);
 
-app.use('/', new UserRoute().router);
+app.use('/', new UserRoute().router);   
 app.use('/admin', new AdminRoute().router);
 app.use('/worker', new WorkerRoute().router);
 
