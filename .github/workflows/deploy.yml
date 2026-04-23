@@ -22,9 +22,23 @@ jobs:
             echo "Pull latest code"
             git pull origin main
 
-            echo "Restart Docker container"
+            echo "Create network (if not exists)"
+            docker network create app-network || true
+
+            echo "Ensure Redis is running"
+            docker stop redis || true
+            docker rm redis || true
+            docker run -d --name redis --network app-network redis
+
+            echo "Restart Backend"
             docker stop backend || true
             docker rm backend || true
 
             docker build -t backend .
-            docker run -d -p 5000:5000 --env-file .env --name backend backend
+
+            docker run -d \
+              --name backend \
+              --network app-network \
+              -p 5000:5000 \
+              --env-file .env \
+            backend
