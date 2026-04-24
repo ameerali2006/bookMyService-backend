@@ -252,10 +252,11 @@ export class ManagementAdmin implements IAdminManagementController {
   ): Promise<void> {
     try {
       const data = req.body;
-      console.log(req);
+      
       const validatedData = serviceRegistrationSchema.parse(data);
       const result = await this._adminManagement.serviceRegister(validatedData);
-      if (result.data) {
+      console.log(result)
+      if (result.success) {
         res.status(STATUS_CODES.OK).json(result);
       } else {
         res.status(STATUS_CODES.NOT_FOUND).json(result);

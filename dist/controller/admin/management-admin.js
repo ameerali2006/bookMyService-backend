@@ -189,10 +189,10 @@ let ManagementAdmin = class ManagementAdmin {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const data = req.body;
-                console.log(req);
                 const validatedData = service_create_1.serviceRegistrationSchema.parse(data);
                 const result = yield this._adminManagement.serviceRegister(validatedData);
-                if (result.data) {
+                console.log(result);
+                if (result.success) {
                     res.status(status_code_1.STATUS_CODES.OK).json(result);
                 }
                 else {

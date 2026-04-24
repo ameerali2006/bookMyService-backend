@@ -253,19 +253,19 @@ export class ManagementAdminService implements IManagementAdminService {
 
   async serviceRegister(
     data: serviceCreateDto,
-  ): Promise<{ data?: serviceManageDto; message: string }> {
+  ): Promise<{ data?: serviceManageDto; message: string ,success :boolean}> {
     try {
-      const existing = await this._serviceRepo.findOne({
-        category: data.category,
-      });
+      console.log("data ividda inddu",data)
+      const existing = await this._serviceRepo.findByCategory(data.category);
 
       if (existing) {
-        return { message: 'Service already exists' };
+        return {success:true, message: 'Service already exists' };
       }
 
       const newService = await this._serviceRepo.create(data);
       const mappedData = AdminMapper.resServiceDetails([newService]);
       return {
+        success:true,
         data: mappedData[0],
         message: 'Service created successfully',
       };

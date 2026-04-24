@@ -25,7 +25,7 @@ export interface getAllServicesResponse {
    services:serviceManageDto[];currentPage: number;totalPages: number;totalItems: number
 }
 export interface serviceRegisterResponse {
-   data?:serviceManageDto, message:string
+   data?:serviceManageDto, message:string,success:boolean
 }
 export interface updateServiceStatusResponse {
    success:boolean, status:'inactive' |'active'

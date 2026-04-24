@@ -186,15 +186,15 @@ let ManagementAdminService = class ManagementAdminService {
     serviceRegister(data) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const existing = yield this._serviceRepo.findOne({
-                    category: data.category,
-                });
+                console.log("data ividda inddu", data);
+                const existing = yield this._serviceRepo.findByCategory(data.category);
                 if (existing) {
-                    return { message: 'Service already exists' };
+                    return { success: true, message: 'Service already exists' };
                 }
                 const newService = yield this._serviceRepo.create(data);
                 const mappedData = admin_mapper_1.AdminMapper.resServiceDetails([newService]);
                 return {
+                    success: true,
                     data: mappedData[0],
                     message: 'Service created successfully',
                 };

@@ -206,6 +206,7 @@ export class BookingRepository
       advancePaymentStatus: status === 'succeeded' ? 'paid' : status,
       status: status === 'succeeded' ? 'confirmed' : 'pending',
       address: addressId,
+      totalAmount:100
     });
   }
 

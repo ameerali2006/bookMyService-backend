@@ -15,7 +15,7 @@ export class ServiceRepository
   }
 
   async findByCategory(category: string): Promise<IService[]> {
-    return this.find({ category });
+    return this.find({  category: { $regex: `^${category.trim()}$`, $options: 'i' },});
   }
 
   async findActiveServicesByIds(ids: string[]): Promise<IService[]> {

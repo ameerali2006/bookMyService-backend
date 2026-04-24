@@ -157,6 +157,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                 advancePaymentStatus: status === 'succeeded' ? 'paid' : status,
                 status: status === 'succeeded' ? 'confirmed' : 'pending',
                 address: addressId,
+                totalAmount: 100
             });
         });
     }

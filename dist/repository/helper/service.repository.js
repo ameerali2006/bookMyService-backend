@@ -23,7 +23,7 @@ class ServiceRepository extends base_repository_1.BaseRepository {
     }
     findByCategory(category) {
         return __awaiter(this, void 0, void 0, function* () {
-            return this.find({ category });
+            return this.find({ category: { $regex: `^${category.trim()}$`, $options: 'i' }, });
         });
     }
     findActiveServicesByIds(ids) {
