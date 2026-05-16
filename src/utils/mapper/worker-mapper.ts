@@ -14,17 +14,17 @@ const isCategoryObj = (val: unknown): val is CategoryObj => typeof val === 'obje
 
 export class WorkerMapper {
   static responseWorkerDto(worker: IWorker): responseDto {
-    const { _id, location, ...rest } = worker;
+    const { _id, location, name,email,profileImage,zone } = worker;
 
     return {
       _id: _id.toString(),
-      name: rest.name,
-      email: rest.email,
-      image: rest.profileImage,
+      name: name,
+      email: email,
+      image: profileImage,
       location: {
         lat: location.coordinates[1],
         lng: location.coordinates[0],
-        address: rest.zone,
+        address:zone,
       },
     };
   }

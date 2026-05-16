@@ -86,7 +86,77 @@ export const GOOGLE_REGISTRATION_MAIL_CONTENT = (
   </div>
 </div>
 `;
+// Add this HTML template to your email constants file (email.ts)
+export const BOOKING_CANCELLED_MAIL_CONTENT = (
+  userName: string,
+  serviceName: string,
+  bookingCode: string,
+  reason: string,
+  refundAmount?: number,
+): string => `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+</head>
+<body style="font-family: Arial, sans-serif; background:#f8fafc; padding:20px;">
+  <div style="max-width:600px; margin:0 auto; background:#ffffff; border-radius:12px; overflow:hidden; border:1px solid #e2e8f0;">
+    
+    <div style="background:linear-gradient(135deg,#dc2626,#e11d48); padding:24px; color:white;">
+      <h1 style="margin:0; font-size:24px;">Booking Cancelled</h1>
+      <p style="margin:8px 0 0; opacity:0.9;">
+        Your booking has been cancelled successfully.
+      </p>
+    </div>
 
+    <div style="padding:24px;">
+      <p>Hi <strong>${userName}</strong>,</p>
+
+      <p>
+        Your booking for <strong>${serviceName}</strong> has been cancelled.
+      </p>
+
+      <table style="width:100%; border-collapse:collapse; margin:20px 0;">
+        <tr>
+          <td style="padding:8px 0; color:#64748b;">Booking Code</td>
+          <td style="padding:8px 0; font-weight:600;">${bookingCode}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0; color:#64748b;">Service</td>
+          <td style="padding:8px 0; font-weight:600;">${serviceName}</td>
+        </tr>
+        <tr>
+          <td style="padding:8px 0; color:#64748b;">Reason</td>
+          <td style="padding:8px 0;">${reason}</td>
+        </tr>
+        ${
+          typeof refundAmount === 'number'
+            ? `
+        <tr>
+          <td style="padding:8px 0; color:#64748b;">Refund Amount</td>
+          <td style="padding:8px 0; font-weight:600;">₹${refundAmount.toFixed(2)}</td>
+        </tr>
+        `
+            : ''
+        }
+      </table>
+
+      <p style="color:#475569;">
+        ${
+          typeof refundAmount === 'number'
+            ? 'Any applicable refund will be processed to your original payment method or wallet shortly.'
+            : 'If you have any questions, please contact our support team.'
+        }
+      </p>
+
+      <p style="margin-top:24px;">
+        Thank you for using <strong>bookMyService</strong>.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+`;
 export const VERIFICATION_MAIL_CONTENT = (otp: string) => `
 <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
    <div style="text-align: center; margin-bottom: 30px;">

@@ -233,8 +233,8 @@ let ManagementAdmin = class ManagementAdmin {
     getBookings(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { search = '', status = 'all', limit = '10', page = '1', } = req.query;
-                const result = yield this._adminManagement.getAllBookings(search, status, Number(limit), Number(page));
+                const { search = '', status = 'all', service = "", limit = '10', page = '1', } = req.query;
+                const result = yield this._adminManagement.getAllBookings(search, status, service, Number(limit), Number(page));
                 if (result.success) {
                     res.status(status_code_1.STATUS_CODES.OK).json(result);
                 }
@@ -243,6 +243,7 @@ let ManagementAdmin = class ManagementAdmin {
                 }
             }
             catch (error) {
+                console.log(error);
                 next(error);
             }
         });

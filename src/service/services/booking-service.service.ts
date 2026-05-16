@@ -1,20 +1,22 @@
-import { inject, injectable } from 'tsyringe';
+import { inject, injectable } from "tsyringe";
 import {
   BookingDetails,
   IBookingService,
   VerifiedPaymentResult,
-} from '../../interface/service/services/booking-service.sevice.interface';
+} from "../../interface/service/services/booking-service.sevice.interface";
 import {
   setBasicBookingDetailsResponse,
   getBookingDetailsResponseDTO,
   updateWorkerDetailsResponseDto,
   verifyPaymentResponseDto,
-} from '../../dto/service.dto';
-import { TYPES } from '../../config/constants/types';
-import { IBookingRepository } from '../../interface/repository/booking.repository.interface';
-import { IWorkerRepository } from '../../interface/repository/worker.repository.interface';
-import { IBooking } from '../../interface/model/booking.model.interface';
-import { ISlotLockRepository } from '../../interface/repository/slot-lock.repository.interface';
+} from "../../dto/service.dto";
+import { TYPES } from "../../config/constants/types";
+import { IBookingRepository } from "../../interface/repository/booking.repository.interface";
+import { IWorkerRepository } from "../../interface/repository/worker.repository.interface";
+import { IBooking } from "../../interface/model/booking.model.interface";
+import { ISlotLockRepository } from "../../interface/repository/slot-lock.repository.interface";
+import { MESSAGES } from "../../config/constants/message";
+import { IEmailService } from "../../interface/helpers/email-service.service.interface";
 
 @injectable()
 export class BookingService implements IBookingService {
@@ -23,6 +25,7 @@ export class BookingService implements IBookingService {
     @inject(TYPES.WorkerRepository) private _workerRepo: IWorkerRepository,
     @inject(TYPES.SlotLockRepository)
     private _slotLockRepo: ISlotLockRepository,
+    @inject(TYPES.EmailService) private _emailService: IEmailService,
   ) {}
 
   async setBasicBookingDetails(
@@ -36,14 +39,14 @@ export class BookingService implements IBookingService {
       if (!userId || !workerId) {
         return {
           success: false,
-          message: 'User not Found',
+          message: "User not Found",
           bookingId: null,
         };
       }
       if (!time || !date || !description) {
         return {
           success: false,
-          message: 'Missing required fields (time, date, or description)',
+          message: "Missing required fields (time, date, or description)",
           bookingId: null,
         };
       }
@@ -51,7 +54,7 @@ export class BookingService implements IBookingService {
       if (isNaN(new Date(date).getTime())) {
         return {
           success: false,
-          message: 'Invalid date format',
+          message: "Invalid date format",
           bookingId: null,
         };
       }
@@ -60,13 +63,13 @@ export class BookingService implements IBookingService {
       if (!workerData) {
         return {
           success: false,
-          message: 'worker is not found',
+          message: "worker is not found",
           bookingId: null,
         };
       }
       const bookingDate = new Date(date);
 
-      const [h, m] = time.split(':').map(Number);
+      const [h, m] = time.split(":").map(Number);
       bookingDate.setHours(h, m, 0, 0);
 
       const startTime = new Date(bookingDate);
@@ -84,7 +87,7 @@ export class BookingService implements IBookingService {
       if (!locked) {
         return {
           success: false,
-          message: 'Slot already booked by another user',
+          message: "Slot already booked by another user",
           bookingId: null,
         };
       }
@@ -96,28 +99,28 @@ export class BookingService implements IBookingService {
         date: bookingDate,
         startTime: time,
         description,
-        status: 'pending',
-        advancePaymentStatus: 'unpaid',
+        status: "pending",
+        advancePaymentStatus: "unpaid",
       });
 
       if (!newBooking) {
         return {
           success: false,
-          message: 'Failed to create booking',
+          message: "Failed to create booking",
           bookingId: null,
         };
       }
 
       return {
         success: true,
-        message: 'Slot locked for 10 minutes',
+        message: "Slot locked for 10 minutes",
         bookingId: newBooking._id.toString(),
       };
     } catch (error) {
       console.log(error);
       return {
         success: false,
-        message: 'internal Error',
+        message: "internal Error",
         bookingId: null,
       };
     }
@@ -130,7 +133,7 @@ export class BookingService implements IBookingService {
       if (!bookingId) {
         return {
           success: false,
-          message: 'booking details not found',
+          message: "booking details not found",
           details: null,
         };
       }
@@ -139,22 +142,22 @@ export class BookingService implements IBookingService {
       if (!booking) {
         return {
           success: false,
-          message: 'booking details not found',
+          message: "booking details not found",
           details: null,
         };
       }
       const worker = booking.workerId as unknown as { name?: string };
       const service = booking.serviceId as unknown as { category?: string };
 
-      let time = `${Number(booking.startTime.split(':')[0]) % 12}:${booking.startTime.split(':')[1]} `;
-      Number(booking.startTime.split(':')[0]) % 12
-      == Number(booking.startTime.split(':')[0])
-        ? (time += ' AM')
-        : (time += ' PM');
+      let time = `${Number(booking.startTime.split(":")[0]) % 12}:${booking.startTime.split(":")[1]} `;
+      Number(booking.startTime.split(":")[0]) % 12 ==
+      Number(booking.startTime.split(":")[0])
+        ? (time += " AM")
+        : (time += " PM");
       const data = {
         workerName: worker.name as string,
         serviceName: service.category as string,
-        date: booking.date.toISOString().split('T')[0],
+        date: booking.date.toISOString().split("T")[0],
         time,
         description: booking.description as string,
         advancePaymentStatus: booking.advancePaymentStatus,
@@ -163,13 +166,13 @@ export class BookingService implements IBookingService {
       };
       return {
         success: true,
-        message: 'booking details  found',
+        message: "booking details  found",
         details: data,
       };
     } catch (error) {
       return {
         success: false,
-        message: 'internal error',
+        message: "internal error",
         details: null,
       };
     }
@@ -194,7 +197,7 @@ export class BookingService implements IBookingService {
       if (!bookingId || !workerId) {
         return {
           success: false,
-          message: 'Missing bookingId or workerId',
+          message: "Missing bookingId or workerId",
         };
       }
 
@@ -202,7 +205,7 @@ export class BookingService implements IBookingService {
       if (!endingTime || !itemsRequired?.length) {
         return {
           success: false,
-          message: 'Ending time and required items are mandatory',
+          message: "Ending time and required items are mandatory",
         };
       }
 
@@ -217,7 +220,7 @@ export class BookingService implements IBookingService {
       if (!updatedBooking) {
         return {
           success: false,
-          message: 'Booking not found or unauthorized',
+          message: "Booking not found or unauthorized",
         };
       }
 
@@ -234,55 +237,55 @@ export class BookingService implements IBookingService {
 
       return {
         success: true,
-        message: 'Worker details updated successfully',
+        message: "Worker details updated successfully",
         booking: updatedBooking,
       };
     } catch (error) {
-      console.error('❌ Error updating worker details:', error);
+      console.error("❌ Error updating worker details:", error);
       return {
         success: false,
-        message: 'Internal server error while updating details',
+        message: "Internal server error while updating details",
       };
     }
   }
 
   async verifyPayment(
     bookingId: string,
-    paymentType: 'advance' | 'final',
+    paymentType: "advance" | "final",
   ): Promise<verifyPaymentResponseDto> {
     try {
       if (!bookingId || !paymentType) {
         return {
           success: false,
-          message: 'Missing bookingId or paymentType',
+          message: "Missing bookingId or paymentType",
           data: null,
         };
       }
 
       const booking = await this._bookingRepo.findById(bookingId);
       if (!booking) {
-        return { success: false, message: 'Booking not found', data: null };
+        return { success: false, message: "Booking not found", data: null };
       }
 
       // -------------------------
       // ADVANCE PAYMENT CHECK
       // -------------------------
-      if (paymentType === 'advance') {
-        if (booking.advancePaymentStatus !== 'paid') {
+      if (paymentType === "advance") {
+        if (booking.advancePaymentStatus !== "paid") {
           return {
             success: false,
-            message: 'Advance payment not completed',
+            message: "Advance payment not completed",
             data: null,
           };
         }
 
         return {
           success: true,
-          message: 'Advance payment verified',
+          message: "Advance payment verified",
           data: {
             bookingId,
             amountPaid: booking.advanceAmount,
-            type: 'advance',
+            type: "advance",
           },
         };
       }
@@ -290,34 +293,75 @@ export class BookingService implements IBookingService {
       // -------------------------
       // FINAL PAYMENT CHECK
       // -------------------------
-      if (paymentType === 'final') {
-        if (booking.finalPaymentStatus !== 'paid') {
+      if (paymentType === "final") {
+        if (booking.finalPaymentStatus !== "paid") {
           return {
             success: false,
-            message: 'Final payment not completed',
+            message: "Final payment not completed",
             data: null,
           };
         }
 
         return {
           success: true,
-          message: 'Final payment verified',
+          message: "Final payment verified",
           data: {
             bookingId,
             amountPaid: booking.totalAmount as number,
-            type: 'final',
+            type: "final",
           },
         };
       }
 
-      return { success: false, message: 'Invalid payment type', data: null };
+      return { success: false, message: "Invalid payment type", data: null };
     } catch (err) {
-      console.error('Error verifying payment:', err);
+      console.error("Error verifying payment:", err);
       return {
         success: false,
-        message: 'Internal server error',
+        message: "Internal server error",
         data: null,
       };
+    }
+  }
+  async cancelBooking(
+    bookingId: string,
+    userId: string,
+    reason: string,
+  ): Promise<{ success: boolean; message: string; booking?: IBooking }> {
+    const booking = await this._bookingRepo.findByIdPopulated(bookingId);
+    if (!booking) {
+      return {
+        success: false,
+        message: MESSAGES.BOOKING_NOT_FOUND,
+      };
+    }
+    if (!["pending", "confirmed"].includes(booking.status)) {
+      return {
+        success: false,
+        message: "Only status with pending and conifirmed can cancel",
+      };
+    }
+    const updateBooking = await this._bookingRepo.updateStatus(
+      bookingId,
+      "cancelled",
+    );
+    if (!updateBooking) {
+      return {
+        success: false,
+        message: MESSAGES.BOOKING_NOT_FOUND,
+      };
+    }
+    await this._emailService.sendBookingCancelledEmail({
+      email: booking.userId.email,
+      userName: booking.userId.name,
+      serviceName: booking.serviceId.category,
+      bookingCode: booking._id.toString(),
+      reason,
+    });
+    return {
+      success:true,
+      message:MESSAGES.BOOKING_CANCELLED,
+      booking:updateBooking
     }
   }
 }

@@ -319,6 +319,7 @@ export class ManagementAdminService implements IManagementAdminService {
   async getAllBookings(
     search: string,
     status: string,
+    service:string,
     limit: number,
     page: number,
   ): Promise<{
@@ -333,6 +334,14 @@ export class ManagementAdminService implements IManagementAdminService {
       const safePage = Math.max(1, Number(page) || 1);
       const safeLimit = Math.min(50, Number(limit) || 10);
       const safeStatus = status === 'all' ? undefined : status;
+      const safeService=service===""?undefined:service
+      console.log({
+          search,
+          status: safeStatus,
+          page: safePage,
+          limit: safeLimit,
+          service:safeService,
+        })
 
       const { data, total } = await this._bookingRepo.getAllBookings(
         {
@@ -340,6 +349,7 @@ export class ManagementAdminService implements IManagementAdminService {
           status: safeStatus,
           page: safePage,
           limit: safeLimit,
+          service:safeService,
         },
       );
 
@@ -355,6 +365,7 @@ export class ManagementAdminService implements IManagementAdminService {
         status: booking.status,
         createdAt: booking.createdAt as Date,
       }));
+      console.log(mappedBookings)
 
       return {
         success: true,
@@ -365,6 +376,7 @@ export class ManagementAdminService implements IManagementAdminService {
         limit: safeLimit,
       };
     } catch (error) {
+      console.log(error)
       return {
         success: false,
         message: 'Failed to fetch bookings',

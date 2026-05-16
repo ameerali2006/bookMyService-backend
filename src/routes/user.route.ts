@@ -64,5 +64,7 @@ export class UserRoute extends BaseRoute {
     this.router.get('/notifications', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.getNotifications(req, res, next));
     this.router.patch('/notifications/:id/read', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.markAsRead(req, res, next));
     this.router.patch('/notifications/read-all', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.markAllRead(req, res, next));
+    this.router.patch('/booking/:bookingId/cancel', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.cancelBooking (req, res, next));
+  
   }
 }

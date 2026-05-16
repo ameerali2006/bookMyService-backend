@@ -30,18 +30,18 @@ let ChatSocketHandler = class ChatSocketHandler {
         this._messageRepo = _messageRepo;
     }
     registerEvents(io, onlineUsers) {
-        io.on('connection', (socket) => {
+        io.on("connection", (socket) => {
             const customSocket = socket;
             /* ---------------- JOIN CHAT ---------------- */
-            socket.on('chat:join', (_a) => __awaiter(this, [_a], void 0, function* ({ chatId }) {
-                console.log('dfdfdfdf meesdsge');
+            socket.on("chat:join", (_a) => __awaiter(this, [_a], void 0, function* ({ chatId }) {
+                console.log("dfdfdfdf meesdsge");
                 const chat = yield this._chatRepo.findById(chatId);
                 if (!chat)
                     return;
                 // 🔐 SECURITY CHECK
-                if (chat.userId.toString() !== customSocket.userId
-                    && chat.workerId.toString() !== customSocket.userId) {
-                    console.log('🚫 Unauthorized chat join attempt');
+                if (chat.userId.toString() !== customSocket.userId &&
+                    chat.workerId.toString() !== customSocket.userId) {
+                    console.log("🚫 Unauthorized chat join attempt");
                     socket.disconnect();
                     return;
                 }
@@ -49,14 +49,14 @@ let ChatSocketHandler = class ChatSocketHandler {
                 console.log(`💬 ${customSocket.userType} ${customSocket.userId} joined chat ${chatId}`);
             }));
             /* ---------------- SEND MESSAGE ---------------- */
-            socket.on('chat:send', (_a) => __awaiter(this, [_a], void 0, function* ({ chatId, message }) {
-                console.log('send message', message);
+            socket.on("chat:send", (_a) => __awaiter(this, [_a], void 0, function* ({ chatId, message }) {
+                console.log("send message", message);
                 const chat = yield this._chatRepo.findById(chatId);
                 if (!chat)
                     return;
                 // 🔐 SECURITY CHECK AGAIN
-                if (chat.userId.toString() !== customSocket.userId
-                    && chat.workerId.toString() !== customSocket.userId) {
+                if (chat.userId.toString() !== customSocket.userId &&
+                    chat.workerId.toString() !== customSocket.userId) {
                     return;
                 }
                 // 💾 SAVE MESSAGE
@@ -69,9 +69,14 @@ let ChatSocketHandler = class ChatSocketHandler {
                     metadata: message.metadata,
                 });
                 // 📡 EMIT TO BOTH SIDES
-                io.to(chatId).emit('chat:receive', savedMessage);
+                io.to(chatId).emit("chat:receive", savedMessage);
+                io.to(chatId).emit("inbox:refresh", {
+                    chatId,
+                    lastMessage: message.type === "TEXT" ? message.content : "📎 Media",
+                    lastMessageTime: savedMessage.createdAt,
+                });
             }));
-            socket.on('chat:react', (_a) => __awaiter(this, [_a], void 0, function* ({ chatId, messageId, emoji }) {
+            socket.on("chat:react", (_a) => __awaiter(this, [_a], void 0, function* ({ chatId, messageId, emoji }) {
                 try {
                     console.log({ chatId, messageId, emoji });
                     const customSocket = socket;
@@ -80,25 +85,25 @@ let ChatSocketHandler = class ChatSocketHandler {
                     if (!chat)
                         return;
                     // 🔐 SECURITY CHECK
-                    if (chat.userId.toString() !== userId
-                        && chat.workerId.toString() !== userId) {
+                    if (chat.userId.toString() !== userId &&
+                        chat.workerId.toString() !== userId) {
                         return;
                     }
                     // ✅ ATOMIC REACTION UPDATE
                     const emoje = yield this._messageRepo.reactToMessage(messageId, userId, emoji);
                     console.log(emoje);
                     // 📡 Emit minimal payload
-                    io.to(chatId).emit('chat:reaction', {
+                    io.to(chatId).emit("chat:reaction", {
                         messageId,
                         userId,
                         emoji,
                     });
                 }
                 catch (error) {
-                    console.error('Reaction error:', error);
+                    console.error("Reaction error:", error);
                 }
             }));
-            socket.on('chat:delete', (_a) => __awaiter(this, [_a], void 0, function* ({ chatId, messageId }) {
+            socket.on("chat:delete", (_a) => __awaiter(this, [_a], void 0, function* ({ chatId, messageId }) {
                 try {
                     const customSocket = socket;
                     const { userId } = customSocket;
@@ -106,17 +111,17 @@ let ChatSocketHandler = class ChatSocketHandler {
                     if (!chat)
                         return;
                     // 🔐 SECURITY CHECK
-                    if (chat.userId.toString() !== userId
-                        && chat.workerId.toString() !== userId) {
+                    if (chat.userId.toString() !== userId &&
+                        chat.workerId.toString() !== userId) {
                         return;
                     }
                     yield this._messageRepo.deleteMessage(messageId, userId);
-                    io.to(chatId).emit('chat:deleted', {
+                    io.to(chatId).emit("chat:deleted", {
                         messageId,
                     });
                 }
                 catch (error) {
-                    console.error('Delete error:', error);
+                    console.error("Delete error:", error);
                 }
             }));
         });

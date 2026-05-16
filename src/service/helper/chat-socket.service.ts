@@ -1,12 +1,12 @@
-import type { Server as IOServer } from 'socket.io';
-import { inject, injectable } from 'tsyringe';
+import type { Server as IOServer } from "socket.io";
+import { inject, injectable } from "tsyringe";
 
-import { ISocketHandler } from '../../interface/service/socket-handler.service.interface';
-import { CustomSocket } from '../../types/socket';
-import { TYPES } from '../../config/constants/types';
+import { ISocketHandler } from "../../interface/service/socket-handler.service.interface";
+import { CustomSocket } from "../../types/socket";
+import { TYPES } from "../../config/constants/types";
 
-import { IChatRepository } from '../../interface/repository/chat.repository.interface';
-import { IMessageRepository } from '../../interface/repository/message.repoository.interface';
+import { IChatRepository } from "../../interface/repository/chat.repository.interface";
+import { IMessageRepository } from "../../interface/repository/message.repoository.interface";
 
 @injectable()
 export class ChatSocketHandler implements ISocketHandler {
@@ -22,22 +22,22 @@ export class ChatSocketHandler implements ISocketHandler {
     io: IOServer,
     onlineUsers: Map<string, { socketId: string; userType: string }>,
   ) {
-    io.on('connection', (socket) => {
+    io.on("connection", (socket) => {
       const customSocket = socket as CustomSocket;
 
       /* ---------------- JOIN CHAT ---------------- */
-      socket.on('chat:join', async ({ chatId }) => {
-        console.log('dfdfdfdf meesdsge');
+      socket.on("chat:join", async ({ chatId }) => {
+        console.log("dfdfdfdf meesdsge");
 
         const chat = await this._chatRepo.findById(chatId);
         if (!chat) return;
 
         // 🔐 SECURITY CHECK
         if (
-          chat.userId.toString() !== customSocket.userId
-          && chat.workerId.toString() !== customSocket.userId
+          chat.userId.toString() !== customSocket.userId &&
+          chat.workerId.toString() !== customSocket.userId
         ) {
-          console.log('🚫 Unauthorized chat join attempt');
+          console.log("🚫 Unauthorized chat join attempt");
           socket.disconnect();
           return;
         }
@@ -49,15 +49,15 @@ export class ChatSocketHandler implements ISocketHandler {
       });
 
       /* ---------------- SEND MESSAGE ---------------- */
-      socket.on('chat:send', async ({ chatId, message }) => {
-        console.log('send message', message);
+      socket.on("chat:send", async ({ chatId, message }) => {
+        console.log("send message", message);
         const chat = await this._chatRepo.findById(chatId);
         if (!chat) return;
 
         // 🔐 SECURITY CHECK AGAIN
         if (
-          chat.userId.toString() !== customSocket.userId
-          && chat.workerId.toString() !== customSocket.userId
+          chat.userId.toString() !== customSocket.userId &&
+          chat.workerId.toString() !== customSocket.userId
         ) {
           return;
         }
@@ -73,9 +73,14 @@ export class ChatSocketHandler implements ISocketHandler {
         });
 
         // 📡 EMIT TO BOTH SIDES
-        io.to(chatId).emit('chat:receive', savedMessage);
+        io.to(chatId).emit("chat:receive", savedMessage);
+        io.to(chatId).emit("inbox:refresh", {
+          chatId,
+          lastMessage: message.type === "TEXT" ? message.content : "📎 Media",
+          lastMessageTime: savedMessage.createdAt,
+        });
       });
-      socket.on('chat:react', async ({ chatId, messageId, emoji }) => {
+      socket.on("chat:react", async ({ chatId, messageId, emoji }) => {
         try {
           console.log({ chatId, messageId, emoji });
           const customSocket = socket as CustomSocket;
@@ -86,27 +91,31 @@ export class ChatSocketHandler implements ISocketHandler {
 
           // 🔐 SECURITY CHECK
           if (
-            chat.userId.toString() !== userId
-            && chat.workerId.toString() !== userId
+            chat.userId.toString() !== userId &&
+            chat.workerId.toString() !== userId
           ) {
             return;
           }
 
           // ✅ ATOMIC REACTION UPDATE
-          const emoje = await this._messageRepo.reactToMessage(messageId, userId, emoji);
+          const emoje = await this._messageRepo.reactToMessage(
+            messageId,
+            userId,
+            emoji,
+          );
           console.log(emoje);
 
           // 📡 Emit minimal payload
-          io.to(chatId).emit('chat:reaction', {
+          io.to(chatId).emit("chat:reaction", {
             messageId,
             userId,
             emoji,
           });
         } catch (error) {
-          console.error('Reaction error:', error);
+          console.error("Reaction error:", error);
         }
       });
-      socket.on('chat:delete', async ({ chatId, messageId }) => {
+      socket.on("chat:delete", async ({ chatId, messageId }) => {
         try {
           const customSocket = socket as CustomSocket;
           const { userId } = customSocket;
@@ -116,19 +125,19 @@ export class ChatSocketHandler implements ISocketHandler {
 
           // 🔐 SECURITY CHECK
           if (
-            chat.userId.toString() !== userId
-            && chat.workerId.toString() !== userId
+            chat.userId.toString() !== userId &&
+            chat.workerId.toString() !== userId
           ) {
             return;
           }
 
           await this._messageRepo.deleteMessage(messageId, userId);
 
-          io.to(chatId).emit('chat:deleted', {
+          io.to(chatId).emit("chat:deleted", {
             messageId,
           });
         } catch (error) {
-          console.error('Delete error:', error);
+          console.error("Delete error:", error);
         }
       });
     });

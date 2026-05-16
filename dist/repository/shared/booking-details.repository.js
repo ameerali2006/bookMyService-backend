@@ -36,11 +36,11 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
     findByIdPopulated(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield booking_model_1.Booking.findById(id)
-                .populate('userId', 'name email phone ')
-                .populate('workerId', 'name email phone category fees')
-                .populate('serviceId', 'category price')
-                .populate('address')
-                .populate('reviewId')
+                .populate("userId", "name email phone ")
+                .populate("workerId", "name email phone category fees")
+                .populate("serviceId", "category price")
+                .populate("address")
+                .populate("reviewId")
                 .exec();
             return result;
         });
@@ -49,9 +49,9 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield booking_model_1.Booking.find({ userId })
                 .sort({ createdAt: -1 })
-                .populate('workerId', 'name category')
-                .populate('serviceId', 'category price')
-                .populate('address')
+                .populate("workerId", "name category")
+                .populate("serviceId", "category price")
+                .populate("address")
                 .exec();
             return result;
         });
@@ -60,9 +60,9 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
         return __awaiter(this, void 0, void 0, function* () {
             const result = yield booking_model_1.Booking.find({ workerId })
                 .sort({ createdAt: -1 })
-                .populate('userId', 'name email phone')
-                .populate('serviceId', 'category price')
-                .populate('address')
+                .populate("userId", "name email phone")
+                .populate("serviceId", "category price")
+                .populate("address")
                 .exec();
             return result;
         });
@@ -79,7 +79,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
     }
     updateStatusWithOTP(id, status) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield booking_model_1.Booking.findByIdAndUpdate(id, { status, $unset: { otp: '' } }, { new: true });
+            return yield booking_model_1.Booking.findByIdAndUpdate(id, { status, $unset: { otp: "" } }, { new: true });
         });
     }
     updatePaymentStatus(id, paymentStatus, paymentId) {
@@ -89,12 +89,12 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
     }
     addRating(id, score, review) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield booking_model_1.Booking.findByIdAndUpdate(id, { rating: { score, review }, status: 'completed' }, { new: true });
+            return yield booking_model_1.Booking.findByIdAndUpdate(id, { rating: { score, review }, status: "completed" }, { new: true });
         });
     }
     cancelBooking(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield booking_model_1.Booking.findByIdAndUpdate(id, { status: 'cancelled' }, { new: true });
+            return yield booking_model_1.Booking.findByIdAndUpdate(id, { status: "cancelled" }, { new: true });
         });
     }
     findByWorkerAndDate(workerId, date) {
@@ -106,9 +106,9 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             return yield booking_model_1.Booking.find({
                 workerId,
                 date: { $gte: startOfDay, $lte: endOfDay },
-                status: { $ne: 'cancelled' },
+                status: { $ne: "cancelled" },
             })
-                .select('startTime endTime date status')
+                .select("startTime endTime date status")
                 .lean();
         });
     }
@@ -121,16 +121,16 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                 },
                 startTime: { $lt: endTime },
                 endTime: { $gt: startTime },
-                status: { $nin: ['cancelled', 'completed'] },
+                status: { $nin: ["cancelled", "completed"] },
             });
         });
     }
     findByIdWithDetails(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return yield booking_model_1.Booking.findById(id)
-                .populate('workerId', 'name')
-                .populate('serviceId', 'category')
-                .populate('userId', 'name');
+                .populate("workerId", "name")
+                .populate("serviceId", "category")
+                .populate("userId", "name");
         });
     }
     findByWorkerAndRange(workerId, startDate, endDate) {
@@ -138,7 +138,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             return booking_model_1.Booking.find({
                 workerId,
                 date: { $gte: startDate, $lt: endDate },
-                status: { $ne: 'cancelled' },
+                status: { $ne: "cancelled" },
             }, {
                 date: 1,
                 startTime: 1,
@@ -154,10 +154,10 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
         return __awaiter(this, void 0, void 0, function* () {
             return yield booking_model_1.Booking.findByIdAndUpdate(bookingId, {
                 advancePaymentId: paymentIntentId,
-                advancePaymentStatus: status === 'succeeded' ? 'paid' : status,
-                status: status === 'succeeded' ? 'confirmed' : 'pending',
+                advancePaymentStatus: status === "succeeded" ? "paid" : status,
+                status: status === "succeeded" ? "confirmed" : "pending",
                 address: addressId,
-                totalAmount: 100
+                totalAmount: 100,
             });
         });
     }
@@ -165,9 +165,9 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
         return __awaiter(this, void 0, void 0, function* () {
             return yield booking_model_1.Booking.findByIdAndUpdate(bookingId, {
                 finalPaymentId: paymentIntentId,
-                finalPaymentStatus: status === 'succeeded' ? 'paid' : status,
-                status: status === 'succeeded' ? 'completed' : 'awaiting-final-payment',
-                remainingAmount: status === 'succeeded' ? 0 : undefined,
+                finalPaymentStatus: status === "succeeded" ? "paid" : status,
+                status: status === "succeeded" ? "completed" : "awaiting-final-payment",
+                remainingAmount: status === "succeeded" ? 0 : undefined,
             });
         });
     }
@@ -175,16 +175,16 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
         return __awaiter(this, void 0, void 0, function* () {
             return yield booking_model_1.Booking.find({
                 workerId,
-                advancePaymentStatus: 'succeeded',
-                workerResponse: 'pending',
-            }).populate('userId serviceId workerId');
+                advancePaymentStatus: "succeeded",
+                workerResponse: "pending",
+            }).populate("userId serviceId workerId");
         });
     }
     findUnsettledCompleted() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield booking_model_1.Booking.find({
-                status: 'completed',
-                finalPaymentStatus: 'paid',
+                status: "completed",
+                finalPaymentStatus: "paid",
                 $or: [{ isSettled: false }, { isSettled: { $exists: false } }],
             });
         });
@@ -202,7 +202,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
     }
     findServiceRequests(filters) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { workerId, search, status, page, limit, } = filters;
+            const { workerId, search, status, page, limit } = filters;
             // ✅ Start of today (00:00)
             const todayStart = new Date();
             todayStart.setHours(0, 0, 0, 0);
@@ -213,14 +213,14 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             if (status)
                 query.workerResponse = status;
             if (search) {
-                query.$or = [{ 'userId.name': { $regex: search, $options: 'i' } }];
+                query.$or = [{ "userId.name": { $regex: search, $options: "i" } }];
             }
             const skip = (page - 1) * limit;
             const booking = yield booking_model_1.Booking.find(query)
-                .populate('userId', 'name phone')
-                .populate('serviceId', 'category')
-                .populate('workerId', 'name')
-                .populate('address')
+                .populate("userId", "name phone")
+                .populate("serviceId", "category")
+                .populate("workerId", "name")
+                .populate("address")
                 .sort({ date: 1 }) // ✅ nearest upcoming first
                 .skip(skip)
                 .limit(limit)
@@ -240,17 +240,17 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             if (workerResponse.length) {
                 query.workerResponse = { $in: workerResponse };
             }
-            if (search && search.trim() !== '') {
+            if (search && search.trim() !== "") {
                 query.$or = [
-                    { 'serviceId.category': { $regex: search, $options: 'i' } },
-                    { 'workerId.name': { $regex: search, $options: 'i' } },
+                    { "serviceId.category": { $regex: search, $options: "i" } },
+                    { "workerId.name": { $regex: search, $options: "i" } },
                 ];
             }
             console.log(query);
             const total = yield booking_model_1.Booking.countDocuments(query);
             const bookings = yield booking_model_1.Booking.find(query)
-                .populate('workerId')
-                .populate('serviceId')
+                .populate("workerId")
+                .populate("serviceId")
                 .skip(skip)
                 .limit(limit)
                 .sort({ createdAt: -1 })
@@ -265,20 +265,20 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             today.setHours(0, 0, 0, 0);
             const query = {
                 workerId,
-                workerResponse: 'accepted',
+                workerResponse: "accepted",
                 status: status || {
-                    $in: ['confirmed', 'in-progress', 'awaiting-final-payment'],
+                    $in: ["confirmed", "in-progress", "awaiting-final-payment"],
                 },
-                date: { $gte: today }, // 🔥 KEY FIX
+                date: { $gte: today },
             };
             if (search) {
-                query.$or = [{ bookingId: { $regex: search, $options: 'i' } }];
+                query.$or = [{ bookingId: { $regex: search, $options: "i" } }];
             }
             const skip = (page - 1) * limit;
             const [items, total] = yield Promise.all([
                 booking_model_1.Booking.find(query)
-                    .populate('userId', 'name')
-                    .populate('serviceId', 'name')
+                    .populate("userId", "name")
+                    .populate("serviceId", "name")
                     .sort({ date: 1, startTime: 1 })
                     .skip(skip)
                     .limit(limit)
@@ -288,34 +288,175 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             return { items, total };
         });
     }
+    //   async getAllBookings(params: {
+    //     search?: string;
+    //     status?: string;
+    //     service?: string;
+    //     limit?: number;
+    //     page?: number;
+    //   }): Promise<{
+    //     data: IBookingPopulated[];
+    //     total: number;
+    //     page: number;
+    //     limit: number;
+    //   }> {
+    //     const { search, status, service, page = 1, limit = 10 } = params;
+    //     const query: FilterQuery<IBooking> = {};
+    //     // Status filter
+    //     if (status && status !== "all") {
+    //       query.status = status;
+    //     }
+    //     // Search filter
+    //     if (search || service) {
+    //       query.$or = [];
+    //       console.log("Search is : ",search)
+    //       // Global search
+    //       if (search) {
+    //         query.$or.push(
+    //           { "userId.name": { $regex: search, $options: "i" } },
+    //           { "workerId.name": { $regex: search, $options: "i" } },
+    //           { "serviceId.category": { $regex: search, $options: "i" } },
+    //         );
+    //       }
+    //       // Service filter
+    //     }
+    //     console.log("Query : ",query)
+    //     const skip = (page - 1) * limit;
+    //     const [data, total] = await Promise.all([
+    //       Booking.find(query)
+    //         .populate("userId")
+    //         .populate("workerId")
+    //         .populate("serviceId")
+    //         .populate("address")
+    //         .sort({ createdAt: -1 })
+    //         .skip(skip)
+    //         .limit(limit)
+    //         .lean<IBookingPopulated[]>(),
+    //       Booking.countDocuments(query),
+    //     ]);
+    // console.log("response : ", {
+    //   data,
+    //   total,
+    //   page,
+    //   limit,
+    // })
+    //     return {
+    //       data,
+    //       total,
+    //       page,
+    //       limit,
+    //     };
+    //   }
     getAllBookings(params) {
         return __awaiter(this, void 0, void 0, function* () {
-            const { search, status, page = 1, limit = 10, } = params;
-            const query = {};
-            if (status && status !== 'all') {
-                query.status = status;
-            }
-            if (search) {
-                query.$or = [
-                    { _id: search }, // booking id search
-                    { 'userId.name': { $regex: search, $options: 'i' } },
-                    { 'workerId.name': { $regex: search, $options: 'i' } },
-                    { 'serviceId.category': { $regex: search, $options: 'i' } },
-                ];
-            }
+            var _a, _b, _c, _d;
+            const { search = "", status, service, page = 1, limit = 10, } = params;
             const skip = (page - 1) * limit;
-            const [data, total] = yield Promise.all([
-                booking_model_1.Booking.find(query)
-                    .populate('userId')
-                    .populate('workerId')
-                    .populate('serviceId')
-                    .populate('address')
-                    .sort({ createdAt: -1 })
-                    .skip(skip)
-                    .limit(limit)
-                    .lean(),
-                booking_model_1.Booking.countDocuments(query),
-            ]);
+            // Base match stage
+            const matchStage = {};
+            if (status && status !== "all") {
+                matchStage.status = status;
+            }
+            // Search conditions after lookup
+            const searchConditions = [];
+            if (search) {
+                searchConditions.push({ "userId.name": { $regex: search, $options: "i" } }, { "workerId.name": { $regex: search, $options: "i" } }, { "serviceId.category": { $regex: search, $options: "i" } });
+            }
+            // Separate service filter
+            if (service) {
+                searchConditions.push({
+                    "serviceId.category": { $regex: service, $options: "i" },
+                });
+            }
+            // Aggregation pipeline
+            const pipeline = [
+                // Match booking fields first
+                { $match: matchStage },
+                // Lookup user
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "userId",
+                    },
+                },
+                {
+                    $unwind: {
+                        path: "$userId",
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                // Lookup worker
+                {
+                    $lookup: {
+                        from: "workers",
+                        localField: "workerId",
+                        foreignField: "_id",
+                        as: "workerId",
+                    },
+                },
+                {
+                    $unwind: {
+                        path: "$workerId",
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                // Lookup service
+                {
+                    $lookup: {
+                        from: "services",
+                        localField: "serviceId",
+                        foreignField: "_id",
+                        as: "serviceId",
+                    },
+                },
+                {
+                    $unwind: {
+                        path: "$serviceId",
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                // Lookup address
+                {
+                    $lookup: {
+                        from: "addresses",
+                        localField: "address",
+                        foreignField: "_id",
+                        as: "addressId",
+                    },
+                },
+                {
+                    $unwind: {
+                        path: "$addressId",
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+            ];
+            // Apply search after lookups
+            if (searchConditions.length > 0) {
+                pipeline.push({
+                    $match: {
+                        $or: searchConditions,
+                    },
+                });
+            }
+            // Get paginated data and total count in one query
+            pipeline.push({
+                $facet: {
+                    data: [
+                        { $sort: { createdAt: -1 } },
+                        { $skip: skip },
+                        { $limit: limit },
+                    ],
+                    totalCount: [
+                        { $count: "count" },
+                    ],
+                },
+            });
+            const result = yield booking_model_1.Booking.aggregate(pipeline);
+            const data = (((_a = result[0]) === null || _a === void 0 ? void 0 : _a.data) || []);
+            const total = ((_d = (_c = (_b = result[0]) === null || _b === void 0 ? void 0 : _b.totalCount) === null || _c === void 0 ? void 0 : _c[0]) === null || _d === void 0 ? void 0 : _d.count) || 0;
             return {
                 data,
                 total,
@@ -330,14 +471,14 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             const query = {
                 workerId,
             };
-            if (search && search.trim() !== '') {
+            if (search && search.trim() !== "") {
                 query.$or = [
-                    { 'userId.name': { $regex: search, $options: 'i' } },
-                    { 'serviceId.category': { $regex: search, $options: 'i' } },
-                    { 'address.city': { $regex: search, $options: 'i' } },
-                    { 'address.street': { $regex: search, $options: 'i' } },
-                    { 'address.buildingName': { $regex: search, $options: 'i' } },
-                    { 'address.area': { $regex: search, $options: 'i' } },
+                    { "userId.name": { $regex: search, $options: "i" } },
+                    { "serviceId.category": { $regex: search, $options: "i" } },
+                    { "address.city": { $regex: search, $options: "i" } },
+                    { "address.street": { $regex: search, $options: "i" } },
+                    { "address.buildingName": { $regex: search, $options: "i" } },
+                    { "address.area": { $regex: search, $options: "i" } },
                 ];
             }
             if (statuses && statuses.length > 0) {
@@ -363,10 +504,10 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             console.log(query);
             const [items, total] = yield Promise.all([
                 booking_model_1.Booking.find(query)
-                    .populate('userId', 'name phone')
-                    .populate('serviceId', 'category')
-                    .populate('address')
-                    .sort({ date: 1, startTime: 1 })
+                    .populate("userId", "name phone")
+                    .populate("serviceId", "category")
+                    .populate("address")
+                    .sort({ date: -1, startTime: 1 })
                     .skip(skip)
                     .limit(limit)
                     .lean(),
@@ -390,21 +531,21 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             // 2️⃣ Completed Jobs
             const completedJobs = yield booking_model_1.Booking.countDocuments({
                 workerId,
-                status: 'completed',
+                status: "completed",
             });
             // 3️⃣ Monthly Earnings
             const monthlyEarningsAgg = yield booking_model_1.Booking.aggregate([
                 {
                     $match: {
                         workerId: workerObjectId,
-                        status: 'completed',
+                        status: "completed",
                         date: { $gte: monthStart },
                     },
                 },
                 {
                     $group: {
                         _id: null,
-                        total: { $sum: '$totalAmount' },
+                        total: { $sum: "$totalAmount" },
                     },
                 },
             ]);
@@ -412,7 +553,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
             // 4️⃣ Upcoming Jobs
             const upcomingJobs = yield booking_model_1.Booking.countDocuments({
                 workerId,
-                status: { $in: ['confirmed', 'in-progress'] },
+                status: { $in: ["confirmed", "in-progress"] },
                 date: { $gte: todayStart },
             });
             // 5️⃣ Rating Aggregation
@@ -420,13 +561,13 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                 {
                     $match: {
                         workerId: workerObjectId,
-                        'rating.score': { $exists: true },
+                        "rating.score": { $exists: true },
                     },
                 },
                 {
                     $group: {
                         _id: null,
-                        avgRating: { $avg: '$rating.score' },
+                        avgRating: { $avg: "$rating.score" },
                         totalReviews: { $sum: 1 },
                     },
                 },
@@ -438,10 +579,10 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                 workerId,
                 date: { $gte: todayStart, $lte: todayEnd },
             })
-                .populate('workerId')
-                .populate('userId')
-                .populate('serviceId')
-                .populate('address')
+                .populate("workerId")
+                .populate("userId")
+                .populate("serviceId")
+                .populate("address")
                 .lean();
             return {
                 totalJobs,
@@ -469,10 +610,10 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                                     _id: null,
                                     totalBookings: { $sum: 1 },
                                     completedBookings: {
-                                        $sum: { $cond: [{ $eq: ['$status', 'completed'] }, 1, 0] },
+                                        $sum: { $cond: [{ $eq: ["$status", "completed"] }, 1, 0] },
                                     },
                                     cancelledBookings: {
-                                        $sum: { $cond: [{ $eq: ['$status', 'cancelled'] }, 1, 0] },
+                                        $sum: { $cond: [{ $eq: ["$status", "cancelled"] }, 1, 0] },
                                     },
                                 },
                             },
@@ -481,14 +622,14 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                         totalRevenue: [
                             {
                                 $match: {
-                                    status: 'completed',
-                                    finalPaymentStatus: 'paid',
+                                    status: "completed",
+                                    finalPaymentStatus: "paid",
                                 },
                             },
                             {
                                 $group: {
                                     _id: null,
-                                    revenue: { $sum: '$totalAmount' },
+                                    revenue: { $sum: "$totalAmount" },
                                 },
                             },
                         ],
@@ -496,42 +637,42 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                         revenueChart: [
                             {
                                 $match: {
-                                    status: 'completed',
-                                    finalPaymentStatus: 'paid',
+                                    status: "completed",
+                                    finalPaymentStatus: "paid",
                                 },
                             },
                             {
                                 $group: {
                                     _id: {
-                                        year: { $year: '$createdAt' },
-                                        month: { $month: '$createdAt' },
+                                        year: { $year: "$createdAt" },
+                                        month: { $month: "$createdAt" },
                                     },
-                                    revenue: { $sum: '$totalAmount' },
+                                    revenue: { $sum: "$totalAmount" },
                                 },
                             },
-                            { $sort: { '_id.year': 1, '_id.month': 1 } },
+                            { $sort: { "_id.year": 1, "_id.month": 1 } },
                         ],
                         // 🥧 Service Distribution
                         serviceDistribution: [
                             {
                                 $lookup: {
-                                    from: 'services',
-                                    localField: 'serviceId',
-                                    foreignField: '_id',
-                                    as: 'service',
+                                    from: "services",
+                                    localField: "serviceId",
+                                    foreignField: "_id",
+                                    as: "service",
                                 },
                             },
-                            { $unwind: '$service' },
+                            { $unwind: "$service" },
                             {
                                 $group: {
-                                    _id: '$service.category',
+                                    _id: "$service.category",
                                     count: { $sum: 1 },
                                 },
                             },
                             {
                                 $project: {
                                     _id: 0,
-                                    service: '$_id',
+                                    service: "$_id",
                                     count: 1,
                                 },
                             },
@@ -541,7 +682,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                             {
                                 $match: { createdAt: { $gte: startOfCurrentMonth } },
                             },
-                            { $count: 'count' },
+                            { $count: "count" },
                         ],
                         // 📅 Last Month
                         lastMonth: [
@@ -553,7 +694,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                                     },
                                 },
                             },
-                            { $count: 'count' },
+                            { $count: "count" },
                         ],
                     },
                 },

@@ -49,6 +49,7 @@ class UserRoute extends base_route_1.BaseRoute {
         this.router.get('/notifications', (0, auth_middleware_1.verifyAuth)(), resolver_1.blockStatusMiddleware.checkStatus, (req, res, next) => resolver_1.notificationController.getNotifications(req, res, next));
         this.router.patch('/notifications/:id/read', (0, auth_middleware_1.verifyAuth)(), resolver_1.blockStatusMiddleware.checkStatus, (req, res, next) => resolver_1.notificationController.markAsRead(req, res, next));
         this.router.patch('/notifications/read-all', (0, auth_middleware_1.verifyAuth)(), resolver_1.blockStatusMiddleware.checkStatus, (req, res, next) => resolver_1.notificationController.markAllRead(req, res, next));
+        this.router.patch('/booking/:bookingId/cancel', (0, auth_middleware_1.verifyAuth)(), resolver_1.blockStatusMiddleware.checkStatus, (req, res, next) => resolver_1.bookingController.cancelBooking(req, res, next));
     }
 }
 exports.UserRoute = UserRoute;

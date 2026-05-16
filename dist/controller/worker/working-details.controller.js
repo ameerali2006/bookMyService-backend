@@ -38,6 +38,7 @@ let WorkingDetailsController = class WorkingDetailsController {
     getWorkingDetails(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
+                console.log(req.query);
                 const email = req.query.email;
                 console.log(email);
                 const details = yield this._workingManage.getWorkingDetails(email);

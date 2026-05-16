@@ -24,11 +24,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookingService = void 0;
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
+const message_1 = require("../../config/constants/message");
 let BookingService = class BookingService {
-    constructor(_bookingRepo, _workerRepo, _slotLockRepo) {
+    constructor(_bookingRepo, _workerRepo, _slotLockRepo, _emailService) {
         this._bookingRepo = _bookingRepo;
         this._workerRepo = _workerRepo;
         this._slotLockRepo = _slotLockRepo;
+        this._emailService = _emailService;
     }
     setBasicBookingDetails(userId, workerId, time, date, description) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -36,21 +38,21 @@ let BookingService = class BookingService {
                 if (!userId || !workerId) {
                     return {
                         success: false,
-                        message: 'User not Found',
+                        message: "User not Found",
                         bookingId: null,
                     };
                 }
                 if (!time || !date || !description) {
                     return {
                         success: false,
-                        message: 'Missing required fields (time, date, or description)',
+                        message: "Missing required fields (time, date, or description)",
                         bookingId: null,
                     };
                 }
                 if (isNaN(new Date(date).getTime())) {
                     return {
                         success: false,
-                        message: 'Invalid date format',
+                        message: "Invalid date format",
                         bookingId: null,
                     };
                 }
@@ -58,12 +60,12 @@ let BookingService = class BookingService {
                 if (!workerData) {
                     return {
                         success: false,
-                        message: 'worker is not found',
+                        message: "worker is not found",
                         bookingId: null,
                     };
                 }
                 const bookingDate = new Date(date);
-                const [h, m] = time.split(':').map(Number);
+                const [h, m] = time.split(":").map(Number);
                 bookingDate.setHours(h, m, 0, 0);
                 const startTime = new Date(bookingDate);
                 const endTime = new Date(startTime.getTime() + 60 * 60 * 1000);
@@ -72,7 +74,7 @@ let BookingService = class BookingService {
                 if (!locked) {
                     return {
                         success: false,
-                        message: 'Slot already booked by another user',
+                        message: "Slot already booked by another user",
                         bookingId: null,
                     };
                 }
@@ -83,19 +85,19 @@ let BookingService = class BookingService {
                     date: bookingDate,
                     startTime: time,
                     description,
-                    status: 'pending',
-                    advancePaymentStatus: 'unpaid',
+                    status: "pending",
+                    advancePaymentStatus: "unpaid",
                 });
                 if (!newBooking) {
                     return {
                         success: false,
-                        message: 'Failed to create booking',
+                        message: "Failed to create booking",
                         bookingId: null,
                     };
                 }
                 return {
                     success: true,
-                    message: 'Slot locked for 10 minutes',
+                    message: "Slot locked for 10 minutes",
                     bookingId: newBooking._id.toString(),
                 };
             }
@@ -103,7 +105,7 @@ let BookingService = class BookingService {
                 console.log(error);
                 return {
                     success: false,
-                    message: 'internal Error',
+                    message: "internal Error",
                     bookingId: null,
                 };
             }
@@ -115,7 +117,7 @@ let BookingService = class BookingService {
                 if (!bookingId) {
                     return {
                         success: false,
-                        message: 'booking details not found',
+                        message: "booking details not found",
                         details: null,
                     };
                 }
@@ -123,21 +125,21 @@ let BookingService = class BookingService {
                 if (!booking) {
                     return {
                         success: false,
-                        message: 'booking details not found',
+                        message: "booking details not found",
                         details: null,
                     };
                 }
                 const worker = booking.workerId;
                 const service = booking.serviceId;
-                let time = `${Number(booking.startTime.split(':')[0]) % 12}:${booking.startTime.split(':')[1]} `;
-                Number(booking.startTime.split(':')[0]) % 12
-                    == Number(booking.startTime.split(':')[0])
-                    ? (time += ' AM')
-                    : (time += ' PM');
+                let time = `${Number(booking.startTime.split(":")[0]) % 12}:${booking.startTime.split(":")[1]} `;
+                Number(booking.startTime.split(":")[0]) % 12 ==
+                    Number(booking.startTime.split(":")[0])
+                    ? (time += " AM")
+                    : (time += " PM");
                 const data = {
                     workerName: worker.name,
                     serviceName: service.category,
-                    date: booking.date.toISOString().split('T')[0],
+                    date: booking.date.toISOString().split("T")[0],
                     time,
                     description: booking.description,
                     advancePaymentStatus: booking.advancePaymentStatus,
@@ -145,14 +147,14 @@ let BookingService = class BookingService {
                 };
                 return {
                     success: true,
-                    message: 'booking details  found',
+                    message: "booking details  found",
                     details: data,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'internal error',
+                    message: "internal error",
                     details: null,
                 };
             }
@@ -165,14 +167,14 @@ let BookingService = class BookingService {
                 if (!bookingId || !workerId) {
                     return {
                         success: false,
-                        message: 'Missing bookingId or workerId',
+                        message: "Missing bookingId or workerId",
                     };
                 }
                 // 🧠 Validate input
                 if (!endingTime || !(itemsRequired === null || itemsRequired === void 0 ? void 0 : itemsRequired.length)) {
                     return {
                         success: false,
-                        message: 'Ending time and required items are mandatory',
+                        message: "Ending time and required items are mandatory",
                     };
                 }
                 // 💾 Update the booking
@@ -185,7 +187,7 @@ let BookingService = class BookingService {
                 if (!updatedBooking) {
                     return {
                         success: false,
-                        message: 'Booking not found or unauthorized',
+                        message: "Booking not found or unauthorized",
                     };
                 }
                 // 📨 Optional: Send confirmation email to the user
@@ -200,15 +202,15 @@ let BookingService = class BookingService {
                 // }
                 return {
                     success: true,
-                    message: 'Worker details updated successfully',
+                    message: "Worker details updated successfully",
                     booking: updatedBooking,
                 };
             }
             catch (error) {
-                console.error('❌ Error updating worker details:', error);
+                console.error("❌ Error updating worker details:", error);
                 return {
                     success: false,
-                    message: 'Internal server error while updating details',
+                    message: "Internal server error while updating details",
                 };
             }
         });
@@ -219,66 +221,102 @@ let BookingService = class BookingService {
                 if (!bookingId || !paymentType) {
                     return {
                         success: false,
-                        message: 'Missing bookingId or paymentType',
+                        message: "Missing bookingId or paymentType",
                         data: null,
                     };
                 }
                 const booking = yield this._bookingRepo.findById(bookingId);
                 if (!booking) {
-                    return { success: false, message: 'Booking not found', data: null };
+                    return { success: false, message: "Booking not found", data: null };
                 }
                 // -------------------------
                 // ADVANCE PAYMENT CHECK
                 // -------------------------
-                if (paymentType === 'advance') {
-                    if (booking.advancePaymentStatus !== 'paid') {
+                if (paymentType === "advance") {
+                    if (booking.advancePaymentStatus !== "paid") {
                         return {
                             success: false,
-                            message: 'Advance payment not completed',
+                            message: "Advance payment not completed",
                             data: null,
                         };
                     }
                     return {
                         success: true,
-                        message: 'Advance payment verified',
+                        message: "Advance payment verified",
                         data: {
                             bookingId,
                             amountPaid: booking.advanceAmount,
-                            type: 'advance',
+                            type: "advance",
                         },
                     };
                 }
                 // -------------------------
                 // FINAL PAYMENT CHECK
                 // -------------------------
-                if (paymentType === 'final') {
-                    if (booking.finalPaymentStatus !== 'paid') {
+                if (paymentType === "final") {
+                    if (booking.finalPaymentStatus !== "paid") {
                         return {
                             success: false,
-                            message: 'Final payment not completed',
+                            message: "Final payment not completed",
                             data: null,
                         };
                     }
                     return {
                         success: true,
-                        message: 'Final payment verified',
+                        message: "Final payment verified",
                         data: {
                             bookingId,
                             amountPaid: booking.totalAmount,
-                            type: 'final',
+                            type: "final",
                         },
                     };
                 }
-                return { success: false, message: 'Invalid payment type', data: null };
+                return { success: false, message: "Invalid payment type", data: null };
             }
             catch (err) {
-                console.error('Error verifying payment:', err);
+                console.error("Error verifying payment:", err);
                 return {
                     success: false,
-                    message: 'Internal server error',
+                    message: "Internal server error",
                     data: null,
                 };
             }
+        });
+    }
+    cancelBooking(bookingId, userId, reason) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const booking = yield this._bookingRepo.findByIdPopulated(bookingId);
+            if (!booking) {
+                return {
+                    success: false,
+                    message: message_1.MESSAGES.BOOKING_NOT_FOUND,
+                };
+            }
+            if (!["pending", "confirmed"].includes(booking.status)) {
+                return {
+                    success: false,
+                    message: "Only status with pending and conifirmed can cancel",
+                };
+            }
+            const updateBooking = yield this._bookingRepo.updateStatus(bookingId, "cancelled");
+            if (!updateBooking) {
+                return {
+                    success: false,
+                    message: message_1.MESSAGES.BOOKING_NOT_FOUND,
+                };
+            }
+            yield this._emailService.sendBookingCancelledEmail({
+                email: booking.userId.email,
+                userName: booking.userId.name,
+                serviceName: booking.serviceId.category,
+                bookingCode: booking._id.toString(),
+                reason,
+            });
+            return {
+                success: true,
+                message: message_1.MESSAGES.BOOKING_CANCELLED,
+                booking: updateBooking
+            };
         });
     }
 };
@@ -288,5 +326,6 @@ exports.BookingService = BookingService = __decorate([
     __param(0, (0, tsyringe_1.inject)(types_1.TYPES.BookingRepository)),
     __param(1, (0, tsyringe_1.inject)(types_1.TYPES.WorkerRepository)),
     __param(2, (0, tsyringe_1.inject)(types_1.TYPES.SlotLockRepository)),
-    __metadata("design:paramtypes", [Object, Object, Object])
+    __param(3, (0, tsyringe_1.inject)(types_1.TYPES.EmailService)),
+    __metadata("design:paramtypes", [Object, Object, Object, Object])
 ], BookingService);

@@ -1,11 +1,12 @@
 import nodemailer, { Transporter } from 'nodemailer';
 import chalk from 'chalk';
 import { injectable } from 'tsyringe';
-import { IEmailService, IServiceRejectedPayload } from '../../interface/helpers/email-service.service.interface';
+import { IBookingCancelledPayload, IEmailService, IServiceRejectedPayload } from '../../interface/helpers/email-service.service.interface';
 
 import {
   VERIFICATION_MAIL_CONTENT, PASSWORD_RESET_MAIL_CONTENT, SENT_REJECTION_EMAIL, GOOGLE_REGISTRATION_MAIL_CONTENT,
   SERVICE_REJECTED_MAIL_CONTENT,
+  BOOKING_CANCELLED_MAIL_CONTENT,
 } from '../../config/constants/email';
 import { ENV } from '../../config/env/env';
 
@@ -99,6 +100,34 @@ export class EmailService implements IEmailService {
       chalk.yellowBright(`${entityLabel} - ${to}`),
     );
   }
+  async sendBookingCancelledEmail(
+  payload: IBookingCancelledPayload,
+): Promise<void> {
+  const {
+    email,
+    userName,
+    serviceName,
+    bookingCode,
+    reason,
+    refundAmount,
+  } = payload;
+
+  const subject = `Booking Cancelled — ${serviceName} — bookMyService`;
+
+  const html = BOOKING_CANCELLED_MAIL_CONTENT(
+    userName,
+    serviceName,
+    bookingCode,
+    reason,
+    refundAmount,
+  );
+
+  await this.sendEmail(email, subject, html);
+
+  console.log(
+    `📨 Booking cancellation email sent to ${email} for booking ${bookingCode}`,
+  );
+}
 
   async sendGoogleRegistrationEmail(
     to: string,

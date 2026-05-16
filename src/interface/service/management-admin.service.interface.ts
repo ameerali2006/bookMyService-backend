@@ -19,7 +19,7 @@ export interface IManagementAdminService{
     getAllServices(search:string, sort:string, page:number, limit:number,): Promise<getAllServicesResponse>;
     serviceRegister(data:serviceCreateDto):Promise<serviceRegisterResponse>
     updateServiceStatus(serviceId:string, status:'inactive' |'active'):Promise<updateServiceStatusResponse>
-    getAllBookings(search:string, status:string, limit:number, page:number):Promise<getAllBookingsResponse>
+    getAllBookings(search:string, status:string,service:string, limit:number, page:number):Promise<getAllBookingsResponse>
     getBookingDetail(bookingId:string):Promise<IbookingDetailPageResponse>
     getDashboard(): Promise<{success:boolean, message:string, data:IAdminDashboardResponse}>
 }

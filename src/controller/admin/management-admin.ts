@@ -307,18 +307,21 @@ export class ManagementAdmin implements IAdminManagementController {
       const {
         search = '',
         status = 'all',
+        service="",
         limit = '10',
         page = '1',
       } = req.query as {
         search?: string;
         status?: string;
         limit?: string;
+        service?:string
         page?: string;
       };
 
       const result = await this._adminManagement.getAllBookings(
         search,
         status,
+        service,
         Number(limit),
         Number(page),
       );
@@ -328,6 +331,7 @@ export class ManagementAdmin implements IAdminManagementController {
         res.status(STATUS_CODES.BAD_REQUEST).json(result);
       }
     } catch (error) {
+      console.log(error)
       next(error);
     }
   }

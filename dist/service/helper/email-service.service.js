@@ -93,6 +93,15 @@ let EmailService = class EmailService {
             console.log(chalk_1.default.bgRedBright.bold('❌ Rejection Email Sent:'), chalk_1.default.yellowBright(`${entityLabel} - ${to}`));
         });
     }
+    sendBookingCancelledEmail(payload) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { email, userName, serviceName, bookingCode, reason, refundAmount, } = payload;
+            const subject = `Booking Cancelled — ${serviceName} — bookMyService`;
+            const html = (0, email_1.BOOKING_CANCELLED_MAIL_CONTENT)(userName, serviceName, bookingCode, reason, refundAmount);
+            yield this.sendEmail(email, subject, html);
+            console.log(`📨 Booking cancellation email sent to ${email} for booking ${bookingCode}`);
+        });
+    }
     sendGoogleRegistrationEmail(to, fullName, tempPassword) {
         return __awaiter(this, void 0, void 0, function* () {
             const subject = 'Welcome to bookMyService 🎉';

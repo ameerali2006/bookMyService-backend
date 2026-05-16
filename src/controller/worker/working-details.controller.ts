@@ -35,6 +35,7 @@ export class WorkingDetailsController implements IWorkingDetailsController {
     next: NextFunction,
   ): Promise<void> {
     try {
+      console.log(req.query)
       const email = req.query.email as string;
       console.log(email);
       const details = await this._workingManage.getWorkingDetails(email);

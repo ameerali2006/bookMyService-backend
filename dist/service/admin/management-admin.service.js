@@ -230,17 +230,26 @@ let ManagementAdminService = class ManagementAdminService {
             }
         });
     }
-    getAllBookings(search, status, limit, page) {
+    getAllBookings(search, status, service, limit, page) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const safePage = Math.max(1, Number(page) || 1);
                 const safeLimit = Math.min(50, Number(limit) || 10);
                 const safeStatus = status === 'all' ? undefined : status;
+                const safeService = service === "" ? undefined : service;
+                console.log({
+                    search,
+                    status: safeStatus,
+                    page: safePage,
+                    limit: safeLimit,
+                    service: safeService,
+                });
                 const { data, total } = yield this._bookingRepo.getAllBookings({
                     search,
                     status: safeStatus,
                     page: safePage,
                     limit: safeLimit,
+                    service: safeService,
                 });
                 // 3️⃣ Map to DTO (decoupling DB model from API)
                 const mappedBookings = data.map((booking) => ({
@@ -254,6 +263,7 @@ let ManagementAdminService = class ManagementAdminService {
                     status: booking.status,
                     createdAt: booking.createdAt,
                 }));
+                console.log(mappedBookings);
                 return {
                     success: true,
                     message: 'Bookings fetched successfully',
@@ -264,6 +274,7 @@ let ManagementAdminService = class ManagementAdminService {
                 };
             }
             catch (error) {
+                console.log(error);
                 return {
                     success: false,
                     message: 'Failed to fetch bookings',

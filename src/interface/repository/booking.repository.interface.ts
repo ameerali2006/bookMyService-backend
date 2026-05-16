@@ -110,6 +110,7 @@ export interface IBookingRepository extends IBaseRepository<IBooking> {
     search?: string;
     status?: string;
     limit?: number;
+    service?:string;
     page?: number;
   }): Promise<{
     data: IBookingPopulated[];

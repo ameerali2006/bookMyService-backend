@@ -5,14 +5,19 @@ export interface IServiceRejectedPayload {
   reason?: string;
   refundAmount?: number;
 }
-export interface IEmailService {
-	sendEmail(toEmail: string, subject: string, content: string): Promise<void>;
-	generateOtpEmailContent(otp: string): string;
-	sendResetEmail(
-		to: string,
-		subject: string,
-		resetLink: string
-	): Promise<void>
-	sendServiceRejectedEmail(payload: IServiceRejectedPayload): Promise<void>;
 
+export interface IBookingCancelledPayload {
+  email: string;
+  userName: string;
+  serviceName: string;
+  bookingCode: string;
+  reason: string;
+  refundAmount?: number;
+}
+export interface IEmailService {
+  sendEmail(toEmail: string, subject: string, content: string): Promise<void>;
+  generateOtpEmailContent(otp: string): string;
+  sendResetEmail(to: string, subject: string, resetLink: string): Promise<void>;
+  sendServiceRejectedEmail(payload: IServiceRejectedPayload): Promise<void>;
+  sendBookingCancelledEmail(payload: IBookingCancelledPayload): Promise<void>;
 }

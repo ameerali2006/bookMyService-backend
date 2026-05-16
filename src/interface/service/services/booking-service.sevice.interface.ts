@@ -1,13 +1,16 @@
 import {
-  getBookingDetailsResponseDTO, setBasicBookingDetailsResponse, updateWorkerDetailsRequestDto, updateWorkerDetailsResponseDto, verifyPaymentResponseDto,
-} from '../../../dto/service.dto';
-import { IBooking } from '../../model/booking.model.interface';
+  getBookingDetailsResponseDTO,
+  setBasicBookingDetailsResponse,
+  updateWorkerDetailsRequestDto,
+  updateWorkerDetailsResponseDto,
+  verifyPaymentResponseDto,
+} from "../../../dto/service.dto";
+import { IBooking } from "../../model/booking.model.interface";
 
 export interface VerifiedPaymentResult {
-  bookingId: string
-  amountPaid: number
-  type: 'advance' | 'final'
-
+  bookingId: string;
+  amountPaid: number;
+  type: "advance" | "final";
 }
 export interface BookingDetails {
   workerName: string;
@@ -15,23 +18,28 @@ export interface BookingDetails {
   date: string;
   time: string;
   description: string;
-  advancePaymentStatus?:'unpaid' | 'paid' | 'failed' | 'refunded'
+  advancePaymentStatus?: "unpaid" | "paid" | "failed" | "refunded";
   advance: number;
 }
 export interface IBookingService {
+  cancelBooking(
+    bookingId: string,
+    userId: string,
+    reason: string,
+  ): Promise<{ success: boolean; message: string; booking?: IBooking }>;
   setBasicBookingDetails(
     userId: string,
     workerId: string,
     time: string,
     date: Date,
-    description: string
+    description: string,
   ): Promise<setBasicBookingDetailsResponse>;
-  getBookingDetails(
-    bookingId: string
-  ): Promise<getBookingDetailsResponseDTO>;
-  updateWorkerDetails(data: updateWorkerDetailsRequestDto): Promise<updateWorkerDetailsResponseDto>;
+  getBookingDetails(bookingId: string): Promise<getBookingDetailsResponseDTO>;
+  updateWorkerDetails(
+    data: updateWorkerDetailsRequestDto,
+  ): Promise<updateWorkerDetailsResponseDto>;
   verifyPayment(
     bookingId: string,
-    paymentType: 'advance' | 'final'
+    paymentType: "advance" | "final",
   ): Promise<verifyPaymentResponseDto>;
 }

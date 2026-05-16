@@ -6,6 +6,7 @@ import { CustomRequest } from '../middleware/auth.middleware';
 import { TYPES } from '../config/constants/types';
 import { IBookingService } from '../interface/service/services/booking-service.sevice.interface';
 import { STATUS_CODES } from '../config/constants/status-code';
+import { MESSAGES } from '../config/constants/message';
 
 @injectable()
 export class BookingController implements IBookingController {
@@ -66,6 +67,22 @@ export class BookingController implements IBookingController {
       }
     } catch (error) {
       next(error);
+    }
+  }
+  async cancelBooking(req: Request, res: Response, next: NextFunction): Promise<void>{
+    try {
+      const bookingId= req.params.bookingId
+      const userId = (req as CustomRequest).user._id
+      const reason =req.body.reason
+      if(!bookingId||!reason){
+        res.status(STATUS_CODES.BAD_REQUEST).json({success:false,message:MESSAGES.BOOKING_NOT_FOUND})
+      } 
+      const result=await this._bookingService.cancelBooking(bookingId,userId,reason)
+      res.status(STATUS_CODES.OK).json(result)
+
+
+    } catch (error) {
+      next(error)
     }
   }
 }

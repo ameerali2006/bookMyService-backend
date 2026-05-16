@@ -25,6 +25,7 @@ exports.BookingController = void 0;
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../config/constants/types");
 const status_code_1 = require("../config/constants/status-code");
+const message_1 = require("../config/constants/message");
 let BookingController = class BookingController {
     constructor(_bookingService) {
         this._bookingService = _bookingService;
@@ -80,6 +81,23 @@ let BookingController = class BookingController {
                 else {
                     res.status(status_code_1.STATUS_CODES.OK).json(response);
                 }
+            }
+            catch (error) {
+                next(error);
+            }
+        });
+    }
+    cancelBooking(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const bookingId = req.params.bookingId;
+                const userId = req.user._id;
+                const reason = req.body.reason;
+                if (!bookingId || !reason) {
+                    res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({ success: false, message: message_1.MESSAGES.BOOKING_NOT_FOUND });
+                }
+                const result = yield this._bookingService.cancelBooking(bookingId, userId, reason);
+                res.status(status_code_1.STATUS_CODES.OK).json(result);
             }
             catch (error) {
                 next(error);
