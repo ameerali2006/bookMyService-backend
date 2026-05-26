@@ -65,6 +65,7 @@ let WorkingDetailsController = class WorkingDetailsController {
             try {
                 const email = req.body.email;
                 const { payload } = req.body;
+                console.log(payload);
                 console.log(email);
                 const details = yield this._workingManage.updateWorkingDetails(email, payload);
                 if (details.success) {

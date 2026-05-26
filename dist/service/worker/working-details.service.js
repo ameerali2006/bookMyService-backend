@@ -42,6 +42,7 @@ let WorkingDetailsManagement = class WorkingDetailsManagement {
             if (!worker)
                 throw new Error("Worker not found");
             let details = yield this._workingRepo.findByWorkerId(worker._id.toString());
+            console.log("details:", details);
             const daysOfWeek = [
                 "Sunday",
                 "Monday",

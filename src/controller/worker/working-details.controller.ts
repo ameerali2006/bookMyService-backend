@@ -63,6 +63,7 @@ export class WorkingDetailsController implements IWorkingDetailsController {
     try {
       const email = req.body.email as string;
       const { payload } = req.body;
+      console.log(payload)
       console.log(email);
       const details = await this._workingManage.updateWorkingDetails(
         email,
