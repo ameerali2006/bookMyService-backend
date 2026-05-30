@@ -42,7 +42,7 @@ let ServiceDetails = class ServiceDetails {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!lat || !lng || !serviceId) {
-                    throw new Error('Latitude, longitude and serviceId are required');
+                    throw new Error("Latitude, longitude and serviceId are required");
                 }
                 console.log({
                     serviceId,
@@ -56,13 +56,13 @@ let ServiceDetails = class ServiceDetails {
                 const data = yield this._workerAgg.findNearbyWorkersByServiceId(serviceId, lat, lng, search, sort, page, pageSize);
                 console.log(data);
                 if (!data) {
-                    return { success: false, message: 'Worker not Found', data: null };
+                    return { success: false, message: "Worker not Found", data: null };
                 }
-                return { success: true, message: 'Data fetched Successfully', data };
+                return { success: true, message: "Data fetched Successfully", data };
             }
             catch (error) {
                 console.error(error);
-                return { success: false, message: 'Worker not Found', data: null };
+                return { success: false, message: "Worker not Found", data: null };
             }
         });
     }
@@ -73,7 +73,7 @@ let ServiceDetails = class ServiceDetails {
                     return {
                         status: status_code_1.STATUS_CODES.BAD_REQUEST,
                         success: false,
-                        message: 'Latitude and longitude are required',
+                        message: "Latitude and longitude are required",
                     };
                 }
                 console.log({ lat, lng, maxDistance });
@@ -84,7 +84,7 @@ let ServiceDetails = class ServiceDetails {
                     return {
                         status: status_code_1.STATUS_CODES.OK,
                         success: true,
-                        message: 'No services found nearby',
+                        message: "No services found nearby",
                         services: [],
                     };
                 }
@@ -92,12 +92,12 @@ let ServiceDetails = class ServiceDetails {
                 return {
                     status: status_code_1.STATUS_CODES.OK,
                     success: true,
-                    message: 'Nearby services found',
+                    message: "Nearby services found",
                     services,
                 };
             }
             catch (error) {
-                console.error('Login error:', error);
+                console.error("Login error:", error);
                 if (error instanceof custom_error_1.CustomError) {
                     throw error;
                 }
@@ -116,12 +116,12 @@ let ServiceDetails = class ServiceDetails {
         return d.toTimeString().substring(0, 5);
     }
     timeToMinutes(time) {
-        const [h, m] = time.split(':').map(Number);
+        const [h, m] = time.split(":").map(Number);
         return h * 60 + m;
     }
     getWorkerAvailablity(workerId) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f, _g, _h;
+            var _a, _b, _c, _d, _e, _f, _g;
             try {
                 // 1) Working details
                 let details = yield this._workingDetails.findByWorkerId(workerId);
@@ -129,26 +129,10 @@ let ServiceDetails = class ServiceDetails {
                     return {
                         status: 404,
                         success: false,
-                        message: 'Working details not found',
+                        message: "Working details not found",
                     };
                 }
-                // 2) Apply week rotation if needed (prefer non-destructive rotation)
-                const daysOfWeek = [
-                    'Sunday',
-                    'Monday',
-                    'Tuesday',
-                    'Wednesday',
-                    'Thursday',
-                    'Friday',
-                    'Saturday',
-                ];
                 const today = new Date();
-                const todayName = daysOfWeek[today.getDay()];
-                if (details.weekStartDay && todayName !== details.weekStartDay) {
-                    details = (yield this._workingHelper.rotateDayShedule(String(details._id)));
-                }
-                const rotatedDays = (_a = details.days) !== null && _a !== void 0 ? _a : [];
-                // 3) Batch fetch bookings in one range query for next 7 days
                 const startBounds = (0, time_Intervals_1.dayBounds)(today).start;
                 const endBounds = new Date(startBounds);
                 endBounds.setDate(endBounds.getDate() + 7); // exclusive upper bound
@@ -162,14 +146,14 @@ let ServiceDetails = class ServiceDetails {
                         bookingsByKey.set(dk, []);
                     bookingsByKey.get(dk).push({
                         startTime: b.startTime,
-                        endTime: (_b = b.endTime) !== null && _b !== void 0 ? _b : null,
+                        endTime: (_a = b.endTime) !== null && _a !== void 0 ? _a : null,
                         advancePaymentStatus: b.advancePaymentStatus,
                     });
                 }
                 // 5) Pre-index holidays & custom slots for O(1) lookup
-                const holidaysSet = new Set(((_c = details.holidays) !== null && _c !== void 0 ? _c : []).map((h) => (0, time_Intervals_1.dateKey)(h.date)));
+                const holidaysSet = new Set(((_b = details.holidays) !== null && _b !== void 0 ? _b : []).map((h) => (0, time_Intervals_1.dateKey)(h.date)));
                 const customByKey = new Map();
-                for (const cs of (_d = details.customSlots) !== null && _d !== void 0 ? _d : []) {
+                for (const cs of (_c = details.customSlots) !== null && _c !== void 0 ? _c : []) {
                     const dk = (0, time_Intervals_1.dateKey)(cs.date);
                     if (!customByKey.has(dk))
                         customByKey.set(dk, []);
@@ -184,7 +168,10 @@ let ServiceDetails = class ServiceDetails {
                     target.setDate(startBounds.getDate() + i);
                     const dk = (0, time_Intervals_1.dateKey)(target);
                     // Find schedule for this day (safe modulo)
-                    const daySchedule = rotatedDays[i % 7];
+                    const targetDayName = target.toLocaleString("en-US", {
+                        weekday: "long",
+                    });
+                    const daySchedule = details.days.find((d) => d.day === targetDayName);
                     const isHoliday = holidaysSet.has(dk);
                     // ---- Base availability: union(working hours, custom slots) ----
                     let base = [];
@@ -195,7 +182,7 @@ let ServiceDetails = class ServiceDetails {
                             end: (0, time_Intervals_1.toMinutes)(daySchedule.endTime),
                         });
                         // Custom slots for that day (additional availability)
-                        for (const cs of (_e = customByKey.get(dk)) !== null && _e !== void 0 ? _e : []) {
+                        for (const cs of (_d = customByKey.get(dk)) !== null && _d !== void 0 ? _d : []) {
                             base.push({
                                 start: (0, time_Intervals_1.toMinutes)(cs.startTime),
                                 end: (0, time_Intervals_1.toMinutes)(cs.endTime),
@@ -205,14 +192,14 @@ let ServiceDetails = class ServiceDetails {
                         base = (0, time_Intervals_1.mergeIntervals)(base.filter((iv) => iv.end > iv.start));
                     }
                     // Breaks
-                    const breakCuts = ((_f = daySchedule === null || daySchedule === void 0 ? void 0 : daySchedule.breaks) !== null && _f !== void 0 ? _f : [])
+                    const breakCuts = ((_e = daySchedule === null || daySchedule === void 0 ? void 0 : daySchedule.breaks) !== null && _e !== void 0 ? _e : [])
                         .map((b) => ({
                         start: (0, time_Intervals_1.toMinutes)(b.breakStart),
                         end: (0, time_Intervals_1.toMinutes)(b.breakEnd),
                     }))
                         .filter((iv) => iv.end > iv.start);
                     // Booked cuts (with 60-min buffer rule for advance-paid bookings with no endTime)
-                    const bookedCuts = ((_g = bookingsByKey.get(dk)) !== null && _g !== void 0 ? _g : [])
+                    const bookedCuts = ((_f = bookingsByKey.get(dk)) !== null && _f !== void 0 ? _f : [])
                         .map((b) => {
                         const s = (0, time_Intervals_1.toMinutes)(b.startTime);
                         // Case 1: If endTime exists, use it as-is.
@@ -221,7 +208,7 @@ let ServiceDetails = class ServiceDetails {
                             return { start: s, end: e };
                         }
                         // Case 2: No endTime, advance paid -> block 60 min buffer.
-                        if (b.advancePaymentStatus === 'paid') {
+                        if (b.advancePaymentStatus === "paid") {
                             return { start: s, end: s + 60 };
                         }
                         // Case 3: No endTime, advance not paid -> ignore (no block).
@@ -231,15 +218,26 @@ let ServiceDetails = class ServiceDetails {
                     // Available after subtracting breaks & booked
                     let available = (0, time_Intervals_1.subtractIntervals)(base, breakCuts);
                     available = (0, time_Intervals_1.subtractIntervals)(available, bookedCuts);
+                    const todayKey = (0, time_Intervals_1.dateKey)(new Date());
+                    if (dk === todayKey) {
+                        const now = new Date();
+                        const currentMinutes = now.getHours() * 60 + now.getMinutes() + 60; // 1 hour buffer
+                        available = (0, time_Intervals_1.subtractIntervals)(available, [
+                            {
+                                start: 0,
+                                end: currentMinutes,
+                            },
+                        ]);
+                    }
                     // Build full labeled 00:00–24:00 timeline with priorities
                     const labeled = (0, time_Intervals_1.buildLabeledTimeline)(available, breakCuts, bookedCuts);
                     // Enabled if not holiday, schedule enabled, and has some available segment
-                    const enabled = !isHoliday
-                        && !!(daySchedule === null || daySchedule === void 0 ? void 0 : daySchedule.enabled)
-                        && labeled.some((x) => x.status === 'available');
+                    const enabled = !isHoliday &&
+                        !!(daySchedule === null || daySchedule === void 0 ? void 0 : daySchedule.enabled) &&
+                        labeled.some((x) => x.status === "available");
                     results.push({
                         date: dk,
-                        day: (_h = daySchedule === null || daySchedule === void 0 ? void 0 : daySchedule.day) !== null && _h !== void 0 ? _h : target.toLocaleString('en-US', { weekday: 'long' }),
+                        day: (_g = daySchedule === null || daySchedule === void 0 ? void 0 : daySchedule.day) !== null && _g !== void 0 ? _g : target.toLocaleString("en-US", { weekday: "long" }),
                         enabled,
                         availableTimes: labeled.map((seg) => ({
                             start: (0, time_Intervals_1.fromMinutes)(seg.start),
@@ -248,11 +246,12 @@ let ServiceDetails = class ServiceDetails {
                         })),
                     });
                 }
+                console.log(...results);
                 // 7) Return final payload
                 return {
                     status: 200,
                     success: true,
-                    message: 'Availability fetched successfully',
+                    message: "Availability fetched successfully",
                     data: { dates: results },
                 };
             }
@@ -261,7 +260,7 @@ let ServiceDetails = class ServiceDetails {
                 return {
                     status: 500,
                     success: false,
-                    message: 'Failed to fetch availability',
+                    message: "Failed to fetch availability",
                 };
             }
         });
@@ -273,7 +272,7 @@ let ServiceDetails = class ServiceDetails {
                 if (!worker) {
                     return {
                         success: false,
-                        message: 'Worker not found',
+                        message: "Worker not found",
                         data: null,
                     };
                 }
@@ -282,14 +281,14 @@ let ServiceDetails = class ServiceDetails {
                 const response = Object.assign(Object.assign({}, worker.toObject()), { avgRating: ratingSummary.avgRating, totalReviews: ratingSummary.totalReviews, recentReviews: reviews });
                 return {
                     success: true,
-                    message: 'Worker profile fetched successfully',
+                    message: "Worker profile fetched successfully",
                     data: response,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'Failed to fetch worker profile',
+                    message: "Failed to fetch worker profile",
                     data: null,
                 };
             }

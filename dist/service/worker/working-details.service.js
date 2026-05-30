@@ -23,7 +23,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkingDetailsManagement = void 0;
 const tsyringe_1 = require("tsyringe");
-const date_fns_1 = require("date-fns");
 const types_1 = require("../../config/constants/types");
 const message_1 = require("../../config/constants/message");
 const custom_error_1 = require("../../utils/custom-error");
@@ -61,12 +60,12 @@ let WorkingDetailsManagement = class WorkingDetailsManagement {
                     ...daysOfWeek.slice(0, today),
                 ];
                 const defaultDays = dayOrder.map((day, i) => {
-                    const date = (0, date_fns_1.addDays)(new Date(), i);
+                    // const date = addDays(new Date(), i);
                     const startTime = "09:00";
                     const endTime = "17:00";
                     return {
                         day,
-                        date,
+                        // date,
                         enabled: false,
                         startTime,
                         endTime,

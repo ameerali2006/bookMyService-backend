@@ -20,7 +20,7 @@ const BreakSchema = new mongoose_1.Schema({
 const DayScheduleSchema = new mongoose_1.Schema({
     day: { type: String, required: true },
     enabled: { type: Boolean, default: true },
-    date: { type: Date },
+    // date: { type: Date },
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     breaks: { type: [BreakSchema], default: [] },

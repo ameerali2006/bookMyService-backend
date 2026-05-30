@@ -42,12 +42,12 @@ class WorkerMapper {
     static toAllWorkerBookingDto(booking) {
         var _a, _b, _c, _d, _e, _f;
         const { _id } = booking;
-        const { _id: userId } = booking.userId;
+        const { _id: userId } = booking.user._id;
         return {
             id: _id.toString(),
             userId: userId.toString(),
-            userName: booking.userId.name,
-            serviceName: booking.serviceId.category,
+            userName: booking.user.name,
+            serviceName: booking.service.category,
             date: booking.date.toISOString().split('T')[0],
             time: booking.startTime,
             address: typeof booking.address === 'string'

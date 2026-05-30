@@ -67,13 +67,13 @@ export class WorkingDetailsManagement implements IWorkingDetailsManagement {
       ];
 
       const defaultDays = dayOrder.map((day, i) => {
-        const date = addDays(new Date(), i);
+        // const date = addDays(new Date(), i);
         const startTime = "09:00";
         const endTime = "17:00";
 
         return {
           day,
-          date,
+          // date,
           enabled: false,
           startTime,
           endTime,

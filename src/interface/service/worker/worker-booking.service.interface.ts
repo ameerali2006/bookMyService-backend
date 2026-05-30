@@ -11,8 +11,15 @@ import {
   reachedCustomerLocationResponseDto,
   workerComplateWorkResponseDto,
 } from '../../../dto/worker/working-details.dto';
-import { IBookingPopulated } from '../../model/booking.model.interface';
-
+import { IAddress } from '../../model/address.model.interface';
+import { IBooking, IBookingPopulated } from '../../model/booking.model.interface';
+import { IService } from '../../model/service.model.interface';
+import { IUser } from '../../model/user.model.interface';
+export interface IBookingWorkerListItem extends Omit<IBooking, "userId" | "serviceId"|"address"> {
+  user: IUser;
+  service: IService;
+  address: IAddress;
+}
 export interface serviceData {
   bookingId: string;
   serviceName: string;

@@ -350,7 +350,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
     getAllBookings(params) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c, _d;
-            const { search = "", status, service, page = 1, limit = 10, } = params;
+            const { search = "", status, service, page = 1, limit = 10 } = params;
             const skip = (page - 1) * limit;
             // Base match stage
             const matchStage = {};
@@ -449,9 +449,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                         { $skip: skip },
                         { $limit: limit },
                     ],
-                    totalCount: [
-                        { $count: "count" },
-                    ],
+                    totalCount: [{ $count: "count" }],
                 },
             });
             const result = yield booking_model_1.Booking.aggregate(pipeline);
@@ -467,54 +465,105 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
     }
     allBookingList(params) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e, _f;
             const { workerId, page, limit, search, statuses, workerResponses, from, to, } = params;
-            const query = {
-                workerId,
+            const match = {
+                workerId: new mongoose_1.Types.ObjectId(workerId),
             };
-            if (search && search.trim() !== "") {
-                query.$or = [
-                    { "userId.name": { $regex: search, $options: "i" } },
-                    { "serviceId.category": { $regex: search, $options: "i" } },
-                    { "address.city": { $regex: search, $options: "i" } },
-                    { "address.street": { $regex: search, $options: "i" } },
-                    { "address.buildingName": { $regex: search, $options: "i" } },
-                    { "address.area": { $regex: search, $options: "i" } },
-                ];
+            if (statuses === null || statuses === void 0 ? void 0 : statuses.length) {
+                match.status = { $in: statuses };
             }
-            if (statuses && statuses.length > 0) {
-                query.status = { $in: statuses };
-            }
-            if (workerResponses && workerResponses.length > 0) {
-                query.workerResponse = { $in: workerResponses };
+            if (workerResponses === null || workerResponses === void 0 ? void 0 : workerResponses.length) {
+                match.workerResponse = { $in: workerResponses };
             }
             if (from || to) {
-                query.date = {};
+                match.date = {};
                 if (from) {
                     const start = new Date(from);
                     start.setHours(0, 0, 0, 0);
-                    query.date.$gte = start;
+                    match.date.$gte = start;
                 }
                 if (to) {
                     const end = new Date(to);
                     end.setHours(23, 59, 59, 999);
-                    query.date.$lte = end;
+                    match.date.$lte = end;
                 }
             }
+            const searchMatch = (search === null || search === void 0 ? void 0 : search.trim())
+                ? {
+                    $or: [
+                        { "user.name": { $regex: search, $options: "i" } },
+                        { "service.category": { $regex: search, $options: "i" } },
+                        { "address.city": { $regex: search, $options: "i" } },
+                        { "address.street": { $regex: search, $options: "i" } },
+                        { "address.buildingName": { $regex: search, $options: "i" } },
+                        { "address.area": { $regex: search, $options: "i" } },
+                    ],
+                }
+                : {};
             const skip = (page - 1) * limit;
-            console.log(query);
-            const [items, total] = yield Promise.all([
-                booking_model_1.Booking.find(query)
-                    .populate("userId", "name phone")
-                    .populate("serviceId", "category")
-                    .populate("address")
-                    .sort({ date: -1, startTime: 1 })
-                    .skip(skip)
-                    .limit(limit)
-                    .lean(),
-                booking_model_1.Booking.countDocuments(query),
-            ]);
-            console.log(items);
-            return { items, total };
+            const pipeline = [
+                { $match: match },
+                {
+                    $lookup: {
+                        from: "users",
+                        localField: "userId",
+                        foreignField: "_id",
+                        as: "user",
+                    },
+                },
+                {
+                    $unwind: {
+                        path: "$user",
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "services",
+                        localField: "serviceId",
+                        foreignField: "_id",
+                        as: "service",
+                    },
+                },
+                {
+                    $unwind: {
+                        path: "$service",
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "addresses",
+                        localField: "address",
+                        foreignField: "_id",
+                        as: "address",
+                    },
+                },
+                {
+                    $unwind: {
+                        path: "$address",
+                        preserveNullAndEmptyArrays: true,
+                    },
+                },
+                ...(search ? [{ $match: searchMatch }] : []),
+                {
+                    $facet: {
+                        items: [
+                            { $sort: { date: -1, startTime: 1 } },
+                            { $skip: skip },
+                            { $limit: limit },
+                        ],
+                        total: [{ $count: "count" }],
+                    },
+                },
+            ];
+            const result = yield booking_model_1.Booking.aggregate(pipeline);
+            console.log(JSON.stringify(result[0], null, 2));
+            return {
+                items: (_b = (_a = result[0]) === null || _a === void 0 ? void 0 : _a.items) !== null && _b !== void 0 ? _b : [],
+                total: (_f = (_e = (_d = (_c = result[0]) === null || _c === void 0 ? void 0 : _c.total) === null || _d === void 0 ? void 0 : _d[0]) === null || _e === void 0 ? void 0 : _e.count) !== null && _f !== void 0 ? _f : 0,
+            };
         });
     }
     getWorkerDashboardStats(workerId) {

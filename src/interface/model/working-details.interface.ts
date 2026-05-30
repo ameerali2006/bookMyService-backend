@@ -18,7 +18,7 @@ export enum WeekDay {
 export interface IDaySchedule {
   day: WeekDay;
   enabled: boolean;
-  date:Date
+  // date:Date
   startTime: string;
   endTime: string;
   breaks: IBreak[];

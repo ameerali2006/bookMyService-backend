@@ -1,17 +1,17 @@
-import { inject, injectable } from 'tsyringe';
-import { IWorker } from '../../interface/model/worker.model.interface';
-import { IServiceDetails } from '../../interface/service/services/Service-details.service.interface';
-import { TYPES } from '../../config/constants/types';
-import { IWorkerAggregation } from '../../interface/repository/worker-aggregation.repository.interface';
-import { serviceCreateDto } from '../../dto/admin/management.dto';
-import { STATUS_CODES } from '../../config/constants/status-code';
-import { CustomError } from '../../utils/custom-error';
-import { MESSAGES } from '../../config/constants/message';
-import { IServiceRepository } from '../../interface/repository/service.repository.interface';
-import { IWorkingDetailsRepository } from '../../interface/repository/working-details.interface';
-import { IBookingRepository } from '../../interface/repository/booking.repository.interface';
-import { IWorkingHelper } from '../../interface/service/working-helper.service.interface';
-import { IWorkingDetails } from '../../interface/model/working-details.interface';
+import { inject, injectable } from "tsyringe";
+import { IWorker } from "../../interface/model/worker.model.interface";
+import { IServiceDetails } from "../../interface/service/services/Service-details.service.interface";
+import { TYPES } from "../../config/constants/types";
+import { IWorkerAggregation } from "../../interface/repository/worker-aggregation.repository.interface";
+import { serviceCreateDto } from "../../dto/admin/management.dto";
+import { STATUS_CODES } from "../../config/constants/status-code";
+import { CustomError } from "../../utils/custom-error";
+import { MESSAGES } from "../../config/constants/message";
+import { IServiceRepository } from "../../interface/repository/service.repository.interface";
+import { IWorkingDetailsRepository } from "../../interface/repository/working-details.interface";
+import { IBookingRepository } from "../../interface/repository/booking.repository.interface";
+import { IWorkingHelper } from "../../interface/service/working-helper.service.interface";
+import { IWorkingDetails } from "../../interface/model/working-details.interface";
 import {
   buildLabeledTimeline,
   dateKey,
@@ -22,14 +22,14 @@ import {
   mergeIntervals,
   subtractIntervals,
   toMinutes,
-} from '../../utils/time&Intervals';
+} from "../../utils/time&Intervals";
 import {
   IWorkerListItem,
   IWorkerProfileResponse,
-} from '../../dto/user/worker-listing-home.dto';
+} from "../../dto/user/worker-listing-home.dto";
 
-import { IReviewRepository } from '../../interface/repository/review.repository.interface';
-import { IWorkerRepository } from '../../interface/repository/worker.repository.interface';
+import { IReviewRepository } from "../../interface/repository/review.repository.interface";
+import { IWorkerRepository } from "../../interface/repository/worker.repository.interface";
 
 @injectable()
 export class ServiceDetails implements IServiceDetails {
@@ -59,7 +59,7 @@ export class ServiceDetails implements IServiceDetails {
   }> {
     try {
       if (!lat || !lng || !serviceId) {
-        throw new Error('Latitude, longitude and serviceId are required');
+        throw new Error("Latitude, longitude and serviceId are required");
       }
       console.log({
         serviceId,
@@ -82,12 +82,12 @@ export class ServiceDetails implements IServiceDetails {
 
       console.log(data);
       if (!data) {
-        return { success: false, message: 'Worker not Found', data: null };
+        return { success: false, message: "Worker not Found", data: null };
       }
-      return { success: true, message: 'Data fetched Successfully', data };
+      return { success: true, message: "Data fetched Successfully", data };
     } catch (error) {
       console.error(error);
-      return { success: false, message: 'Worker not Found', data: null };
+      return { success: false, message: "Worker not Found", data: null };
     }
   }
 
@@ -106,7 +106,7 @@ export class ServiceDetails implements IServiceDetails {
         return {
           status: STATUS_CODES.BAD_REQUEST,
           success: false,
-          message: 'Latitude and longitude are required',
+          message: "Latitude and longitude are required",
         };
       }
       console.log({ lat, lng, maxDistance });
@@ -122,21 +122,22 @@ export class ServiceDetails implements IServiceDetails {
         return {
           status: STATUS_CODES.OK,
           success: true,
-          message: 'No services found nearby',
+          message: "No services found nearby",
           services: [],
         };
       }
 
-      const services = await this._serviceRepo.findActiveServicesByIds(serviceIds);
+      const services =
+        await this._serviceRepo.findActiveServicesByIds(serviceIds);
 
       return {
         status: STATUS_CODES.OK,
         success: true,
-        message: 'Nearby services found',
+        message: "Nearby services found",
         services,
       };
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
 
       if (error instanceof CustomError) {
         throw error;
@@ -160,7 +161,7 @@ export class ServiceDetails implements IServiceDetails {
   }
 
   private timeToMinutes(time: string) {
-    const [h, m] = time.split(':').map(Number);
+    const [h, m] = time.split(":").map(Number);
     return h * 60 + m;
   }
 
@@ -176,7 +177,7 @@ export class ServiceDetails implements IServiceDetails {
         availableTimes: {
           start: string;
           end: string;
-          status: 'available' | 'unavailable' | 'break' | 'booked';
+          status: "available" | "unavailable" | "break" | "booked";
         }[];
       }[];
     };
@@ -188,31 +189,11 @@ export class ServiceDetails implements IServiceDetails {
         return {
           status: 404,
           success: false,
-          message: 'Working details not found',
+          message: "Working details not found",
         };
       }
 
-      // 2) Apply week rotation if needed (prefer non-destructive rotation)
-      const daysOfWeek = [
-        'Sunday',
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-      ];
       const today = new Date();
-      const todayName = daysOfWeek[today.getDay()];
-      if (details.weekStartDay && todayName !== details.weekStartDay) {
-        details = (await this._workingHelper.rotateDayShedule(
-          String(details._id),
-        )) as typeof details;
-      }
-
-      const rotatedDays = details.days ?? [];
-
-      // 3) Batch fetch bookings in one range query for next 7 days
       const startBounds = dayBounds(today).start;
       const endBounds = new Date(startBounds);
       endBounds.setDate(endBounds.getDate() + 7); // exclusive upper bound
@@ -222,7 +203,7 @@ export class ServiceDetails implements IServiceDetails {
         date: Date;
         startTime: string;
         endTime?: string | null;
-        advancePaymentStatus?: 'unpaid' | 'paid' | 'failed' | 'refunded';
+        advancePaymentStatus?: "unpaid" | "paid" | "failed" | "refunded";
       }> = await this._booking.findByWorkerAndRange(
         workerId,
         startBounds,
@@ -235,7 +216,7 @@ export class ServiceDetails implements IServiceDetails {
         Array<{
           startTime: string;
           endTime?: string | null;
-          advancePaymentStatus?: 'unpaid' | 'paid' | 'failed' | 'refunded';
+          advancePaymentStatus?: "unpaid" | "paid" | "failed" | "refunded";
         }>
       >();
 
@@ -283,7 +264,11 @@ export class ServiceDetails implements IServiceDetails {
         const dk = dateKey(target);
 
         // Find schedule for this day (safe modulo)
-        const daySchedule = rotatedDays[i % 7];
+        const targetDayName = target.toLocaleString("en-US", {
+          weekday: "long",
+        });
+
+        const daySchedule = details.days.find((d) => d.day === targetDayName);
         const isHoliday = holidaysSet.has(dk);
 
         // ---- Base availability: union(working hours, custom slots) ----
@@ -327,7 +312,7 @@ export class ServiceDetails implements IServiceDetails {
             }
 
             // Case 2: No endTime, advance paid -> block 60 min buffer.
-            if (b.advancePaymentStatus === 'paid') {
+            if (b.advancePaymentStatus === "paid") {
               return { start: s, end: s + 60 };
             }
 
@@ -339,20 +324,35 @@ export class ServiceDetails implements IServiceDetails {
         // Available after subtracting breaks & booked
         let available = subtractIntervals(base, breakCuts);
         available = subtractIntervals(available, bookedCuts);
+        const todayKey = dateKey(new Date());
+
+        if (dk === todayKey) {
+          const now = new Date();
+
+          const currentMinutes = now.getHours() * 60 + now.getMinutes() + 60; // 1 hour buffer
+
+          available = subtractIntervals(available, [
+            {
+              start: 0,
+              end: currentMinutes,
+            },
+          ]);
+        }
 
         // Build full labeled 00:00–24:00 timeline with priorities
         const labeled = buildLabeledTimeline(available, breakCuts, bookedCuts);
 
         // Enabled if not holiday, schedule enabled, and has some available segment
-        const enabled = !isHoliday
-          && !!daySchedule?.enabled
-          && labeled.some((x) => x.status === 'available');
+        const enabled =
+          !isHoliday &&
+          !!daySchedule?.enabled &&
+          labeled.some((x) => x.status === "available");
 
         results.push({
           date: dk,
           day:
-            daySchedule?.day
-            ?? target.toLocaleString('en-US', { weekday: 'long' }),
+            daySchedule?.day ??
+            target.toLocaleString("en-US", { weekday: "long" }),
           enabled,
           availableTimes: labeled.map((seg) => ({
             start: fromMinutes(seg.start),
@@ -361,12 +361,12 @@ export class ServiceDetails implements IServiceDetails {
           })),
         });
       }
-
+      console.log(...results);
       // 7) Return final payload
       return {
         status: 200,
         success: true,
-        message: 'Availability fetched successfully',
+        message: "Availability fetched successfully",
         data: { dates: results },
       };
     } catch (err) {
@@ -374,7 +374,7 @@ export class ServiceDetails implements IServiceDetails {
       return {
         status: 500,
         success: false,
-        message: 'Failed to fetch availability',
+        message: "Failed to fetch availability",
       };
     }
   }
@@ -390,14 +390,15 @@ export class ServiceDetails implements IServiceDetails {
       if (!worker) {
         return {
           success: false,
-          message: 'Worker not found',
+          message: "Worker not found",
           data: null,
         };
       }
 
       const reviews = await this._reviewRepo.getRecentReviewsByWorker(workerId);
 
-      const ratingSummary = await this._reviewRepo.getWorkerRatingSummary(workerId);
+      const ratingSummary =
+        await this._reviewRepo.getWorkerRatingSummary(workerId);
 
       const response: IWorkerProfileResponse = {
         ...worker.toObject(),
@@ -408,13 +409,13 @@ export class ServiceDetails implements IServiceDetails {
 
       return {
         success: true,
-        message: 'Worker profile fetched successfully',
+        message: "Worker profile fetched successfully",
         data: response,
       };
     } catch (error) {
       return {
         success: false,
-        message: 'Failed to fetch worker profile',
+        message: "Failed to fetch worker profile",
         data: null,
       };
     }

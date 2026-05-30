@@ -376,241 +376,227 @@ export class BookingRepository
     return { items, total };
   }
 
-//   async getAllBookings(params: {
-//     search?: string;
-//     status?: string;
-//     service?: string;
-//     limit?: number;
-//     page?: number;
-//   }): Promise<{
-//     data: IBookingPopulated[];
-//     total: number;
-//     page: number;
-//     limit: number;
-//   }> {
-//     const { search, status, service, page = 1, limit = 10 } = params;
+  //   async getAllBookings(params: {
+  //     search?: string;
+  //     status?: string;
+  //     service?: string;
+  //     limit?: number;
+  //     page?: number;
+  //   }): Promise<{
+  //     data: IBookingPopulated[];
+  //     total: number;
+  //     page: number;
+  //     limit: number;
+  //   }> {
+  //     const { search, status, service, page = 1, limit = 10 } = params;
 
-//     const query: FilterQuery<IBooking> = {};
+  //     const query: FilterQuery<IBooking> = {};
 
-//     // Status filter
-//     if (status && status !== "all") {
-//       query.status = status;
-//     }
+  //     // Status filter
+  //     if (status && status !== "all") {
+  //       query.status = status;
+  //     }
 
-//     // Search filter
-//     if (search || service) {
-//       query.$or = [];
-//       console.log("Search is : ",search)
-//       // Global search
-//       if (search) {
-//         query.$or.push(
-//           { "userId.name": { $regex: search, $options: "i" } },
-//           { "workerId.name": { $regex: search, $options: "i" } },
-//           { "serviceId.category": { $regex: search, $options: "i" } },
-//         );
-//       }
+  //     // Search filter
+  //     if (search || service) {
+  //       query.$or = [];
+  //       console.log("Search is : ",search)
+  //       // Global search
+  //       if (search) {
+  //         query.$or.push(
+  //           { "userId.name": { $regex: search, $options: "i" } },
+  //           { "workerId.name": { $regex: search, $options: "i" } },
+  //           { "serviceId.category": { $regex: search, $options: "i" } },
+  //         );
+  //       }
 
-//       // Service filter
-     
-//     }
-//     console.log("Query : ",query)
-//     const skip = (page - 1) * limit;
+  //       // Service filter
 
-//     const [data, total] = await Promise.all([
-//       Booking.find(query)
-//         .populate("userId")
-//         .populate("workerId")
-//         .populate("serviceId")
-//         .populate("address")
-//         .sort({ createdAt: -1 })
-//         .skip(skip)
-//         .limit(limit)
-//         .lean<IBookingPopulated[]>(),
+  //     }
+  //     console.log("Query : ",query)
+  //     const skip = (page - 1) * limit;
 
-//       Booking.countDocuments(query),
-//     ]);
-// console.log("response : ", {
-//   data,
-//   total,
-//   page,
-//   limit,
-// })
-//     return {
-//       data,
-//       total,
-//       page,
-//       limit,
-//     };
-//   }
+  //     const [data, total] = await Promise.all([
+  //       Booking.find(query)
+  //         .populate("userId")
+  //         .populate("workerId")
+  //         .populate("serviceId")
+  //         .populate("address")
+  //         .sort({ createdAt: -1 })
+  //         .skip(skip)
+  //         .limit(limit)
+  //         .lean<IBookingPopulated[]>(),
 
+  //       Booking.countDocuments(query),
+  //     ]);
+  // console.log("response : ", {
+  //   data,
+  //   total,
+  //   page,
+  //   limit,
+  // })
+  //     return {
+  //       data,
+  //       total,
+  //       page,
+  //       limit,
+  //     };
+  //   }
 
   async getAllBookings(params: {
-  search?: string;
-  status?: string;
-  service?: string;
-  limit?: number;
-  page?: number;
-}): Promise<{
-  data: IBookingPopulated[];
-  total: number;
-  page: number;
-  limit: number;
-}> {
-  const {
-    search = "",
-    status,
-    service,
-    page = 1,
-    limit = 10,
-  } = params;
-
-  const skip = (page - 1) * limit;
-
-  // Base match stage
-  const matchStage: Record<string, unknown> = {};
-
-  if (status && status !== "all") {
-    matchStage.status = status;
-  }
-
-  // Search conditions after lookup
-  const searchConditions: Record<string, unknown>[] = [];
-
-  if (search) {
-    searchConditions.push(
-      { "userId.name": { $regex: search, $options: "i" } },
-      { "workerId.name": { $regex: search, $options: "i" } },
-      { "serviceId.category": { $regex: search, $options: "i" } }
-    );
-  }
-
-  // Separate service filter
-  if (service) {
-    searchConditions.push({
-      "serviceId.category": { $regex: service, $options: "i" },
-    });
-  }
-
-  // Aggregation pipeline
-  const pipeline: PipelineStage[]  = [
-    // Match booking fields first
-    { $match: matchStage },
-
-    // Lookup user
-    {
-      $lookup: {
-        from: "users",
-        localField: "userId",
-        foreignField: "_id",
-        as: "userId",
-      },
-    },
-    {
-      $unwind: {
-        path: "$userId",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-
-    // Lookup worker
-    {
-      $lookup: {
-        from: "workers",
-        localField: "workerId",
-        foreignField: "_id",
-        as: "workerId",
-      },
-    },
-    {
-      $unwind: {
-        path: "$workerId",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-
-    // Lookup service
-    {
-      $lookup: {
-        from: "services",
-        localField: "serviceId",
-        foreignField: "_id",
-        as: "serviceId",
-      },
-    },
-    {
-      $unwind: {
-        path: "$serviceId",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-
-    // Lookup address
-    {
-      $lookup: {
-        from: "addresses",
-        localField: "address",
-        foreignField: "_id",
-        as: "addressId",
-      },
-    },
-    {
-      $unwind: {
-        path: "$addressId",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-  ];
-
-  // Apply search after lookups
-  if (searchConditions.length > 0) {
-    pipeline.push({
-      $match: {
-        $or: searchConditions,
-      },
-    });
-  }
-
-  // Get paginated data and total count in one query
-  pipeline.push({
-    $facet: {
-      data: [
-        { $sort: { createdAt: -1 } },
-        { $skip: skip },
-        { $limit: limit },
-      ],
-      totalCount: [
-        { $count: "count" },
-      ],
-    },
-  });
-
-  const result = await Booking.aggregate(pipeline);
-
-  const data = (result[0]?.data || []) as IBookingPopulated[];
-  const total = result[0]?.totalCount?.[0]?.count || 0;
-
-  return {
-    data,
-    total,
-    page,
-    limit,
-  };
-}
-  async allBookingList(params: {
-    workerId: string;
-
+    search?: string;
+    status?: string;
+    service?: string;
+    limit?: number;
+    page?: number;
+  }): Promise<{
+    data: IBookingPopulated[];
+    total: number;
     page: number;
     limit: number;
+  }> {
+    const { search = "", status, service, page = 1, limit = 10 } = params;
 
+    const skip = (page - 1) * limit;
+
+    // Base match stage
+    const matchStage: Record<string, unknown> = {};
+
+    if (status && status !== "all") {
+      matchStage.status = status;
+    }
+
+    // Search conditions after lookup
+    const searchConditions: Record<string, unknown>[] = [];
+
+    if (search) {
+      searchConditions.push(
+        { "userId.name": { $regex: search, $options: "i" } },
+        { "workerId.name": { $regex: search, $options: "i" } },
+        { "serviceId.category": { $regex: search, $options: "i" } },
+      );
+    }
+
+    // Separate service filter
+    if (service) {
+      searchConditions.push({
+        "serviceId.category": { $regex: service, $options: "i" },
+      });
+    }
+
+    // Aggregation pipeline
+    const pipeline: PipelineStage[] = [
+      // Match booking fields first
+      { $match: matchStage },
+
+      // Lookup user
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "userId",
+        },
+      },
+      {
+        $unwind: {
+          path: "$userId",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      // Lookup worker
+      {
+        $lookup: {
+          from: "workers",
+          localField: "workerId",
+          foreignField: "_id",
+          as: "workerId",
+        },
+      },
+      {
+        $unwind: {
+          path: "$workerId",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      // Lookup service
+      {
+        $lookup: {
+          from: "services",
+          localField: "serviceId",
+          foreignField: "_id",
+          as: "serviceId",
+        },
+      },
+      {
+        $unwind: {
+          path: "$serviceId",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      // Lookup address
+      {
+        $lookup: {
+          from: "addresses",
+          localField: "address",
+          foreignField: "_id",
+          as: "addressId",
+        },
+      },
+      {
+        $unwind: {
+          path: "$addressId",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ];
+
+    // Apply search after lookups
+    if (searchConditions.length > 0) {
+      pipeline.push({
+        $match: {
+          $or: searchConditions,
+        },
+      });
+    }
+
+    // Get paginated data and total count in one query
+    pipeline.push({
+      $facet: {
+        data: [
+          { $sort: { createdAt: -1 } },
+          { $skip: skip },
+          { $limit: limit },
+        ],
+        totalCount: [{ $count: "count" }],
+      },
+    });
+
+    const result = await Booking.aggregate(pipeline);
+
+    const data = (result[0]?.data || []) as IBookingPopulated[];
+    const total = result[0]?.totalCount?.[0]?.count || 0;
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
+  }
+  async allBookingList(params: {
+    workerId: string;
+    page: number;
+    limit: number;
     search?: string;
     statuses?: string[];
     workerResponses?: string[];
     from?: Date;
     to?: Date;
-  }): Promise<{
-    items: IBookingPopulated[];
-    total: number;
-  }> {
+  }) {
     const {
       workerId,
       page,
@@ -622,63 +608,120 @@ export class BookingRepository
       to,
     } = params;
 
-    const query: FilterQuery<IBooking> = {
-      workerId,
+    const match: Record<string, any> = {
+      workerId: new Types.ObjectId(workerId),
     };
 
-    if (search && search.trim() !== "") {
-      query.$or = [
-        { "userId.name": { $regex: search, $options: "i" } },
-        { "serviceId.category": { $regex: search, $options: "i" } },
-        { "address.city": { $regex: search, $options: "i" } },
-        { "address.street": { $regex: search, $options: "i" } },
-        { "address.buildingName": { $regex: search, $options: "i" } },
-        { "address.area": { $regex: search, $options: "i" } },
-      ];
+    if (statuses?.length) {
+      match.status = { $in: statuses };
     }
 
-    if (statuses && statuses.length > 0) {
-      query.status = { $in: statuses };
+    if (workerResponses?.length) {
+      match.workerResponse = { $in: workerResponses };
     }
-    if (workerResponses && workerResponses.length > 0) {
-      query.workerResponse = { $in: workerResponses };
-    }
+
     if (from || to) {
-      query.date = {};
+      match.date = {};
 
       if (from) {
         const start = new Date(from);
         start.setHours(0, 0, 0, 0);
-        query.date.$gte = start;
+        match.date.$gte = start;
       }
 
       if (to) {
         const end = new Date(to);
         end.setHours(23, 59, 59, 999);
-        query.date.$lte = end;
+        match.date.$lte = end;
       }
     }
 
+    const searchMatch = search?.trim()
+      ? {
+          $or: [
+            { "user.name": { $regex: search, $options: "i" } },
+            { "service.category": { $regex: search, $options: "i" } },
+            { "address.city": { $regex: search, $options: "i" } },
+            { "address.street": { $regex: search, $options: "i" } },
+            { "address.buildingName": { $regex: search, $options: "i" } },
+            { "address.area": { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
     const skip = (page - 1) * limit;
-    console.log(query);
 
-    const [items, total] = await Promise.all([
-      Booking.find(query)
-        .populate("userId", "name phone")
-        .populate("serviceId", "category")
-        .populate("address")
-        .sort({ date: -1, startTime: 1 })
-        .skip(skip)
-        .limit(limit)
-        .lean<IBookingPopulated[]>(),
+    const pipeline: PipelineStage[] = [
+      { $match: match },
 
-      Booking.countDocuments(query),
-    ]);
-    console.log(items);
+      {
+        $lookup: {
+          from: "users",
+          localField: "userId",
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: {
+          path: "$user",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
 
-    return { items, total };
+      {
+        $lookup: {
+          from: "services",
+          localField: "serviceId",
+          foreignField: "_id",
+          as: "service",
+        },
+      },
+      {
+        $unwind: {
+          path: "$service",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      {
+        $lookup: {
+          from: "addresses",
+          localField: "address",
+          foreignField: "_id",
+          as: "address",
+        },
+      },
+      {
+        $unwind: {
+          path: "$address",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      ...(search ? [{ $match: searchMatch }] : []),
+
+      {
+        $facet: {
+          items: [
+            { $sort: { date: -1, startTime: 1 } },
+            { $skip: skip },
+            { $limit: limit },
+          ],
+          total: [{ $count: "count" }],
+        },
+      },
+      
+    ];
+
+    const result = await Booking.aggregate(pipeline);
+    console.log(JSON.stringify(result[0], null, 2));
+
+    return {
+      items: result[0]?.items ?? [],
+      total: result[0]?.total?.[0]?.count ?? 0,
+    };
   }
-
   async getWorkerDashboardStats(
     workerId: string,
   ): Promise<IWorkerDashboardRepoResult> {

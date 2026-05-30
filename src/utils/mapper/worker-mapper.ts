@@ -7,6 +7,7 @@ import {
 } from '../../dto/worker/working-details.dto';
 import { IBookingPopulated } from '../../interface/model/booking.model.interface';
 import { IWorker } from '../../interface/model/worker.model.interface';
+import { IBookingWorkerListItem } from '../../interface/service/worker/worker-booking.service.interface';
 
 type CategoryObj = { category: string };
 
@@ -95,15 +96,15 @@ export class WorkerMapper {
     };
   };
 
-  static toAllWorkerBookingDto(booking: IBookingPopulated): allBookingDto {
+  static toAllWorkerBookingDto(booking: IBookingWorkerListItem): allBookingDto {
     const { _id } = booking;
-    const { _id: userId } = booking.userId;
+    const { _id: userId } = booking.user._id;
 
     return {
       id: _id.toString(),
       userId: userId.toString(),
-      userName: booking.userId.name,
-      serviceName: booking.serviceId.category,
+      userName: booking.user.name,
+      serviceName: booking.service.category,
       date: booking.date.toISOString().split('T')[0],
       time: booking.startTime,
       address:

@@ -6,7 +6,7 @@ import {
 } from '../model/booking.model.interface';
 import { PaymentStatus } from '../model/wallet.model.interface';
 
-import { IRequestFilters } from '../service/worker/worker-booking.service.interface';
+import { IBookingWorkerListItem, IRequestFilters } from '../service/worker/worker-booking.service.interface';
 import { IBaseRepository } from './base.repository.interface';
 
 export interface IWorkerDashboardRepoResult {
@@ -131,7 +131,7 @@ export interface IBookingRepository extends IBaseRepository<IBooking> {
     from?: Date;
     to?: Date;
   }): Promise<{
-    items: IBookingPopulated[];
+    items: IBookingWorkerListItem[];
     total: number;
   }>;
   getWorkerDashboardStats(
