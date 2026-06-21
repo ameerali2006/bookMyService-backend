@@ -91,6 +91,7 @@ export class ReviewService implements IReviewService {
         message: `user give ${rating} star for your work`,
         type: 'booking',
         workerId: booking.workerId.toString(),
+        bookingId:bookingId
       });
 
       return {

@@ -174,6 +174,7 @@ export class WorkerBookingService implements IWorkerBookingService {
         message: 'worker  Approved your booking',
         type: 'booking',
         userId: booking.userId._id.toString(),
+        bookingId:bookingId
       });
 
       return { success: true, message: 'Service approved successfully' };
@@ -246,6 +247,7 @@ export class WorkerBookingService implements IWorkerBookingService {
         message: 'worker  rejected your booking',
         type: 'booking',
         userId: booking.userId.toString(),
+        bookingId,
       });
 
       return {
@@ -439,6 +441,7 @@ export class WorkerBookingService implements IWorkerBookingService {
         message: 'worker reached to your location',
         type: 'booking',
         userId: booking.booking?.userId._id.toString(),
+        bookingId:bookingid,
       });
 
       return {
@@ -499,6 +502,7 @@ export class WorkerBookingService implements IWorkerBookingService {
         message: 'worker successfully verified',
         type: 'booking',
         userId: booking.userId.toString(),
+        bookingId,
       });
 
       return {
@@ -549,6 +553,7 @@ export class WorkerBookingService implements IWorkerBookingService {
         message: ' work is complate',
         type: 'booking',
         userId: booking.userId._id.toString(),
+        bookingId,
       });
 
       return {

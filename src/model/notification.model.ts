@@ -5,7 +5,7 @@ const NotificationSchema = new Schema<INotification>(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     workerId: { type: Schema.Types.ObjectId, ref: 'Worker' },
-
+    bookingId: { type: Schema.Types.ObjectId, ref: 'Booking' },
     title: { type: String, required: true },
     message: { type: String, required: true },
 

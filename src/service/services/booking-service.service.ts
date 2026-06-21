@@ -17,6 +17,7 @@ import { IBooking } from "../../interface/model/booking.model.interface";
 import { ISlotLockRepository } from "../../interface/repository/slot-lock.repository.interface";
 import { MESSAGES } from "../../config/constants/message";
 import { IEmailService } from "../../interface/helpers/email-service.service.interface";
+import { INotificationService } from "../../interface/service/notification.service.interface";
 
 @injectable()
 export class BookingService implements IBookingService {
@@ -26,6 +27,8 @@ export class BookingService implements IBookingService {
     @inject(TYPES.SlotLockRepository)
     private _slotLockRepo: ISlotLockRepository,
     @inject(TYPES.EmailService) private _emailService: IEmailService,
+    @inject(TYPES.NotificationService)
+    private notification: INotificationService,
   ) {}
 
   async setBasicBookingDetails(
@@ -335,6 +338,12 @@ export class BookingService implements IBookingService {
         message: MESSAGES.BOOKING_NOT_FOUND,
       };
     }
+    if(booking.workerResponse=="rejected"){
+       return {
+        success: false,
+        message: "worker already rejected this booking",
+      };
+    }
     if (!["pending", "confirmed"].includes(booking.status)) {
       return {
         success: false,
@@ -351,6 +360,15 @@ export class BookingService implements IBookingService {
         message: MESSAGES.BOOKING_NOT_FOUND,
       };
     }
+    await this.notification.createNotification({
+        title: 'booking canceled',
+        message: 'user cancel the booking',
+        type: 'booking',
+        workerId: booking.workerId._id.toString(),
+        bookingId,
+      });
+
+
     await this._emailService.sendBookingCancelledEmail({
       email: booking.userId.email,
       userName: booking.userId.name,
@@ -359,9 +377,9 @@ export class BookingService implements IBookingService {
       reason,
     });
     return {
-      success:true,
-      message:MESSAGES.BOOKING_CANCELLED,
-      booking:updateBooking
-    }
+      success: true,
+      message: MESSAGES.BOOKING_CANCELLED,
+      booking: updateBooking,
+    };
   }
 }

@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const envSchema = z.object({
   PORT: z.string().min(1, 'PORT is required'),
 
-  MONGO_URI: z.string().url('MONGO_URI must be a valid MongoDB URL'),
+  MONGO_URI: z.string().min(1,'MONGO_URI must be a valid MongoDB URL'),
 
   REDIS_HOST: z.string().min(1, 'REDIS_HOST is required'),
   REDIS_PORT: z.string().regex(/^\d+$/, 'REDIS_PORT must be a number'),

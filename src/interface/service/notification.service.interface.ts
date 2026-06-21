@@ -3,6 +3,7 @@ import { INotification } from '../model/notification.model.interface';
 export interface CreateNotificationDTO {
     userId?:string
   workerId?:string
+  bookingId?:string
   title: string;
   message: string;
   type: 'booking' | 'payment' | 'review' | 'system'

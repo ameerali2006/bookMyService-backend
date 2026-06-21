@@ -5,6 +5,7 @@ const mongoose_1 = require("mongoose");
 const NotificationSchema = new mongoose_1.Schema({
     userId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User' },
     workerId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Worker' },
+    bookingId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'Booking' },
     title: { type: String, required: true },
     message: { type: String, required: true },
     type: {

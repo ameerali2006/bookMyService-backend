@@ -26,11 +26,12 @@ const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const message_1 = require("../../config/constants/message");
 let BookingService = class BookingService {
-    constructor(_bookingRepo, _workerRepo, _slotLockRepo, _emailService) {
+    constructor(_bookingRepo, _workerRepo, _slotLockRepo, _emailService, notification) {
         this._bookingRepo = _bookingRepo;
         this._workerRepo = _workerRepo;
         this._slotLockRepo = _slotLockRepo;
         this._emailService = _emailService;
+        this.notification = notification;
     }
     setBasicBookingDetails(userId, workerId, time, date, description) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -292,6 +293,12 @@ let BookingService = class BookingService {
                     message: message_1.MESSAGES.BOOKING_NOT_FOUND,
                 };
             }
+            if (booking.workerResponse == "rejected") {
+                return {
+                    success: false,
+                    message: "worker already rejected this booking",
+                };
+            }
             if (!["pending", "confirmed"].includes(booking.status)) {
                 return {
                     success: false,
@@ -305,6 +312,13 @@ let BookingService = class BookingService {
                     message: message_1.MESSAGES.BOOKING_NOT_FOUND,
                 };
             }
+            yield this.notification.createNotification({
+                title: 'booking canceled',
+                message: 'user cancel the booking',
+                type: 'booking',
+                workerId: booking.workerId._id.toString(),
+                bookingId,
+            });
             yield this._emailService.sendBookingCancelledEmail({
                 email: booking.userId.email,
                 userName: booking.userId.name,
@@ -315,7 +329,7 @@ let BookingService = class BookingService {
             return {
                 success: true,
                 message: message_1.MESSAGES.BOOKING_CANCELLED,
-                booking: updateBooking
+                booking: updateBooking,
             };
         });
     }
@@ -327,5 +341,6 @@ exports.BookingService = BookingService = __decorate([
     __param(1, (0, tsyringe_1.inject)(types_1.TYPES.WorkerRepository)),
     __param(2, (0, tsyringe_1.inject)(types_1.TYPES.SlotLockRepository)),
     __param(3, (0, tsyringe_1.inject)(types_1.TYPES.EmailService)),
-    __metadata("design:paramtypes", [Object, Object, Object, Object])
+    __param(4, (0, tsyringe_1.inject)(types_1.TYPES.NotificationService)),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object])
 ], BookingService);

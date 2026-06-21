@@ -4,7 +4,7 @@ exports.envSchema = void 0;
 const zod_1 = require("zod");
 exports.envSchema = zod_1.z.object({
     PORT: zod_1.z.string().min(1, 'PORT is required'),
-    MONGO_URI: zod_1.z.string().url('MONGO_URI must be a valid MongoDB URL'),
+    MONGO_URI: zod_1.z.string().min(1, 'MONGO_URI must be a valid MongoDB URL'),
     REDIS_HOST: zod_1.z.string().min(1, 'REDIS_HOST is required'),
     REDIS_PORT: zod_1.z.string().regex(/^\d+$/, 'REDIS_PORT must be a number'),
     REDIS_PASSWORD: zod_1.z.string().min(1, 'REDIS_PASSWORD is required'),

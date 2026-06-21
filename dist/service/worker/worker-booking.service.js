@@ -137,6 +137,7 @@ let WorkerBookingService = class WorkerBookingService {
                     message: 'worker  Approved your booking',
                     type: 'booking',
                     userId: booking.userId._id.toString(),
+                    bookingId: bookingId
                 });
                 return { success: true, message: 'Service approved successfully' };
             }
@@ -194,6 +195,7 @@ let WorkerBookingService = class WorkerBookingService {
                     message: 'worker  rejected your booking',
                     type: 'booking',
                     userId: booking.userId.toString(),
+                    bookingId,
                 });
                 return {
                     success: true,
@@ -364,6 +366,7 @@ let WorkerBookingService = class WorkerBookingService {
                     message: 'worker reached to your location',
                     type: 'booking',
                     userId: (_a = booking.booking) === null || _a === void 0 ? void 0 : _a.userId._id.toString(),
+                    bookingId: bookingid,
                 });
                 return {
                     success: true,
@@ -421,6 +424,7 @@ let WorkerBookingService = class WorkerBookingService {
                     message: 'worker successfully verified',
                     type: 'booking',
                     userId: booking.userId.toString(),
+                    bookingId,
                 });
                 return {
                     success: true,
@@ -467,6 +471,7 @@ let WorkerBookingService = class WorkerBookingService {
                     message: ' work is complate',
                     type: 'booking',
                     userId: booking.userId._id.toString(),
+                    bookingId,
                 });
                 return {
                     status: status_code_1.STATUS_CODES.OK,
