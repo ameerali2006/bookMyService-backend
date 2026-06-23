@@ -86,8 +86,8 @@ let StripeController = class StripeController {
                 res.status(status_code_1.STATUS_CODES.OK).json({ received: true });
             }
             catch (err) {
-                console.error('⚠️ Webhook Error:', err.message);
-                res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({ received: false, error: err.message });
+                console.error('⚠️ Webhook Error:', err instanceof Error ? err.message : String(err));
+                res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({ received: false, error: err instanceof Error ? err.message : String(err) });
             }
         });
     }

@@ -72,7 +72,7 @@ class BaseRepository {
             const total = yield this.model.countDocuments(filter);
             let query = this.model.find(filter).skip(skip).limit(limit);
             for (const { path, select, match } of populateFields) {
-                query = query.populate(path, select, match);
+                query = query.populate({ path, select, match });
             }
             const data = (yield query.lean());
             return { data, total };
@@ -82,7 +82,7 @@ class BaseRepository {
         return __awaiter(this, arguments, void 0, function* (id, populateFields = []) {
             let query = this.model.findById(id);
             for (const { path, select, match } of populateFields) {
-                query = query.populate(path, select, match);
+                query = query.populate({ path, select, match });
             }
             const data = (yield query.lean());
             return data;

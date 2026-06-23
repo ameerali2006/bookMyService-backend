@@ -77,10 +77,10 @@ export class ServiceController implements IServiceConroller {
           message: response.message || 'Failed to fetch nearby workers',
         });
       }
-    } catch (error: any) {
+    } catch (error) {
       res.status(STATUS_CODES.BAD_REQUEST).json({
         success: false,
-        message: error.message || 'Failed to fetch nearby workers',
+        message: (error instanceof Error ? error.message : '') || 'Failed to fetch nearby workers',
       });
     }
   }
@@ -104,10 +104,10 @@ export class ServiceController implements IServiceConroller {
       );
       console.log(data.data?.dates);
       res.status(STATUS_CODES.OK).json(data);
-    } catch (err: any) {
+    } catch (err) {
       res
         .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({ error: err.message });
+        .json({ error: err instanceof Error ? err.message : String(err) });
     }
   }
 

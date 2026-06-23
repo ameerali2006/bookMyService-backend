@@ -77,7 +77,7 @@ export class WorkerBookingController implements IWorkerBookingController {
       const page = Number(req.query.page) || 1;
       const limit = Number(req.query.limit) || 10;
       const search = req.query.search as string | undefined;
-      const status = req.query.status as any;
+      const status = req.query.status as 'approved' | 'in-progress' | 'awaiting-final-payment' | undefined;
 
       const result = await this.bookingService.getWorkerApprovedBookings({
         workerId,

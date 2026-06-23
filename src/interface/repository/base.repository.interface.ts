@@ -11,18 +11,18 @@ export interface IBaseRepository<T extends Document> {
   ): Promise<{ items: T[]; total: number }>;
   updateById(id: string, data: Partial<T>): Promise<T | null>;
   deleteById(id: string): Promise<T | null>;
-  findOne(query: any): Promise<T | null>;
-  find(query: any): Promise<T[]>;
+  findOne(query: FilterQuery<T>): Promise<T | null>;
+  find(query: FilterQuery<T>): Promise<T[]>;
   update(filter: FilterQuery<T>, updateData: Partial<T>): Promise<T>;
   findWithPopulate<TReturn = T>(
     filter: FilterQuery<T>,
-    populateFields: { path: string; select?: string; match?: any }[],
+    populateFields: { path: string; select?: string; match?: FilterQuery<unknown> }[],
     skip?: number,
     limit?: number
   ): Promise<{ data: TReturn[]; total: number }>;
   findByIdAndPopulate<TReturn = T>(
     id: string,
-    populateFields: { path: string; select?: string; match?: any }[]
+    populateFields: { path: string; select?: string; match?: FilterQuery<unknown> }[]
   ): Promise<TReturn | null>
   countDocuments(filter?: FilterQuery<T>): Promise<number>
 }

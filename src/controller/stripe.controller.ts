@@ -80,9 +80,9 @@ export class StripeController implements IStripeController {
       }
 
       res.status(STATUS_CODES.OK).json({ received: true });
-    } catch (err: any) {
-      console.error('⚠️ Webhook Error:', err.message);
-      res.status(STATUS_CODES.BAD_REQUEST).json({ received: false, error: err.message });
+    } catch (err) {
+      console.error('⚠️ Webhook Error:', err instanceof Error ? err.message : String(err));
+      res.status(STATUS_CODES.BAD_REQUEST).json({ received: false, error: err instanceof Error ? err.message : String(err) });
     }
   }
 }

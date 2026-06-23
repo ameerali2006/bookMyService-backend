@@ -11,6 +11,7 @@ import { fromMinutes, toMinutes } from '../../utils/time&Intervals';
 import { IWorkingDetailsRepository } from '../../interface/repository/working-details.interface';
 import { IBookingRepository } from '../../interface/repository/booking.repository.interface';
 import { IWorkerRepository } from '../../interface/repository/worker.repository.interface';
+import { IBookingPopulated } from '../../interface/model/booking.model.interface';
 
 @injectable()
 export class WorkerHelperService implements IWorkerHelperService {
@@ -129,8 +130,8 @@ export class WorkerHelperService implements IWorkerHelperService {
           efficiency,
           satisfaction,
         },
-        todaySchedule: dashboardData.todaySchedule.map((job: any) => ({
-          bookingId: job._id,
+        todaySchedule: dashboardData.todaySchedule.map((job: IBookingPopulated) => ({
+          bookingId: job._id.toString(),
           time: job.startTime,
           service: job.serviceId?.category,
           clientName: job.userId?.name,

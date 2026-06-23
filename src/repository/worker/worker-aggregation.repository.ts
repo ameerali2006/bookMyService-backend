@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { Types } from 'mongoose';
+import { Types, PipelineStage } from 'mongoose';
 import { WorkerModel } from '../../model/worker.model';
 import { BaseRepository } from '../shared/base.repository';
 import { IWorker } from '../../interface/model/worker.model.interface';
@@ -47,7 +47,7 @@ export class WorkerAggregation
     const skip = (page - 1) * pageSize;
     const serviceObjectId = new Types.ObjectId(serviceId);
 
-    const pipeline: any[] = [
+    const pipeline: PipelineStage[] = [
       {
         $geoNear: {
           near: { type: 'Point', coordinates: [lng, lat] },

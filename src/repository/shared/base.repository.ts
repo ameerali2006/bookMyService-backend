@@ -34,11 +34,11 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
     return await this.model.findByIdAndDelete(id);
   }
 
-  async findOne(query: any): Promise<T | null> {
+  async findOne(query: FilterQuery<T>): Promise<T | null> {
     return await this.model.findOne(query);
   }
 
-  async find(query: any): Promise<T[]> {
+  async find(query: FilterQuery<T>): Promise<T[]> {
     return await this.model.find(query);
   }
 
@@ -54,14 +54,14 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
 
   async findWithPopulate<TReturn = T>(
     filter: FilterQuery<T>,
-    populateFields: { path: string; select?: string; match?: any }[],
+    populateFields: { path: string; select?: string; match?: FilterQuery<unknown> }[],
     skip: number = 0,
     limit: number = 10,
   ): Promise<{ data: TReturn[]; total: number }> {
     const total = await this.model.countDocuments(filter);
     let query = this.model.find(filter).skip(skip).limit(limit);
     for (const { path, select, match } of populateFields) {
-      query = query.populate(path, select, match);
+      query = query.populate({ path, select, match });
     }
     const data = (await query.lean()) as TReturn[];
     return { data, total };
@@ -69,12 +69,12 @@ export class BaseRepository<T extends Document> implements IBaseRepository<T> {
 
   async findByIdAndPopulate<TReturn = T>(
     id: string,
-    populateFields: { path: string; select?: string; match?: any }[] = [],
+    populateFields: { path: string; select?: string; match?: FilterQuery<unknown> }[] = [],
   ): Promise<TReturn | null> {
     let query = this.model.findById(id);
 
     for (const { path, select, match } of populateFields) {
-      query = query.populate(path, select, match);
+      query = query.populate({ path, select, match });
     }
 
     const data = (await query.lean()) as TReturn | null;

@@ -7,6 +7,12 @@ import { IJwtService } from '../../interface/helpers/jwt-service.service.interfa
 export interface ResetTokenPayload extends JwtPayload {
 	email: string;
 }
+export interface TokenPayload extends JwtPayload {
+  _id?: string;
+  userId?: string;
+  email?: string;
+  role?: 'user' | 'admin' | 'worker';
+}
 @injectable()
 export class JwtService implements IJwtService {
   generateAccessToken(_id:string, role:'user'|'admin'|'worker'):string {
@@ -21,10 +27,10 @@ export class JwtService implements IJwtService {
     });
   }
 
-  verifyToken(token:string, type:'access'|'refresh'):any {
+  verifyToken(token:string, type:'access'|'refresh'): TokenPayload | null {
     const secret = type === 'access' ? ENV.ACCESS_TOKEN_SECRET : ENV.REFRESH_TOKEN_SECRET;
     try {
-      return jwt.verify(token, secret as string);
+      return jwt.verify(token, secret as string) as TokenPayload;
     } catch (error) {
       console.error('error on jwt :', error);
       return null;

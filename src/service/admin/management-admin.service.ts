@@ -1,4 +1,5 @@
 import { inject, injectable } from 'tsyringe';
+import { FilterQuery } from 'mongoose';
 import { IManagementAdminService } from '../../interface/service/management-admin.service.interface';
 import { IUser } from '../../interface/model/user.model.interface';
 import { TYPES } from '../../config/constants/types';
@@ -21,9 +22,10 @@ import { STATUS_CODES } from '../../config/constants/status-code';
 import { IWorkerRepository } from '../../interface/repository/worker.repository.interface';
 import { IWorker } from '../../interface/model/worker.model.interface';
 import { IServiceRepository } from '../../interface/repository/service.repository.interface';
+import { IService } from '../../interface/model/service.model.interface';
 import { IBookingPopulated } from '../../interface/model/booking.model.interface';
 import { IBookingRepository } from '../../interface/repository/booking.repository.interface';
-import { IAdminDashboardResponse } from '../../dto/admin/admin-dashboard.dto';
+import { IAdminDashboardResponse, IAdminDashboardRaw } from '../../dto/admin/admin-dashboard.dto';
 
 @injectable()
 export class ManagementAdminService implements IManagementAdminService {
@@ -48,7 +50,7 @@ export class ManagementAdminService implements IManagementAdminService {
     totalItems: number;
   }> {
     try {
-      const filter: any = {};
+      const filter: FilterQuery<IUser | IWorker> = {};
 
       if (search) {
         filter.$or = [
@@ -139,7 +141,7 @@ export class ManagementAdminService implements IManagementAdminService {
     totalPages: number;
   }> {
     try {
-      const query: any = {};
+      const query: FilterQuery<IWorker> = {};
       if (status) {
         query.isVerified = status;
       }
@@ -213,11 +215,11 @@ export class ManagementAdminService implements IManagementAdminService {
     totalItems: number;
   }> {
     try {
-      const query: any = {};
+      const query: FilterQuery<IService> = {};
       if (search) {
         query.category = { $regex: search, $options: 'i' };
       }
-      let sortOption: any = { createdAt: -1 };
+      let sortOption: Record<string, 1 | -1> = { createdAt: -1 };
       if (sort == 'lowPrice') sortOption = { price: 1 };
       if (sort == 'highPrice') sortOption = { price: -1 };
 
@@ -457,7 +459,7 @@ export class ManagementAdminService implements IManagementAdminService {
           revenueGrowth: 0, // can calculate similar to booking
         },
 
-        revenueChart: data.revenueChart.map((item: any) => ({
+        revenueChart: data.revenueChart.map((item: IAdminDashboardRaw['revenueChart'][number]) => ({
           month: `${item._id.month}/${item._id.year}`,
           revenue: item.revenue,
         })),

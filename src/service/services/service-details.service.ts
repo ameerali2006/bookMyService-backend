@@ -149,7 +149,7 @@ export class ServiceDetails implements IServiceDetails {
     }
   }
 
-  private rotateDays(days: any[], todayName: string) {
+  private rotateDays<T extends { day: string }>(days: T[], todayName: string): T[] {
     const startIndex = days.findIndex((d) => d.day === todayName);
     if (startIndex === -1) return days;
     return [...days.slice(startIndex), ...days.slice(0, startIndex)];

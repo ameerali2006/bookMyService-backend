@@ -69,7 +69,7 @@ let ServiceController = class ServiceController {
             catch (error) {
                 res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                     success: false,
-                    message: error.message || 'Failed to fetch nearby workers',
+                    message: (error instanceof Error ? error.message : '') || 'Failed to fetch nearby workers',
                 });
             }
         });
@@ -92,7 +92,7 @@ let ServiceController = class ServiceController {
             catch (err) {
                 res
                     .status(status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR)
-                    .json({ error: err.message });
+                    .json({ error: err instanceof Error ? err.message : String(err) });
             }
         });
     }

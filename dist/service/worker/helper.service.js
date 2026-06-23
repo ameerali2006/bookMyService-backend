@@ -123,7 +123,7 @@ let WorkerHelperService = class WorkerHelperService {
                     todaySchedule: dashboardData.todaySchedule.map((job) => {
                         var _a, _b;
                         return ({
-                            bookingId: job._id,
+                            bookingId: job._id.toString(),
                             time: job.startTime,
                             service: (_a = job.serviceId) === null || _a === void 0 ? void 0 : _a.category,
                             clientName: (_b = job.userId) === null || _b === void 0 ? void 0 : _b.name,

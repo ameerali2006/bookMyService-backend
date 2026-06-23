@@ -1,5 +1,5 @@
-// src/repository/implementation/wallet-transaction.repository.ts
 import { injectable } from 'inversify';
+import { FilterQuery } from 'mongoose';
 
 import { BaseRepository } from './base.repository';
 
@@ -66,7 +66,7 @@ export class TransactionRepository
       endDate,
     } = query;
 
-    const filter: any = {
+    const filter: FilterQuery<ITransaction> = {
       walletId: walletId.toString(),
     };
 

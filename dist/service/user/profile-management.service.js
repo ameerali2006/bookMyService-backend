@@ -89,7 +89,7 @@ let ProfileManagement = class ProfileManagement {
                 };
             }
             catch (error) {
-                console.error('Error updating user:', error.message || error);
+                console.error('Error updating user:', error instanceof Error ? error.message : error);
                 return { success: false, message: 'Internal server error', user: null };
             }
         });

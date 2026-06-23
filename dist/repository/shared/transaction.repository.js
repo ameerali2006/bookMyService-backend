@@ -19,7 +19,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransactionRepository = void 0;
-// src/repository/implementation/wallet-transaction.repository.ts
 const inversify_1 = require("inversify");
 const base_repository_1 = require("./base.repository");
 const transactions_model_1 = require("../../model/transactions.model");

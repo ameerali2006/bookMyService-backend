@@ -608,7 +608,7 @@ export class BookingRepository
       to,
     } = params;
 
-    const match: Record<string, any> = {
+    const match: FilterQuery<IBooking> = {
       workerId: new Types.ObjectId(workerId),
     };
 

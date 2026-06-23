@@ -45,7 +45,7 @@ const verifyAuth = () => (req, res, next) => __awaiter(void 0, void 0, void 0, f
         next(); // ✅ pass control to next middleware
     }
     catch (error) {
-        if (error.name === 'TokenExpiredError') {
+        if (error instanceof Error && error.name === 'TokenExpiredError') {
             console.error(error.name);
             res.status(status_code_1.STATUS_CODES.UNAUTHORIZED).json({
                 message: message_1.MESSAGES.TOKEN_EXPIRED,
@@ -127,9 +127,9 @@ const decodeToken = () => (req, res, next) => __awaiter(void 0, void 0, void 0, 
         const user = tokenService.verifyToken(token === null || token === void 0 ? void 0 : token.access_token, 'access');
         // console.log(`Decoded`, user);
         req.user = {
-            _id: user === null || user === void 0 ? void 0 : user.userId,
+            _id: (user === null || user === void 0 ? void 0 : user.userId) || (user === null || user === void 0 ? void 0 : user._id) || '',
             email: user === null || user === void 0 ? void 0 : user.email,
-            role: user === null || user === void 0 ? void 0 : user.role,
+            role: ((user === null || user === void 0 ? void 0 : user.role) || 'user'),
             access_token: token.access_token,
             refresh_token: token.refresh_token,
         };

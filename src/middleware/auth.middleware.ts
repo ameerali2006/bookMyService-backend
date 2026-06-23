@@ -52,12 +52,12 @@ export const verifyAuth = () => async (req: Request, res: Response, next: NextFu
       ...user,
       access_token: token.access_token,
       refresh_token: token.refresh_token,
-    };
+    } as CustomJwtPayload;
     console.log('2');
 
     next(); // ✅ pass control to next middleware
-  } catch (error: any) {
-    if (error.name === 'TokenExpiredError') {
+  } catch (error) {
+    if (error instanceof Error && error.name === 'TokenExpiredError') {
       console.error(error.name);
       res.status(STATUS_CODES.UNAUTHORIZED).json({
         message: MESSAGES.TOKEN_EXPIRED,
@@ -148,12 +148,12 @@ export const decodeToken = () => async (req: Request, res: Response, next: NextF
     const user = tokenService.verifyToken(token?.access_token, 'access');
     // console.log(`Decoded`, user);
     (req as CustomRequest).user = {
-      _id: user?.userId,
+      _id: user?.userId || user?._id || '',
       email: user?.email,
-      role: user?.role,
+      role: (user?.role || 'user') as 'user' | 'admin' | 'worker',
       access_token: token.access_token,
       refresh_token: token.refresh_token,
-    };
+    } as CustomJwtPayload;
     next();
   } catch (error) {}
 };

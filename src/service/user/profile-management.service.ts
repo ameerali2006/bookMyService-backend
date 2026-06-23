@@ -80,8 +80,8 @@ export class ProfileManagement implements IProfileManagement {
         message: 'User updated successfully',
         user: updatedUser,
       };
-    } catch (error: any) {
-      console.error('Error updating user:', error.message || error);
+    } catch (error) {
+      console.error('Error updating user:', error instanceof Error ? error.message : error);
       return { success: false, message: 'Internal server error', user: null };
     }
   }
