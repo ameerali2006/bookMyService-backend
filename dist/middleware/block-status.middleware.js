@@ -38,7 +38,7 @@ let BlockStatusMiddleware = class BlockStatusMiddleware {
                 if (!req.user) {
                     return res.status(status_code_1.STATUS_CODES.UNAUTHORIZED).json({
                         status: 'error',
-                        message: 'Unauthorized: No user found in request',
+                        message: message_1.MESSAGES.UNAUTHORIZED_NO_USER_FOUND_IN_REQUEST,
                     });
                 }
                 const { userId, role, access_token, refresh_token, } = req.user;
@@ -64,7 +64,7 @@ let BlockStatusMiddleware = class BlockStatusMiddleware {
                     (0, cookie_helper_1.clearAuthCookies)(res, 'access_token', 'refresh_token');
                     return res.status(status_code_1.STATUS_CODES.FORBIDDEN).json({
                         success: false,
-                        message: 'Access denied: Your account has been blocked',
+                        message: message_1.MESSAGES.ACCESS_DENIED_YOUR_ACCOUNT_HAS_BEEN_BLOC,
                     });
                 }
                 next();
@@ -73,7 +73,7 @@ let BlockStatusMiddleware = class BlockStatusMiddleware {
                 console.error('Block Status Middleware Error:', error);
                 res.status(status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR).json({
                     success: false,
-                    message: 'Internal server error while checking blocked status',
+                    message: message_1.MESSAGES.INTERNAL_SERVER_ERROR_WHILE_CHECKING_BLO,
                 });
             }
         });

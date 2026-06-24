@@ -24,7 +24,7 @@ export class TokenService implements ITokenservice {
       console.log('Token received in blacklistToken:', token, typeof token);
       const decode:string|JwtPayload|null = await this._jwtService.verifyToken(token, 'access');
       if (!decode || typeof decode === 'string' || !decode.exp) {
-        throw new Error('Invalid Token: Missing expiration time');
+        throw new Error(MESSAGES.INVALID_TOKEN_MISSING_EXPIRATION_TIME);
       }
       const expiresIn = decode.exp - Math.floor(Date.now() / 100);
       if (expiresIn > 0) {

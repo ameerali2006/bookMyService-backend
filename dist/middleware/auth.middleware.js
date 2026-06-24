@@ -21,7 +21,7 @@ const verifyAuth = () => (req, res, next) => __awaiter(void 0, void 0, void 0, f
         console.log('**token', token);
         if (!token || !token.access_token) {
             res.status(401).json({
-                message: 'Token expired.',
+                message: message_1.MESSAGES.TOKEN_EXPIRED,
             });
             return;
         }
@@ -36,7 +36,7 @@ const verifyAuth = () => (req, res, next) => __awaiter(void 0, void 0, void 0, f
         const user = tokenService.verifyToken(token.access_token, 'access');
         if (!user || !user._id) {
             res.status(401).json({
-                message: 'Token expired.',
+                message: message_1.MESSAGES.TOKEN_EXPIRED,
             });
             return;
         }

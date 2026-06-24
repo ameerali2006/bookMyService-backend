@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProfileManagement = void 0;
+const message_1 = require("../../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const user_mapper_1 = require("../../utils/mapper/user-mapper");
 const types_1 = require("../../config/constants/types");
@@ -38,7 +39,7 @@ let ProfileManagement = class ProfileManagement {
                 if (!userId) {
                     return {
                         success: false,
-                        message: 'user is Not fount',
+                        message: message_1.MESSAGES.USER_IS_NOT_FOUNT,
                         user: null,
                     };
                 }
@@ -47,7 +48,7 @@ let ProfileManagement = class ProfileManagement {
                 if (!userData) {
                     return {
                         success: false,
-                        message: 'User is Not fount',
+                        message: message_1.MESSAGES.USER_IS_NOT_FOUNT,
                         user: null,
                     };
                 }
@@ -55,14 +56,14 @@ let ProfileManagement = class ProfileManagement {
                 console.log('user service', user);
                 return {
                     success: true,
-                    message: 'user data fetch successfully',
+                    message: message_1.MESSAGES.USER_DATA_FETCH_SUCCESSFULLY,
                     user,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'Bad request',
+                    message: message_1.MESSAGES.BAD_REQUEST,
                     user: null,
                 };
             }
@@ -72,25 +73,25 @@ let ProfileManagement = class ProfileManagement {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!user || Object.keys(user).length === 0) {
-                    return { success: false, message: 'User data is missing', user: null };
+                    return { success: false, message: message_1.MESSAGES.USER_DATA_IS_MISSING, user: null };
                 }
                 if (!userId) {
-                    return { success: false, message: 'User ID is missing', user: null };
+                    return { success: false, message: message_1.MESSAGES.USER_ID_IS_MISSING, user: null };
                 }
                 const userData = yield this._userRepo.updateById(userId, user);
                 if (!userData) {
-                    return { success: false, message: 'User not found', user: null };
+                    return { success: false, message: message_1.MESSAGES.USER_NOT_FOUND, user: null };
                 }
                 const updatedUser = user_mapper_1.UserMapper.responseuserProfileDetails(userData);
                 return {
                     success: true,
-                    message: 'User updated successfully',
+                    message: message_1.MESSAGES.USER_UPDATED_SUCCESSFULLY,
                     user: updatedUser,
                 };
             }
             catch (error) {
                 console.error('Error updating user:', error instanceof Error ? error.message : error);
-                return { success: false, message: 'Internal server error', user: null };
+                return { success: false, message: message_1.MESSAGES.INTERNAL_SERVER_ERROR, user: null };
             }
         });
     }
@@ -98,24 +99,24 @@ let ProfileManagement = class ProfileManagement {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!userId) {
-                    return { success: false, message: 'User ID is missing', addresses: null };
+                    return { success: false, message: message_1.MESSAGES.USER_ID_IS_MISSING, addresses: null };
                 }
                 const address = yield this._addressRepo.findByUserId(userId);
                 console.log(address);
                 if (!address || address.length === 0) {
-                    return { success: false, message: 'No addresses found', addresses: null };
+                    return { success: false, message: message_1.MESSAGES.NO_ADDRESSES_FOUND, addresses: null };
                 }
                 const addresses = user_mapper_1.UserMapper.toDTOAddressList(address);
                 return {
                     success: true,
-                    message: 'Addresses retrieved successfully',
+                    message: message_1.MESSAGES.ADDRESSES_RETRIEVED_SUCCESSFULLY,
                     addresses,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'Internal server error',
+                    message: message_1.MESSAGES.INTERNAL_SERVER_ERROR,
                     addresses: null,
                 };
             }
@@ -126,7 +127,7 @@ let ProfileManagement = class ProfileManagement {
             var _a;
             try {
                 if (!userId || !data) {
-                    return { success: false, message: 'somthing is missing', address: null };
+                    return { success: false, message: message_1.MESSAGES.SOMTHING_IS_MISSING, address: null };
                 }
                 const userAddress = yield this._addressRepo.findByUserId(userId);
                 const isPrimary = userAddress.length == 0;
@@ -153,14 +154,14 @@ let ProfileManagement = class ProfileManagement {
                 const address = user_mapper_1.UserMapper.toDTOAddress(savedAddress);
                 return {
                     success: true,
-                    message: 'Address added successfully',
+                    message: message_1.MESSAGES.ADDRESS_ADDED_SUCCESSFULLY,
                     address,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'Internal server error',
+                    message: message_1.MESSAGES.INTERNAL_SERVER_ERROR,
                     address: null,
                 };
             }
@@ -170,7 +171,7 @@ let ProfileManagement = class ProfileManagement {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!userId || !setId) {
-                    return { success: false, message: 'Something is missing' };
+                    return { success: false, message: message_1.MESSAGES.SOMETHING_IS_MISSING };
                 }
                 const existingPrimary = yield this._addressRepo.findPrimaryByUserId(userId);
                 console.log('existing dataaaaa', existingPrimary);
@@ -181,12 +182,12 @@ let ProfileManagement = class ProfileManagement {
                 console.log('existing dataaaaa', existingPrimary);
                 // Now set the new primary
                 yield this._addressRepo.updateById(setId, { isPrimary: true });
-                return { success: true, message: 'Successfully updated' };
+                return { success: true, message: message_1.MESSAGES.SUCCESSFULLY_UPDATED };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'Internal server error',
+                    message: message_1.MESSAGES.INTERNAL_SERVER_ERROR,
                 };
             }
         });

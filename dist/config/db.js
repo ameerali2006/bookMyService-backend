@@ -13,13 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectDB = void 0;
+const message_1 = require("./constants/message");
 const mongoose_1 = __importDefault(require("mongoose"));
 const env_1 = require("./env/env");
 const connectDB = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const mongoURl = env_1.ENV.MONGO_URI;
         if (!mongoURl) {
-            throw new Error('MONGO_URI is not defined in environment variables');
+            throw new Error(message_1.MESSAGES.MONGOURI_IS_NOT_DEFINED_IN_ENVIRONMENT_V);
         }
         yield mongoose_1.default.connect(mongoURl);
         console.log('Mongo db is connected Successfuly');

@@ -25,12 +25,12 @@ export class ChangePasswordService implements IChangePasswordService {
     if (!user) throw new CustomError(MESSAGES.USER_NOT_FOUND, STATUS_CODES.NOT_FOUND);
 
     const isMatch = await this.hash.compare(dto.oldPassword, user.password);
-    if (!isMatch) { return { success: false, message: 'Old password is incorrect' }; }
+    if (!isMatch) { return { success: false, message: MESSAGES.OLD_PASSWORD_IS_INCORRECT }; }
 
     const hashedPassword = await this.hash.hash(dto.newPassword);
     user.password = hashedPassword;
 
     await repo.updateById(user._id.toString(), { password: hashedPassword });
-    return { success: true, message: 'Password changed successfully' };
+    return { success: true, message: MESSAGES.PASSWORD_CHANGED_SUCCESSFULLY };
   }
 }

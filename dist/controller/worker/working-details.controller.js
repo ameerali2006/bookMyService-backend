@@ -119,7 +119,7 @@ let WorkingDetailsController = class WorkingDetailsController {
                     const errors = parsed.error.format();
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'Validation failed',
+                        message: message_1.MESSAGES.VALIDATION_FAILED,
                         errors,
                     });
                 }

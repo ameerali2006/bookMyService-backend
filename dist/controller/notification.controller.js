@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.NotificationController = void 0;
+const message_1 = require("../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../config/constants/types");
 let NotificationController = class NotificationController {
@@ -40,7 +41,7 @@ let NotificationController = class NotificationController {
                 res.json(notifications);
             }
             catch (error) {
-                res.status(500).json({ message: 'Failed to fetch notifications' });
+                res.status(500).json({ message: message_1.MESSAGES.FAILED_TO_FETCH_NOTIFICATIONS });
             }
         });
     }
@@ -53,7 +54,7 @@ let NotificationController = class NotificationController {
                 res.json(updated);
             }
             catch (_a) {
-                res.status(500).json({ message: 'Failed to update' });
+                res.status(500).json({ message: message_1.MESSAGES.FAILED_TO_UPDATE });
             }
         });
     }
@@ -63,7 +64,7 @@ let NotificationController = class NotificationController {
             try {
                 const { user } = req;
                 if (!user) {
-                    res.status(401).json({ message: 'Unauthorized' });
+                    res.status(401).json({ message: message_1.MESSAGES.UNAUTHORIZED });
                     return;
                 }
                 const filter = user.role === 'worker'
@@ -72,7 +73,7 @@ let NotificationController = class NotificationController {
                 const updatedCount = yield this.notificationService.markAllAsRead(filter);
                 res.status(200).json({
                     success: true,
-                    message: 'All notifications marked as read',
+                    message: message_1.MESSAGES.ALL_NOTIFICATIONS_MARKED_AS_READ,
                     updated: updatedCount,
                 });
             }

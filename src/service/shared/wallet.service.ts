@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import { TYPES } from '../../config/constants/types';
 import { responsePart } from '../../dto/shared/responsePart';
@@ -44,7 +45,7 @@ export class WalletService implements IWalletService {
 
       const wallet = await this.getOrCreateWallet(userId, role);
 
-      if (wallet.isFrozen) { return { success: false, message: 'Wallet is frozen' }; }
+      if (wallet.isFrozen) { return { success: false, message: MESSAGES.WALLET_IS_FROZEN }; }
 
       const balanceBefore = wallet.balance;
       const balanceAfter = wallet.balance + amount;
@@ -65,9 +66,9 @@ export class WalletService implements IWalletService {
         this.walletTransaction.createTransaction(transactionPayload),
       ]);
 
-      return { success: true, message: 'Balance credited successfully' };
+      return { success: true, message: MESSAGES.BALANCE_CREDITED_SUCCESSFULLY };
     } catch (error) {
-      return { success: false, message: 'Something went wrong' };
+      return { success: false, message: MESSAGES.SOMETHING_WENT_WRONG };
     }
   }
 
@@ -89,7 +90,7 @@ export class WalletService implements IWalletService {
     if (!wallet) {
       return {
         success: false,
-        message: 'Wallet not found',
+        message: MESSAGES.WALLET_NOT_FOUND,
         data: {
           balance: 0,
           isFrozen: false,
@@ -101,7 +102,7 @@ export class WalletService implements IWalletService {
 
     return {
       success: true,
-      message: 'Wallet data fetched successfully',
+      message: MESSAGES.WALLET_DATA_FETCHED_SUCCESSFULLY,
       data: {
         balance: wallet.balance,
         isFrozen: wallet.isFrozen,
@@ -152,9 +153,9 @@ export class WalletService implements IWalletService {
 
       const wallet = await this.getOrCreateWallet(userId, role);
 
-      if (wallet.isFrozen) { return { success: false, message: 'Wallet is frozen' }; }
+      if (wallet.isFrozen) { return { success: false, message: MESSAGES.WALLET_IS_FROZEN }; }
 
-      if (wallet.balance < amount) { return { success: false, message: 'Insufficient wallet balance' }; }
+      if (wallet.balance < amount) { return { success: false, message: MESSAGES.INSUFFICIENT_WALLET_BALANCE }; }
 
       const balanceBefore = wallet.balance;
       const balanceAfter = wallet.balance - amount;
@@ -177,12 +178,12 @@ export class WalletService implements IWalletService {
 
       return {
         success: true,
-        message: 'Payment completed successfully',
+        message: MESSAGES.PAYMENT_COMPLETED_SUCCESSFULLY,
       };
     } catch (error) {
       return {
         success: false,
-        message: 'Something went wrong',
+        message: MESSAGES.SOMETHING_WENT_WRONG,
       };
     }
   }

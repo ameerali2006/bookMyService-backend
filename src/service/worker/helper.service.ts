@@ -100,7 +100,7 @@ export class WorkerHelperService implements IWorkerHelperService {
     const worker = await this.workerRepo.findById(workerId);
 
     if (!worker) {
-      return { success: false, message: 'worker not fount' };
+      return { success: false, message: MESSAGES.WORKER_NOT_FOUNT };
     }
 
     const dashboardData = await this.bookingRepo.getWorkerDashboardStats(workerId);
@@ -117,7 +117,7 @@ export class WorkerHelperService implements IWorkerHelperService {
 
     return {
       success: true,
-      message: 'dashboardfetch successfully',
+      message: MESSAGES.DASHBOARDFETCH_SUCCESSFULLY,
       data: {
         workerStatus: worker.isVerified,
         stats: {

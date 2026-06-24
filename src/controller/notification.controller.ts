@@ -1,3 +1,4 @@
+import { MESSAGES } from '../config/constants/message';
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 
@@ -26,7 +27,7 @@ export class NotificationController implements INotificationController {
 
       res.json(notifications);
     } catch (error) {
-      res.status(500).json({ message: 'Failed to fetch notifications' });
+      res.status(500).json({ message: MESSAGES.FAILED_TO_FETCH_NOTIFICATIONS });
     }
   }
 
@@ -39,7 +40,7 @@ export class NotificationController implements INotificationController {
 
       res.json(updated);
     } catch {
-      res.status(500).json({ message: 'Failed to update' });
+      res.status(500).json({ message: MESSAGES.FAILED_TO_UPDATE });
     }
   }
 
@@ -53,7 +54,7 @@ export class NotificationController implements INotificationController {
       const { user } = (req as CustomRequest);
 
       if (!user) {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).json({ message: MESSAGES.UNAUTHORIZED });
         return;
       }
 
@@ -65,7 +66,7 @@ export class NotificationController implements INotificationController {
 
       res.status(200).json({
         success: true,
-        message: 'All notifications marked as read',
+        message: MESSAGES.ALL_NOTIFICATIONS_MARKED_AS_READ,
         updated: updatedCount,
       });
     } catch (error) {

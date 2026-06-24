@@ -31,7 +31,7 @@ export class GoogleService implements IGoogleService {
       const payload = await this._googleAuth.verifyToken(token);
       if (!payload || !payload.email || !payload.name) {
         console.log(payload);
-        throw new CustomError('Invalid Google Token', 400);
+        throw new CustomError(MESSAGES.INVALID_GOOGLE_TOKEN, 400);
       }
       const {
         email, name, sub, picture,
@@ -42,7 +42,7 @@ export class GoogleService implements IGoogleService {
       } else if (role == 'worker') {
         repository = this._workerRepo;
       } else {
-        throw new CustomError('Invalid Role', 400);
+        throw new CustomError(MESSAGES.INVALID_ROLE, 400);
       }
 
       const user:IUser|IWorker|null = await repository.findByEmail(email);
@@ -52,7 +52,7 @@ export class GoogleService implements IGoogleService {
 
         return {
           success: true,
-          message: 'login successfull',
+          message: MESSAGES.LOGIN_SUCCESSFULL,
           accessToken,
           refreshToken,
           user: {
@@ -79,7 +79,7 @@ export class GoogleService implements IGoogleService {
         const refreshToken = this._jwtService.generateRefreshToken(newUser._id.toString(), role);
         return {
           success: true,
-          message: 'register successfull',
+          message: MESSAGES.REGISTER_SUCCESSFULL,
           accessToken,
           refreshToken,
           user: {
@@ -95,7 +95,7 @@ export class GoogleService implements IGoogleService {
       }
       return {
         success: true,
-        message: 'Google user verified',
+        message: MESSAGES.GOOGLE_USER_VERIFIED,
         accessToken: null,
         refreshToken: null,
         user: {

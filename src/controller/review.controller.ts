@@ -1,3 +1,4 @@
+import { MESSAGES } from '../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import { Request, Response, NextFunction } from 'express';
 import { IReviewController } from '../interface/controller/review.controller.interface';
@@ -25,7 +26,7 @@ export class ReviewController implements IReviewController {
       if (!bookingId || !rating || String(comment).trim() == '') {
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'BookingId and rating are required',
+          message: MESSAGES.BOOKINGID_AND_RATING_ARE_REQUIRED,
         });
         return;
       }
@@ -33,7 +34,7 @@ export class ReviewController implements IReviewController {
       if (rating < 1 || rating > 5) {
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'Rating must be between 1 and 5',
+          message: MESSAGES.RATING_MUST_BE_BETWEEN_1_AND_5,
         });
         return;
       }
@@ -49,7 +50,7 @@ export class ReviewController implements IReviewController {
       res.status(STATUS_CODES.OK).json(result);
     } catch (error) {
       console.error(error);
-      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: 'server interfnal Error' });
+      res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: MESSAGES.SERVER_INTERFNAL_ERROR });
     }
   }
 
@@ -78,7 +79,7 @@ export class ReviewController implements IReviewController {
       console.error(error);
       res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
         success: false,
-        message: 'Internal server error',
+        message: MESSAGES.INTERNAL_SERVER_ERROR,
       });
     }
   }

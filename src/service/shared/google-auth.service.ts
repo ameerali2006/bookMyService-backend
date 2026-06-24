@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { OAuth2Client } from 'google-auth-library';
 import { injectable } from 'tsyringe';
 import { ENV } from '../../config/env/env';
@@ -18,7 +19,7 @@ export class GoogleAuthService implements IGoogleAuthService {
     const payload = ticket.getPayload();
 
     if (!payload || !payload.email) {
-      throw new Error('Invalid Google token');
+      throw new Error(MESSAGES.INVALID_GOOGLE_TOKEN);
     }
 
     return payload as IGoogleInfo;

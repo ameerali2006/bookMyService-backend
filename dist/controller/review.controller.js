@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewController = void 0;
+const message_1 = require("../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const status_code_1 = require("../config/constants/status-code");
 const types_1 = require("../config/constants/types");
@@ -38,14 +39,14 @@ let ReviewController = class ReviewController {
                 if (!bookingId || !rating || String(comment).trim() == '') {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'BookingId and rating are required',
+                        message: message_1.MESSAGES.BOOKINGID_AND_RATING_ARE_REQUIRED,
                     });
                     return;
                 }
                 if (rating < 1 || rating > 5) {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'Rating must be between 1 and 5',
+                        message: message_1.MESSAGES.RATING_MUST_BE_BETWEEN_1_AND_5,
                     });
                     return;
                 }
@@ -55,7 +56,7 @@ let ReviewController = class ReviewController {
             }
             catch (error) {
                 console.error(error);
-                res.status(status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: 'server interfnal Error' });
+                res.status(status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR).json({ success: false, message: message_1.MESSAGES.SERVER_INTERFNAL_ERROR });
             }
         });
     }
@@ -75,7 +76,7 @@ let ReviewController = class ReviewController {
                 console.error(error);
                 res.status(status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR).json({
                     success: false,
-                    message: 'Internal server error',
+                    message: message_1.MESSAGES.INTERNAL_SERVER_ERROR,
                 });
             }
         });

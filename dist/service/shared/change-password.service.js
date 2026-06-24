@@ -41,12 +41,12 @@ let ChangePasswordService = class ChangePasswordService {
                 throw new custom_error_1.CustomError(message_1.MESSAGES.USER_NOT_FOUND, status_code_1.STATUS_CODES.NOT_FOUND);
             const isMatch = yield this.hash.compare(dto.oldPassword, user.password);
             if (!isMatch) {
-                return { success: false, message: 'Old password is incorrect' };
+                return { success: false, message: message_1.MESSAGES.OLD_PASSWORD_IS_INCORRECT };
             }
             const hashedPassword = yield this.hash.hash(dto.newPassword);
             user.password = hashedPassword;
             yield repo.updateById(user._id.toString(), { password: hashedPassword });
-            return { success: true, message: 'Password changed successfully' };
+            return { success: true, message: message_1.MESSAGES.PASSWORD_CHANGED_SUCCESSFULLY };
         });
     }
 };

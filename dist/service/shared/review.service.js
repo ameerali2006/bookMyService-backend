@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ReviewService = void 0;
+const message_1 = require("../../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 let ReviewService = class ReviewService {
@@ -38,21 +39,21 @@ let ReviewService = class ReviewService {
                 if (!booking) {
                     return {
                         success: false,
-                        message: 'Booking not found',
+                        message: message_1.MESSAGES.BOOKING_NOT_FOUND,
                     };
                 }
                 // 2. check ownership
                 if (booking.userId.toString() !== userId) {
                     return {
                         success: false,
-                        message: 'Unauthorized',
+                        message: message_1.MESSAGES.UNAUTHORIZED,
                     };
                 }
                 // 3. check completed
                 if (booking.status !== 'completed') {
                     return {
                         success: false,
-                        message: 'You can only review completed bookings',
+                        message: message_1.MESSAGES.YOU_CAN_ONLY_REVIEW_COMPLETED_BOOKINGS,
                     };
                 }
                 // 4. check already reviewed
@@ -60,7 +61,7 @@ let ReviewService = class ReviewService {
                 if (existingReview) {
                     return {
                         success: false,
-                        message: 'Review already submitted',
+                        message: message_1.MESSAGES.REVIEW_ALREADY_SUBMITTED,
                     };
                 }
                 // 5. create review
@@ -74,7 +75,7 @@ let ReviewService = class ReviewService {
                 if (!review) {
                     return {
                         success: false,
-                        message: 'Review already submitted',
+                        message: message_1.MESSAGES.REVIEW_ALREADY_SUBMITTED,
                     };
                 }
                 // optional: update booking flag
@@ -83,14 +84,14 @@ let ReviewService = class ReviewService {
                 });
                 yield this.notification.createNotification({
                     title: 'new Review Add',
-                    message: `user give ${rating} star for your work`,
+                    message: message_1.MESSAGES.USER_GIVE_RATING_STAR_FOR_YOUR_WORK,
                     type: 'booking',
                     workerId: booking.workerId.toString(),
                     bookingId: bookingId
                 });
                 return {
                     success: true,
-                    message: 'Review added successfully',
+                    message: message_1.MESSAGES.REVIEW_ADDED_SUCCESSFULLY,
                     review: {
                         comment: review.comment,
                         rating: review.rating,
@@ -102,7 +103,7 @@ let ReviewService = class ReviewService {
                 console.error(error);
                 return {
                     success: false,
-                    message: 'Failed to add review',
+                    message: message_1.MESSAGES.FAILED_TO_ADD_REVIEW,
                 };
             }
         });
@@ -121,7 +122,7 @@ let ReviewService = class ReviewService {
                 });
                 return {
                     success: true,
-                    message: 'Reviews fetched successfully',
+                    message: message_1.MESSAGES.REVIEWS_FETCHED_SUCCESSFULLY,
                     reviews: data,
                     total,
                 };

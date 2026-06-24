@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkerRegisterSchema = void 0;
+const message_1 = require("../../config/constants/message");
 const zod_1 = require("zod");
 exports.WorkerRegisterSchema = zod_1.z
     .object({
@@ -17,6 +18,6 @@ exports.WorkerRegisterSchema = zod_1.z
     zone: zod_1.z.string(),
 })
     .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
+    message: message_1.MESSAGES.PASSWORDS_DO_NOT_MATCH,
     path: ['confirmPassword'],
 });

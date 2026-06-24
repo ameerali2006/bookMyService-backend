@@ -167,7 +167,7 @@ export class ManagementAdminService implements IManagementAdminService {
       console.error(error);
       throw error instanceof CustomError
         ? error
-        : new CustomError('data error', STATUS_CODES.BAD_REQUEST);
+        : new CustomError(MESSAGES.DATA_ERROR, STATUS_CODES.BAD_REQUEST);
     }
   }
 
@@ -261,7 +261,7 @@ export class ManagementAdminService implements IManagementAdminService {
       const existing = await this._serviceRepo.findByCategory(data.category);
 
       if (existing) {
-        return {success:true, message: 'Service already exists' };
+        return {success:true, message: MESSAGES.SERVICE_ALREADY_EXISTS };
       }
 
       const newService = await this._serviceRepo.create(data);
@@ -269,7 +269,7 @@ export class ManagementAdminService implements IManagementAdminService {
       return {
         success:true,
         data: mappedData[0],
-        message: 'Service created successfully',
+        message: MESSAGES.SERVICE_CREATED_SUCCESSFULLY,
       };
     } catch (error) {
       console.log(error);
@@ -371,7 +371,7 @@ export class ManagementAdminService implements IManagementAdminService {
 
       return {
         success: true,
-        message: 'Bookings fetched successfully',
+        message: MESSAGES.BOOKINGS_FETCHED_SUCCESSFULLY,
         bookings: mappedBookings,
         total,
         page: safePage,
@@ -381,7 +381,7 @@ export class ManagementAdminService implements IManagementAdminService {
       console.log(error)
       return {
         success: false,
-        message: 'Failed to fetch bookings',
+        message: MESSAGES.FAILED_TO_FETCH_BOOKINGS,
 
         total: 0,
         page,
@@ -396,7 +396,7 @@ export class ManagementAdminService implements IManagementAdminService {
         return {
 
           success: false,
-          message: 'data not fount',
+          message: MESSAGES.DATA_NOT_FOUNT,
 
         };
       }
@@ -405,20 +405,20 @@ export class ManagementAdminService implements IManagementAdminService {
         return {
 
           success: false,
-          message: 'data not fount',
+          message: MESSAGES.DATA_NOT_FOUNT,
 
         };
       }
       const booking = AdminMapper.resBookingDetails(getData);
       return {
         success: true,
-        message: 'success fully fetched Data',
+        message: MESSAGES.SUCCESS_FULLY_FETCHED_DATA,
         booking,
       };
     } catch (error) {
       return {
         success: false,
-        message: 'internal error',
+        message: MESSAGES.INTERNAL_ERROR,
       };
     }
   }
@@ -445,7 +445,7 @@ export class ManagementAdminService implements IManagementAdminService {
 
     return {
       success: true,
-      message: 'fetch success fully',
+      message: MESSAGES.FETCH_SUCCESS_FULLY,
       data: {
         stats: {
           totalBookings,

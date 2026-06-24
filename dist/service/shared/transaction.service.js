@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransactionService = void 0;
+const message_1 = require("../../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const shared_mapping_1 = require("../../utils/mapper/shared-mapping");
@@ -37,7 +38,7 @@ let TransactionService = class TransactionService {
             if (!wallet) {
                 return {
                     success: false,
-                    message: 'Wallet not found',
+                    message: message_1.MESSAGES.WALLET_NOT_FOUND,
                     data: {
                         transactions: [],
                         pagination: {
@@ -53,7 +54,7 @@ let TransactionService = class TransactionService {
             const transactions = shared_mapping_1.SharedMapper.toTransactionResponseList(result.transactions);
             return {
                 success: true,
-                message: 'Transactions fetched successfully',
+                message: message_1.MESSAGES.TRANSACTIONS_FETCHED_SUCCESSFULLY,
                 data: {
                     transactions,
                     pagination: {

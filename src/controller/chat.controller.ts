@@ -1,3 +1,4 @@
+import { MESSAGES } from '../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import { Request, Response, NextFunction } from 'express';
 import { TYPES } from '../config/constants/types';
@@ -22,7 +23,7 @@ export class ChatController implements IChatController {
       if (!bookingId) {
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'Booking ID is missing',
+          message: MESSAGES.BOOKING_ID_IS_MISSING,
         });
         return;
       }
@@ -33,7 +34,7 @@ export class ChatController implements IChatController {
       if (!chat) {
         res.status(STATUS_CODES.NOT_FOUND).json({
           success: false,
-          message: 'Chat not found',
+          message: MESSAGES.CHAT_NOT_FOUND,
         });
         return;
       }

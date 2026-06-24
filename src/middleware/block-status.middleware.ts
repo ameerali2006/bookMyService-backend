@@ -46,7 +46,7 @@ export class BlockStatusMiddleware {
       if (!req.user) {
         return res.status(STATUS_CODES.UNAUTHORIZED).json({
           status: 'error',
-          message: 'Unauthorized: No user found in request',
+          message: MESSAGES.UNAUTHORIZED_NO_USER_FOUND_IN_REQUEST,
         });
       }
 
@@ -82,7 +82,7 @@ export class BlockStatusMiddleware {
 
         return res.status(STATUS_CODES.FORBIDDEN).json({
           success: false,
-          message: 'Access denied: Your account has been blocked',
+          message: MESSAGES.ACCESS_DENIED_YOUR_ACCOUNT_HAS_BEEN_BLOC,
         });
       }
 
@@ -91,7 +91,7 @@ export class BlockStatusMiddleware {
       console.error('Block Status Middleware Error:', error);
       res.status(STATUS_CODES.INTERNAL_SERVER_ERROR).json({
         success: false,
-        message: 'Internal server error while checking blocked status',
+        message: MESSAGES.INTERNAL_SERVER_ERROR_WHILE_CHECKING_BLO,
       });
     }
   };

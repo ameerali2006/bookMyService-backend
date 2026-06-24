@@ -24,6 +24,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ManagementAdmin = void 0;
 const tsyringe_1 = require("tsyringe");
 const status_code_1 = require("../../config/constants/status-code");
+const message_1 = require("../../config/constants/message");
 const types_1 = require("../../config/constants/types");
 const custom_error_1 = require("../../utils/custom-error");
 const service_create_1 = require("../validation/service-create");
@@ -48,7 +49,7 @@ let ManagementAdmin = class ManagementAdmin {
             catch (error) {
                 res
                     .status(status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR)
-                    .json({ message: 'Failed to get users', error });
+                    .json({ message: message_1.MESSAGES.FAILED_TO_GET_USERS, error });
                 next(error);
             }
         });
@@ -64,19 +65,19 @@ let ManagementAdmin = class ManagementAdmin {
                 if (!updated) {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST || 400).json({
                         success: false,
-                        message: 'User updation failed',
+                        message: message_1.MESSAGES.USER_UPDATION_FAILED,
                     });
                 }
                 res.status(status_code_1.STATUS_CODES.OK || 200).json({
                     success: true,
-                    message: `User ${(updated === null || updated === void 0 ? void 0 : updated.isBlocked) ? 'activated' : 'blocked'} successfully`,
+                    message: message_1.MESSAGES.USER_UPDATEDISBLOCKED_ACTIVATED_BLOCKED_,
                 });
             }
             catch (error) {
                 const statusCode = error instanceof custom_error_1.CustomError
                     ? error.statusCode
                     : status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR;
-                const message = error instanceof Error ? error.message : 'Failed to update user status';
+                const message = error instanceof Error ? error.message : message_1.MESSAGES.FAILED_TO_UPDATE_USER_STATUS;
                 res.status(statusCode).json({
                     success: false,
                     message,
@@ -100,7 +101,7 @@ let ManagementAdmin = class ManagementAdmin {
             catch (error) {
                 res
                     .status(status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR)
-                    .json({ message: 'Failed to get users', error });
+                    .json({ message: message_1.MESSAGES.FAILED_TO_GET_USERS, error });
                 next(error);
             }
         });
@@ -116,19 +117,19 @@ let ManagementAdmin = class ManagementAdmin {
                 if (!updated) {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST || 400).json({
                         success: false,
-                        message: 'User updation failed',
+                        message: message_1.MESSAGES.USER_UPDATION_FAILED,
                     });
                 }
                 res.status(status_code_1.STATUS_CODES.OK || 200).json({
                     success: true,
-                    message: `User ${(updated === null || updated === void 0 ? void 0 : updated.isBlocked) ? 'activated' : 'blocked'} successfully`,
+                    message: message_1.MESSAGES.USER_UPDATEDISBLOCKED_ACTIVATED_BLOCKED_,
                 });
             }
             catch (error) {
                 const statusCode = error instanceof custom_error_1.CustomError
                     ? error.statusCode
                     : status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR;
-                const message = error instanceof Error ? error.message : 'Failed to update user status';
+                const message = error instanceof Error ? error.message : message_1.MESSAGES.FAILED_TO_UPDATE_USER_STATUS;
                 res.status(statusCode).json({
                     success: false,
                     message,
@@ -162,7 +163,7 @@ let ManagementAdmin = class ManagementAdmin {
                 if (!['approved', 'rejected'].includes(status)) {
                     res
                         .status(status_code_1.STATUS_CODES.BAD_REQUEST)
-                        .json({ success: false, message: 'Invalid status' });
+                        .json({ success: false, message: message_1.MESSAGES.INVALID_STATUS });
                 }
                 console.log('kjhdk');
                 const worker = yield this._adminManagement.verifyWorker(workerId, status);
@@ -216,13 +217,13 @@ let ManagementAdmin = class ManagementAdmin {
                 if (!updated) {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST || 400).json({
                         success: false,
-                        message: 'User updation failed',
+                        message: message_1.MESSAGES.USER_UPDATION_FAILED,
                     });
                 }
                 res.status(status_code_1.STATUS_CODES.OK || 200).json({
                     success: true,
                     status: updated.status,
-                    message: `User ${(updated === null || updated === void 0 ? void 0 : updated.status) ? 'inactive' : 'active'} successfully`,
+                    message: message_1.MESSAGES.USER_UPDATEDSTATUS_INACTIVE_ACTIVE_SUCCE,
                 });
             }
             catch (error) {

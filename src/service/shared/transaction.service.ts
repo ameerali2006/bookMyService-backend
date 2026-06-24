@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import { TYPES } from '../../config/constants/types';
 import { WalletTransactionQuery } from '../../dto/shared/wallet.dto';
@@ -37,7 +38,7 @@ export class TransactionService implements ITransactionService {
     if (!wallet) {
       return {
         success: false,
-        message: 'Wallet not found',
+        message: MESSAGES.WALLET_NOT_FOUND,
         data: {
           transactions: [],
           pagination: {
@@ -58,7 +59,7 @@ export class TransactionService implements ITransactionService {
 
     return {
       success: true,
-      message: 'Transactions fetched successfully',
+      message: MESSAGES.TRANSACTIONS_FETCHED_SUCCESSFULLY,
       data: {
         transactions,
         pagination: {

@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { z } from 'zod';
 
 export const WorkerRegisterSchema = z
@@ -15,6 +16,6 @@ export const WorkerRegisterSchema = z
     zone: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
+    message: MESSAGES.PASSWORDS_DO_NOT_MATCH,
     path: ['confirmPassword'],
   });

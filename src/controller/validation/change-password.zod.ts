@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { z } from 'zod';
 
 export const changePasswordSchema = z.object({
@@ -10,7 +11,7 @@ export const changePasswordSchema = z.object({
     .regex(/[0-9]/, 'Must include at least one number.'),
   confirmPassword: z.string(),
 }).refine((data) => data.newPassword === data.confirmPassword, {
-  message: 'Passwords do not match',
+  message: MESSAGES.PASSWORDS_DO_NOT_MATCH,
   path: ['confirmPassword'],
 });
 

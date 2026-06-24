@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import { Stripe } from 'stripe';
 
@@ -62,14 +63,14 @@ export class StripeService implements IStripeService {
       console.log(paymentIntent);
       return {
         success: true,
-        message: 'Successfully Payment created',
+        message: MESSAGES.SUCCESSFULLY_PAYMENT_CREATED,
         paymentIntent,
       };
     } catch (error) {
       console.error(error);
       return {
         success: false,
-        message: 'internal error',
+        message: MESSAGES.INTERNAL_ERROR,
         paymentIntent: null,
       };
     }

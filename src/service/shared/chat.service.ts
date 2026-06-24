@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import {
   IChatService,
@@ -20,11 +21,11 @@ export class ChatService implements IChatService {
 
   private async validateParticipant(chatId: string, userId: string) {
     const chat = await this.chatRepo.findById(chatId);
-    if (!chat) throw new Error('Chat not found');
+    if (!chat) throw new Error(MESSAGES.CHAT_NOT_FOUND);
 
     const allowed = chat.userId.toString() === userId || chat.workerId.toString() === userId;
 
-    if (!allowed) throw new Error('Unauthorized');
+    if (!allowed) throw new Error(MESSAGES.UNAUTHORIZED);
   }
 
   async createChat(
@@ -33,14 +34,14 @@ export class ChatService implements IChatService {
     try {
       const booking = await this.bookingRepo.findById(bookingId);
       if (!booking) {
-        return { success: false, message: 'booking not fount' };
+        return { success: false, message: MESSAGES.BOOKING_NOT_FOUNT };
       }
       const existingChat = await this.chatRepo.findByBookingId(bookingId);
 
       if (existingChat) {
         return {
           success: true,
-          message: 'chat id fetch successfully',
+          message: MESSAGES.CHAT_ID_FETCH_SUCCESSFULLY,
           chatId: existingChat._id.toString(),
         };
       }
@@ -50,12 +51,12 @@ export class ChatService implements IChatService {
       });
       return {
         success: true,
-        message: 'chat id fetch successfully',
+        message: MESSAGES.CHAT_ID_FETCH_SUCCESSFULLY,
         chatId: newChat._id.toString(),
       };
     } catch (error) {
       console.error('Chat creation failed:', error);
-      return { success: false, message: 'internal error' };
+      return { success: false, message: MESSAGES.INTERNAL_ERROR };
     }
   }
 
@@ -63,11 +64,11 @@ export class ChatService implements IChatService {
     bookingId: string,
   ): Promise<{ success: boolean; message: string; chatId?: string }> {
     if (!bookingId) {
-      return { success: false, message: 'booking id not found' };
+      return { success: false, message: MESSAGES.BOOKING_ID_NOT_FOUND };
     }
     const booking = await this.bookingRepo.findById(bookingId);
     if (!booking) {
-      return { success: false, message: 'booking not found' };
+      return { success: false, message: MESSAGES.BOOKING_NOT_FOUND };
     }
     const chat = await this.chatRepo.findByUserAndWorker(
       booking.userId.toString(),
@@ -80,7 +81,7 @@ export class ChatService implements IChatService {
     }
     return {
       success: true,
-      message: 'chat fetch successfully',
+      message: MESSAGES.CHAT_FETCH_SUCCESSFULLY,
       chatId: chat._id.toString(),
     };
   }
@@ -95,7 +96,7 @@ export class ChatService implements IChatService {
       if (!chatId) {
         return {
           success: false,
-          message: 'Chat ID is required',
+          message: MESSAGES.CHAT_ID_IS_REQUIRED,
           messages: [],
         };
       }
@@ -104,7 +105,7 @@ export class ChatService implements IChatService {
       if (!chat) {
         return {
           success: false,
-          message: 'Chat not found',
+          message: MESSAGES.CHAT_NOT_FOUND,
           messages: [],
         };
       }
@@ -114,7 +115,7 @@ export class ChatService implements IChatService {
 
       return {
         success: true,
-        message: 'Chat history fetched successfully',
+        message: MESSAGES.CHAT_HISTORY_FETCHED_SUCCESSFULLY,
         messages: mappedMessages,
       };
     } catch (error) {
@@ -122,7 +123,7 @@ export class ChatService implements IChatService {
 
       return {
         success: false,
-        message: 'Internal server error',
+        message: MESSAGES.INTERNAL_SERVER_ERROR,
         messages: [],
       };
     }
@@ -135,7 +136,7 @@ export class ChatService implements IChatService {
 
     return {
       success: true,
-      message: 'Chat inbox fetched successfully',
+      message: MESSAGES.CHAT_INBOX_FETCHED_SUCCESSFULLY,
       chats,
     };
   }

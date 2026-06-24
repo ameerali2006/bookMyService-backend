@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookingDetailsService = void 0;
+const message_1 = require("../../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const user_mapper_1 = require("../../utils/mapper/user-mapper");
@@ -39,13 +40,13 @@ let BookingDetailsService = class BookingDetailsService {
                 if (!bookings) {
                     return {
                         success: false,
-                        message: 'No bookings found',
+                        message: message_1.MESSAGES.NO_BOOKINGS_FOUND,
                     };
                 }
                 const formatted = user_mapper_1.UserMapper.ongoingBooking(bookings);
                 return {
                     success: true,
-                    message: 'Ongoing bookings fetched successfully',
+                    message: message_1.MESSAGES.ONGOING_BOOKINGS_FETCHED_SUCCESSFULLY,
                     data: {
                         data: formatted,
                         total,
@@ -55,7 +56,7 @@ let BookingDetailsService = class BookingDetailsService {
             catch (error) {
                 return {
                     success: false,
-                    message: 'internal Error',
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                 };
             }
         });
@@ -64,20 +65,20 @@ let BookingDetailsService = class BookingDetailsService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!bookingId) {
-                    return { success: false, message: 'bookiing detail is missing' };
+                    return { success: false, message: message_1.MESSAGES.BOOKIING_DETAIL_IS_MISSING };
                 }
                 const bookingData = yield this.bookingRepo.findByIdPopulated(bookingId);
                 if (!bookingData) {
-                    return { success: false, message: 'booking not fount' };
+                    return { success: false, message: message_1.MESSAGES.BOOKING_NOT_FOUNT };
                 }
                 const dtoData = user_mapper_1.UserMapper.bookingDetail(bookingData);
-                return { success: true, message: 'successfully fetched data', booking: dtoData };
+                return { success: true, message: message_1.MESSAGES.SUCCESSFULLY_FETCHED_DATA, booking: dtoData };
             }
             catch (error) {
                 console.log(error);
                 return {
                     success: false,
-                    message: 'internal Error',
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                 };
             }
         });

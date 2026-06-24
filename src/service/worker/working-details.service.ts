@@ -42,7 +42,7 @@ export class WorkingDetailsManagement implements IWorkingDetailsManagement {
 
   async getWorkingDetails(email: string): Promise<IWorkingDetailsDocument> {
     const worker = await this._workerRepo.findByEmail(email);
-    if (!worker) throw new Error("Worker not found");
+    if (!worker) throw new Error(MESSAGES.WORKER_NOT_FOUND);
 
     let details = await this._workingRepo.findByWorkerId(worker._id.toString());
     console.log("details:",details)
@@ -173,7 +173,7 @@ export class WorkingDetailsManagement implements IWorkingDetailsManagement {
       if (!workerId) {
         return {
           success: false,
-          message: "Worker is Not Found",
+          message: MESSAGES.WORKER_IS_NOT_FOUND,
           worker: null,
         };
       }
@@ -183,12 +183,12 @@ export class WorkingDetailsManagement implements IWorkingDetailsManagement {
       if (!workerData) {
         return {
           success: false,
-          message: "Worker is Not Found",
+          message: MESSAGES.WORKER_IS_NOT_FOUND,
           worker: null,
         };
       }
       const worker = WorkerMapper.mapWorkerToProfileDTO(workerData);
-      return { success: true, message: "fetch data successfully", worker };
+      return { success: true, message: MESSAGES.FETCH_DATA_SUCCESSFULLY, worker };
     } catch (_error) {
       throw new CustomError(MESSAGES.BAD_REQUEST, STATUS_CODES.BAD_REQUEST);
     }
@@ -217,7 +217,7 @@ export class WorkingDetailsManagement implements IWorkingDetailsManagement {
       if (!updatedWorker) {
         return {
           success: false,
-          message: "Failed to update worker profile",
+          message: MESSAGES.FAILED_TO_UPDATE_WORKER_PROFILE,
           worker: null,
         };
       }
@@ -226,7 +226,7 @@ export class WorkingDetailsManagement implements IWorkingDetailsManagement {
 
       return {
         success: true,
-        message: "Worker profile updated successfully",
+        message: MESSAGES.WORKER_PROFILE_UPDATED_SUCCESSFULLY,
         worker: workerDTO,
       };
     } catch (_error) {
@@ -286,7 +286,7 @@ export class WorkingDetailsManagement implements IWorkingDetailsManagement {
       if (!customSlots || !holidays) {
         return {
           success: false,
-          message: "Data not found",
+          message: MESSAGES.DATA_NOT_FOUND,
           customSlots: null,
           holidays: null,
         };

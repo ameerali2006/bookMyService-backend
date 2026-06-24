@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { z } from 'zod';
 
 export const workerProfileUpdateSchema = z.object({
@@ -13,7 +14,7 @@ export const workerProfileUpdateSchema = z.object({
 
   experience: z
     .enum(['0-1', '2-5', '6-10', '10+'], {
-      message: 'Invalid experience range',
+      message: MESSAGES.INVALID_EXPERIENCE_RANGE,
     })
     .optional(),
   fees: z

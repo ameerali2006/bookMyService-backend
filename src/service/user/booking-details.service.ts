@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import { string } from 'zod';
 import { TYPES } from '../../config/constants/types';
@@ -33,7 +34,7 @@ export class BookingDetailsService implements IBookingDetailsService {
       if (!bookings) {
         return {
           success: false,
-          message: 'No bookings found',
+          message: MESSAGES.NO_BOOKINGS_FOUND,
         };
       }
 
@@ -41,7 +42,7 @@ export class BookingDetailsService implements IBookingDetailsService {
 
       return {
         success: true,
-        message: 'Ongoing bookings fetched successfully',
+        message: MESSAGES.ONGOING_BOOKINGS_FETCHED_SUCCESSFULLY,
         data: {
           data: formatted,
           total,
@@ -50,7 +51,7 @@ export class BookingDetailsService implements IBookingDetailsService {
     } catch (error) {
       return {
         success: false,
-        message: 'internal Error',
+        message: MESSAGES.INTERNAL_ERROR,
       };
     }
   }
@@ -58,19 +59,19 @@ export class BookingDetailsService implements IBookingDetailsService {
   async bookingDetailData(bookingId: string): Promise<bookingDetailDataResponseDto> {
     try {
       if (!bookingId) {
-        return { success: false, message: 'bookiing detail is missing' };
+        return { success: false, message: MESSAGES.BOOKIING_DETAIL_IS_MISSING };
       }
       const bookingData = await this.bookingRepo.findByIdPopulated(bookingId);
       if (!bookingData) {
-        return { success: false, message: 'booking not fount' };
+        return { success: false, message: MESSAGES.BOOKING_NOT_FOUNT };
       }
       const dtoData = UserMapper.bookingDetail(bookingData);
-      return { success: true, message: 'successfully fetched data', booking: dtoData };
+      return { success: true, message: MESSAGES.SUCCESSFULLY_FETCHED_DATA, booking: dtoData };
     } catch (error) {
       console.log(error);
       return {
         success: false,
-        message: 'internal Error',
+        message: MESSAGES.INTERNAL_ERROR,
       };
     }
   }

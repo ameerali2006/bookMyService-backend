@@ -48,7 +48,7 @@ export class ManagementAdmin implements IAdminManagementController {
     } catch (error) {
       res
         .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({ message: 'Failed to get users', error });
+        .json({ message: MESSAGES.FAILED_TO_GET_USERS, error });
       next(error);
     }
   }
@@ -72,19 +72,19 @@ export class ManagementAdmin implements IAdminManagementController {
         res.status(STATUS_CODES.BAD_REQUEST || 400).json({
           success: false,
 
-          message: 'User updation failed',
+          message: MESSAGES.USER_UPDATION_FAILED,
         });
       }
       res.status(STATUS_CODES.OK || 200).json({
         success: true,
 
-        message: `User ${updated?.isBlocked ? 'activated' : 'blocked'} successfully`,
+        message: MESSAGES.USER_UPDATEDISBLOCKED_ACTIVATED_BLOCKED_,
       });
     } catch (error) {
       const statusCode = error instanceof CustomError
         ? error.statusCode
         : STATUS_CODES.INTERNAL_SERVER_ERROR;
-      const message = error instanceof Error ? error.message : 'Failed to update user status';
+      const message = error instanceof Error ? error.message : MESSAGES.FAILED_TO_UPDATE_USER_STATUS;
       res.status(statusCode).json({
         success: false,
         message,
@@ -118,7 +118,7 @@ export class ManagementAdmin implements IAdminManagementController {
     } catch (error) {
       res
         .status(STATUS_CODES.INTERNAL_SERVER_ERROR)
-        .json({ message: 'Failed to get users', error });
+        .json({ message: MESSAGES.FAILED_TO_GET_USERS, error });
       next(error);
     }
   }
@@ -142,19 +142,19 @@ export class ManagementAdmin implements IAdminManagementController {
         res.status(STATUS_CODES.BAD_REQUEST || 400).json({
           success: false,
 
-          message: 'User updation failed',
+          message: MESSAGES.USER_UPDATION_FAILED,
         });
       }
       res.status(STATUS_CODES.OK || 200).json({
         success: true,
 
-        message: `User ${updated?.isBlocked ? 'activated' : 'blocked'} successfully`,
+        message: MESSAGES.USER_UPDATEDISBLOCKED_ACTIVATED_BLOCKED_,
       });
     } catch (error) {
       const statusCode = error instanceof CustomError
         ? error.statusCode
         : STATUS_CODES.INTERNAL_SERVER_ERROR;
-      const message = error instanceof Error ? error.message : 'Failed to update user status';
+      const message = error instanceof Error ? error.message : MESSAGES.FAILED_TO_UPDATE_USER_STATUS;
       res.status(statusCode).json({
         success: false,
         message,
@@ -202,7 +202,7 @@ export class ManagementAdmin implements IAdminManagementController {
       if (!['approved', 'rejected'].includes(status)) {
         res
           .status(STATUS_CODES.BAD_REQUEST)
-          .json({ success: false, message: 'Invalid status' });
+          .json({ success: false, message: MESSAGES.INVALID_STATUS });
       }
       console.log('kjhdk');
       const worker = await this._adminManagement.verifyWorker(
@@ -285,13 +285,13 @@ export class ManagementAdmin implements IAdminManagementController {
         res.status(STATUS_CODES.BAD_REQUEST || 400).json({
           success: false,
 
-          message: 'User updation failed',
+          message: MESSAGES.USER_UPDATION_FAILED,
         });
       }
       res.status(STATUS_CODES.OK || 200).json({
         success: true,
         status: updated.status,
-        message: `User ${updated?.status ? 'inactive' : 'active'} successfully`,
+        message: MESSAGES.USER_UPDATEDSTATUS_INACTIVE_ACTIVE_SUCCE,
       });
     } catch (error) {
       next(error);

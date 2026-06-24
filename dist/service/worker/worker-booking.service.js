@@ -46,7 +46,7 @@ let WorkerBookingService = class WorkerBookingService {
                 console.log(data);
                 const booking = yield this.bookingRepo.findByIdPopulated(bookingId);
                 if (!booking) {
-                    return { success: false, message: 'Booking not found' };
+                    return { success: false, message: message_1.MESSAGES.BOOKING_NOT_FOUND };
                 }
                 if (!booking.startTime) {
                     return {
@@ -58,7 +58,7 @@ let WorkerBookingService = class WorkerBookingService {
                 if (!(0, time_Intervals_1.isTimeGreater)(endTime, booking.startTime)) {
                     return {
                         success: false,
-                        message: 'End time must be greater than start time',
+                        message: message_1.MESSAGES.END_TIME_MUST_BE_GREATER_THAN_START_TIME,
                     };
                 }
                 const workerBooking = yield this.bookingRepo.findByWorkerAndDate(booking.workerId._id.toString(), booking.date);
@@ -73,13 +73,13 @@ let WorkerBookingService = class WorkerBookingService {
                 if (conflict) {
                     return {
                         success: false,
-                        message: 'Time conflict with another approved booking',
+                        message: message_1.MESSAGES.TIME_CONFLICT_WITH_ANOTHER_APPROVED_BOOK,
                     };
                 }
                 if (additionalItems === null || additionalItems === void 0 ? void 0 : additionalItems.length) {
                     for (const item of additionalItems) {
                         if (!item.name || typeof item.price !== 'number') {
-                            return { success: false, message: 'Invalid additional item' };
+                            return { success: false, message: message_1.MESSAGES.INVALID_ADDITIONAL_ITEM };
                         }
                     }
                 }
@@ -134,16 +134,16 @@ let WorkerBookingService = class WorkerBookingService {
                 });
                 yield this.notification.createNotification({
                     title: 'booking Approve',
-                    message: 'worker  Approved your booking',
+                    message: message_1.MESSAGES.WORKER_APPROVED_YOUR_BOOKING,
                     type: 'booking',
                     userId: booking.userId._id.toString(),
                     bookingId: bookingId
                 });
-                return { success: true, message: 'Service approved successfully' };
+                return { success: true, message: message_1.MESSAGES.SERVICE_APPROVED_SUCCESSFULLY };
             }
             catch (error) {
                 console.error(error);
-                return { success: false, message: 'Internal server error' };
+                return { success: false, message: message_1.MESSAGES.INTERNAL_SERVER_ERROR };
             }
         });
     }
@@ -152,10 +152,10 @@ let WorkerBookingService = class WorkerBookingService {
             try {
                 const booking = yield this.bookingRepo.findById(bookingId);
                 if (!booking) {
-                    throw new Error('Booking not found');
+                    throw new Error(message_1.MESSAGES.BOOKING_NOT_FOUND);
                 }
                 if (booking.workerResponse === 'rejected') {
-                    throw new Error('Already rejected');
+                    throw new Error(message_1.MESSAGES.ALREADY_REJECTED);
                 }
                 let refundAmount = 0;
                 const updateBooking = {
@@ -173,12 +173,12 @@ let WorkerBookingService = class WorkerBookingService {
                         description: `Refund for rejected service (${booking.serviceId})`,
                     });
                     if (!wallet)
-                        return { success: false, message: 'user wallet error' };
+                        return { success: false, message: message_1.MESSAGES.USER_WALLET_ERROR };
                     updateBooking.advancePaymentStatus = 'refunded';
                 }
                 const updatedBooking = yield this.bookingRepo.updateById(bookingId, updateBooking);
                 if (!updatedBooking) {
-                    return { success: false, message: 'user booking updation failed' };
+                    return { success: false, message: message_1.MESSAGES.USER_BOOKING_UPDATION_FAILED };
                 }
                 const user = yield this.userRepo.findById(booking.userId);
                 if (user && user.email) {
@@ -192,20 +192,20 @@ let WorkerBookingService = class WorkerBookingService {
                 }
                 yield this.notification.createNotification({
                     title: 'booking rejected',
-                    message: 'worker  rejected your booking',
+                    message: message_1.MESSAGES.WORKER_REJECTED_YOUR_BOOKING,
                     type: 'booking',
                     userId: booking.userId.toString(),
                     bookingId,
                 });
                 return {
                     success: true,
-                    message: 'Service rejected successfully',
+                    message: message_1.MESSAGES.SERVICE_REJECTED_SUCCESSFULLY,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'something went wrong',
+                    message: message_1.MESSAGES.SOMETHING_WENT_WRONG,
                 };
             }
         });
@@ -226,7 +226,7 @@ let WorkerBookingService = class WorkerBookingService {
                 console.log(finalMapped);
                 return {
                     success: true,
-                    message: 'Requests fetched successfully',
+                    message: message_1.MESSAGES.REQUESTS_FETCHED_SUCCESSFULLY,
                     data: {
                         data: finalMapped,
                         page: filter.page,
@@ -238,7 +238,7 @@ let WorkerBookingService = class WorkerBookingService {
                 console.log(error);
                 return {
                     success: false,
-                    message: 'internal error',
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                 };
             }
         });
@@ -251,7 +251,7 @@ let WorkerBookingService = class WorkerBookingService {
                 if (!workerId) {
                     return {
                         success: false,
-                        message: 'worker data not font',
+                        message: message_1.MESSAGES.WORKER_DATA_NOT_FONT,
                     };
                 }
                 status === 'approved' ? 'confirmed' : status;
@@ -266,7 +266,7 @@ let WorkerBookingService = class WorkerBookingService {
                 if (!items) {
                     return {
                         success: false,
-                        message: 'data not fount',
+                        message: message_1.MESSAGES.DATA_NOT_FOUNT,
                     };
                 }
                 const normalizeDate = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -285,7 +285,7 @@ let WorkerBookingService = class WorkerBookingService {
                 }
                 return {
                     success: true,
-                    message: 'data fetch successfully',
+                    message: message_1.MESSAGES.DATA_FETCH_SUCCESSFULLY,
                     today: todayBookings,
                     upcoming: upcomingBookings,
                     pagination: {
@@ -311,14 +311,14 @@ let WorkerBookingService = class WorkerBookingService {
                 if (!bookingId) {
                     return {
                         success: false,
-                        message: 'booking data missing',
+                        message: message_1.MESSAGES.BOOKING_DATA_MISSING,
                     };
                 }
                 const booking = yield this.bookingRepo.findByIdPopulated(bookingId);
                 if (!booking) {
                     return {
                         success: false,
-                        message: 'booking data not fount',
+                        message: message_1.MESSAGES.BOOKING_DATA_NOT_FOUNT,
                     };
                 }
                 const verification = Boolean(booking.otp);
@@ -331,7 +331,7 @@ let WorkerBookingService = class WorkerBookingService {
             catch (error) {
                 return {
                     success: false,
-                    message: 'Internal Eror',
+                    message: message_1.MESSAGES.INTERNAL_EROR,
                 };
             }
         });
@@ -343,7 +343,7 @@ let WorkerBookingService = class WorkerBookingService {
                 if (!bookingid) {
                     return {
                         success: false,
-                        message: 'booking deatails is not fount ',
+                        message: message_1.MESSAGES.BOOKING_DEATAILS_IS_NOT_FOUNT,
                     };
                 }
                 const otp = Math.floor(1000 + Math.random() * 9000).toString();
@@ -351,26 +351,26 @@ let WorkerBookingService = class WorkerBookingService {
                 if (!updateBooking) {
                     return {
                         success: false,
-                        message: 'booking details is not fount ',
+                        message: message_1.MESSAGES.BOOKING_DETAILS_IS_NOT_FOUNT,
                     };
                 }
                 const booking = yield this.getWorkerAprrovalpageDetails(bookingid);
                 if (!booking.success && !booking.booking) {
                     return {
                         success: false,
-                        message: 'booking details is not fount ',
+                        message: message_1.MESSAGES.BOOKING_DETAILS_IS_NOT_FOUNT,
                     };
                 }
                 yield this.notification.createNotification({
                     title: 'worker reached',
-                    message: 'worker reached to your location',
+                    message: message_1.MESSAGES.WORKER_REACHED_TO_YOUR_LOCATION,
                     type: 'booking',
                     userId: (_a = booking.booking) === null || _a === void 0 ? void 0 : _a.userId._id.toString(),
                     bookingId: bookingid,
                 });
                 return {
                     success: true,
-                    message: 'successfully generated otp',
+                    message: message_1.MESSAGES.SUCCESSFULLY_GENERATED_OTP,
                     booking: booking.booking,
                 };
             }
@@ -378,7 +378,7 @@ let WorkerBookingService = class WorkerBookingService {
                 console.log(error);
                 return {
                     success: false,
-                    message: 'Internal error',
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                 };
             }
         });
@@ -389,13 +389,13 @@ let WorkerBookingService = class WorkerBookingService {
                 if (!bookingId) {
                     return {
                         success: false,
-                        message: 'booking detail missing',
+                        message: message_1.MESSAGES.BOOKING_DETAIL_MISSING,
                     };
                 }
                 if (!otp) {
                     return {
                         success: true,
-                        message: 'validation  not fount ',
+                        message: message_1.MESSAGES.VALIDATION_NOT_FOUNT,
                     };
                 }
                 const booking = yield this.bookingRepo.findById(bookingId);
@@ -403,39 +403,39 @@ let WorkerBookingService = class WorkerBookingService {
                 if (!booking) {
                     return {
                         success: false,
-                        message: 'booking detail missing',
+                        message: message_1.MESSAGES.BOOKING_DETAIL_MISSING,
                     };
                 }
                 if (booking.otp != otp) {
                     return {
                         success: false,
-                        message: 'worker varification failed',
+                        message: message_1.MESSAGES.WORKER_VARIFICATION_FAILED,
                     };
                 }
                 const updatebooking = yield this.bookingRepo.updateStatusWithOTP(bookingId, 'in-progress');
                 if (!updatebooking) {
                     return {
                         success: false,
-                        message: 'worker varification failed',
+                        message: message_1.MESSAGES.WORKER_VARIFICATION_FAILED,
                     };
                 }
                 yield this.notification.createNotification({
                     title: 'worker verified',
-                    message: 'worker successfully verified',
+                    message: message_1.MESSAGES.WORKER_SUCCESSFULLY_VERIFIED,
                     type: 'booking',
                     userId: booking.userId.toString(),
                     bookingId,
                 });
                 return {
                     success: true,
-                    message: 'worker successfully verified',
+                    message: message_1.MESSAGES.WORKER_SUCCESSFULLY_VERIFIED,
                 };
             }
             catch (error) {
                 console.error(error);
                 return {
                     success: false,
-                    message: 'internal error',
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                 };
             }
         });
@@ -447,7 +447,7 @@ let WorkerBookingService = class WorkerBookingService {
                     return {
                         status: status_code_1.STATUS_CODES.BAD_REQUEST,
                         success: false,
-                        message: 'booking Id is not fount',
+                        message: message_1.MESSAGES.BOOKING_ID_IS_NOT_FOUNT,
                     };
                 }
                 const updateBooking = yield this.bookingRepo.updateStatus(bookingId, 'awaiting-final-payment');
@@ -455,7 +455,7 @@ let WorkerBookingService = class WorkerBookingService {
                     return {
                         status: status_code_1.STATUS_CODES.BAD_REQUEST,
                         success: false,
-                        message: 'booking updatetion failed',
+                        message: message_1.MESSAGES.BOOKING_UPDATETION_FAILED,
                     };
                 }
                 const booking = yield this.bookingRepo.findByIdPopulated(bookingId);
@@ -463,12 +463,12 @@ let WorkerBookingService = class WorkerBookingService {
                     return {
                         status: status_code_1.STATUS_CODES.BAD_REQUEST,
                         success: false,
-                        message: 'booking is not fount',
+                        message: message_1.MESSAGES.BOOKING_IS_NOT_FOUNT,
                     };
                 }
                 yield this.notification.createNotification({
                     title: ' work complated',
-                    message: ' work is complate',
+                    message: message_1.MESSAGES.WORK_IS_COMPLATE,
                     type: 'booking',
                     userId: booking.userId._id.toString(),
                     bookingId,
@@ -476,7 +476,7 @@ let WorkerBookingService = class WorkerBookingService {
                 return {
                     status: status_code_1.STATUS_CODES.OK,
                     success: true,
-                    message: 'successfully updated',
+                    message: message_1.MESSAGES.SUCCESSFULLY_UPDATED,
                     booking: Object.assign(Object.assign({}, booking.toObject()), { verification: false }),
                 };
             }
@@ -484,7 +484,7 @@ let WorkerBookingService = class WorkerBookingService {
                 return {
                     status: status_code_1.STATUS_CODES.NOT_FOUND,
                     success: false,
-                    message: 'booking is not fount',
+                    message: message_1.MESSAGES.BOOKING_IS_NOT_FOUNT,
                 };
             }
         });
@@ -508,7 +508,7 @@ let WorkerBookingService = class WorkerBookingService {
             });
             return {
                 success: true,
-                message: 'successfully fetch data',
+                message: message_1.MESSAGES.SUCCESSFULLY_FETCH_DATA,
                 data: {
                     bookings: items.map(worker_mapper_1.WorkerMapper.toAllWorkerBookingDto),
                     total,

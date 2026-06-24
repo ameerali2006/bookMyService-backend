@@ -16,6 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RedisTokenService = void 0;
+const message_1 = require("../../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const redis_1 = require("../../config/redis");
 const custom_error_1 = require("../../utils/custom-error");
@@ -24,7 +25,7 @@ let RedisTokenService = class RedisTokenService {
         return __awaiter(this, void 0, void 0, function* () {
             if (typeof token !== 'string') {
                 console.error('Invalid token type:', typeof token, token);
-                throw new Error('Token must be a string');
+                throw new Error(message_1.MESSAGES.TOKEN_MUST_BE_A_STRING);
             }
             yield redis_1.redisClient.set(token, 'blacklisted', { EX: expiresIn });
         });
@@ -45,7 +46,7 @@ let RedisTokenService = class RedisTokenService {
             }
             catch (err) {
                 console.error('Redis setEx failed:', err);
-                throw new custom_error_1.CustomError('Failed to store token in Redis', 500); // real reason
+                throw new custom_error_1.CustomError(message_1.MESSAGES.FAILED_TO_STORE_TOKEN_IN_REDIS, 500); // real reason
             }
         });
     }

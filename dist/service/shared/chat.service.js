@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatService = void 0;
+const message_1 = require("../../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const chat_mapper_1 = require("../../utils/mapper/chat-mapper");
@@ -35,10 +36,10 @@ let ChatService = class ChatService {
         return __awaiter(this, void 0, void 0, function* () {
             const chat = yield this.chatRepo.findById(chatId);
             if (!chat)
-                throw new Error('Chat not found');
+                throw new Error(message_1.MESSAGES.CHAT_NOT_FOUND);
             const allowed = chat.userId.toString() === userId || chat.workerId.toString() === userId;
             if (!allowed)
-                throw new Error('Unauthorized');
+                throw new Error(message_1.MESSAGES.UNAUTHORIZED);
         });
     }
     createChat(bookingId) {
@@ -46,13 +47,13 @@ let ChatService = class ChatService {
             try {
                 const booking = yield this.bookingRepo.findById(bookingId);
                 if (!booking) {
-                    return { success: false, message: 'booking not fount' };
+                    return { success: false, message: message_1.MESSAGES.BOOKING_NOT_FOUNT };
                 }
                 const existingChat = yield this.chatRepo.findByBookingId(bookingId);
                 if (existingChat) {
                     return {
                         success: true,
-                        message: 'chat id fetch successfully',
+                        message: message_1.MESSAGES.CHAT_ID_FETCH_SUCCESSFULLY,
                         chatId: existingChat._id.toString(),
                     };
                 }
@@ -62,24 +63,24 @@ let ChatService = class ChatService {
                 });
                 return {
                     success: true,
-                    message: 'chat id fetch successfully',
+                    message: message_1.MESSAGES.CHAT_ID_FETCH_SUCCESSFULLY,
                     chatId: newChat._id.toString(),
                 };
             }
             catch (error) {
                 console.error('Chat creation failed:', error);
-                return { success: false, message: 'internal error' };
+                return { success: false, message: message_1.MESSAGES.INTERNAL_ERROR };
             }
         });
     }
     getChatId(bookingId) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!bookingId) {
-                return { success: false, message: 'booking id not found' };
+                return { success: false, message: message_1.MESSAGES.BOOKING_ID_NOT_FOUND };
             }
             const booking = yield this.bookingRepo.findById(bookingId);
             if (!booking) {
-                return { success: false, message: 'booking not found' };
+                return { success: false, message: message_1.MESSAGES.BOOKING_NOT_FOUND };
             }
             const chat = yield this.chatRepo.findByUserAndWorker(booking.userId.toString(), booking.workerId.toString());
             if (!chat) {
@@ -88,7 +89,7 @@ let ChatService = class ChatService {
             }
             return {
                 success: true,
-                message: 'chat fetch successfully',
+                message: message_1.MESSAGES.CHAT_FETCH_SUCCESSFULLY,
                 chatId: chat._id.toString(),
             };
         });
@@ -99,7 +100,7 @@ let ChatService = class ChatService {
                 if (!chatId) {
                     return {
                         success: false,
-                        message: 'Chat ID is required',
+                        message: message_1.MESSAGES.CHAT_ID_IS_REQUIRED,
                         messages: [],
                     };
                 }
@@ -107,7 +108,7 @@ let ChatService = class ChatService {
                 if (!chat) {
                     return {
                         success: false,
-                        message: 'Chat not found',
+                        message: message_1.MESSAGES.CHAT_NOT_FOUND,
                         messages: [],
                     };
                 }
@@ -115,7 +116,7 @@ let ChatService = class ChatService {
                 const mappedMessages = chat_mapper_1.ChatMapper.toMessageDTOList(messages, userId);
                 return {
                     success: true,
-                    message: 'Chat history fetched successfully',
+                    message: message_1.MESSAGES.CHAT_HISTORY_FETCHED_SUCCESSFULLY,
                     messages: mappedMessages,
                 };
             }
@@ -123,7 +124,7 @@ let ChatService = class ChatService {
                 console.error('Failed to fetch chat history:', error);
                 return {
                     success: false,
-                    message: 'Internal server error',
+                    message: message_1.MESSAGES.INTERNAL_SERVER_ERROR,
                     messages: [],
                 };
             }
@@ -134,7 +135,7 @@ let ChatService = class ChatService {
             const chats = yield this.chatRepo.getInboxWithAggregation(userId);
             return {
                 success: true,
-                message: 'Chat inbox fetched successfully',
+                message: message_1.MESSAGES.CHAT_INBOX_FETCHED_SUCCESSFULLY,
                 chats,
             };
         });

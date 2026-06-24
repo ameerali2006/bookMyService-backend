@@ -246,7 +246,7 @@ export class AuthUserController implements IAuthController {
       if (!refreshToken) {
         console.log('NO REFRESH TOKEN FOUND');
         res.status(401).json({
-          message: 'Refresh token missing',
+          message: MESSAGES.REFRESH_TOKEN_MISSING,
         });
         return;
       }
@@ -268,7 +268,7 @@ export class AuthUserController implements IAuthController {
 
       res.status(200).json({
         success: true,
-        message: 'Token refreshed',
+        message: MESSAGES.TOKEN_REFRESHED,
       });
     } catch (error) {
       console.log('REFRESH ERROR:', error);
@@ -276,7 +276,7 @@ export class AuthUserController implements IAuthController {
       clearAuthCookies(res, 'access_token', 'refresh_token');
 
       res.status(401).json({
-        message: 'Invalid refresh token',
+        message: MESSAGES.INVALID_REFRESH_TOKEN,
       });
     }
   }

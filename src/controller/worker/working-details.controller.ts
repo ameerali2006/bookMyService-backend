@@ -126,7 +126,7 @@ export class WorkingDetailsController implements IWorkingDetailsController {
         const errors = parsed.error.format();
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'Validation failed',
+          message: MESSAGES.VALIDATION_FAILED,
           errors,
         });
       }

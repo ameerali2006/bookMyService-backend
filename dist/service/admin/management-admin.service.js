@@ -124,7 +124,7 @@ let ManagementAdminService = class ManagementAdminService {
                 console.error(error);
                 throw error instanceof custom_error_1.CustomError
                     ? error
-                    : new custom_error_1.CustomError('data error', status_code_1.STATUS_CODES.BAD_REQUEST);
+                    : new custom_error_1.CustomError(message_1.MESSAGES.DATA_ERROR, status_code_1.STATUS_CODES.BAD_REQUEST);
             }
         });
     }
@@ -189,14 +189,14 @@ let ManagementAdminService = class ManagementAdminService {
                 console.log("data ividda inddu", data);
                 const existing = yield this._serviceRepo.findByCategory(data.category);
                 if (existing) {
-                    return { success: true, message: 'Service already exists' };
+                    return { success: true, message: message_1.MESSAGES.SERVICE_ALREADY_EXISTS };
                 }
                 const newService = yield this._serviceRepo.create(data);
                 const mappedData = admin_mapper_1.AdminMapper.resServiceDetails([newService]);
                 return {
                     success: true,
                     data: mappedData[0],
-                    message: 'Service created successfully',
+                    message: message_1.MESSAGES.SERVICE_CREATED_SUCCESSFULLY,
                 };
             }
             catch (error) {
@@ -266,7 +266,7 @@ let ManagementAdminService = class ManagementAdminService {
                 console.log(mappedBookings);
                 return {
                     success: true,
-                    message: 'Bookings fetched successfully',
+                    message: message_1.MESSAGES.BOOKINGS_FETCHED_SUCCESSFULLY,
                     bookings: mappedBookings,
                     total,
                     page: safePage,
@@ -277,7 +277,7 @@ let ManagementAdminService = class ManagementAdminService {
                 console.log(error);
                 return {
                     success: false,
-                    message: 'Failed to fetch bookings',
+                    message: message_1.MESSAGES.FAILED_TO_FETCH_BOOKINGS,
                     total: 0,
                     page,
                     limit,
@@ -291,27 +291,27 @@ let ManagementAdminService = class ManagementAdminService {
                 if (!bookingId) {
                     return {
                         success: false,
-                        message: 'data not fount',
+                        message: message_1.MESSAGES.DATA_NOT_FOUNT,
                     };
                 }
                 const getData = yield this._bookingRepo.findByIdPopulated(bookingId);
                 if (!getData) {
                     return {
                         success: false,
-                        message: 'data not fount',
+                        message: message_1.MESSAGES.DATA_NOT_FOUNT,
                     };
                 }
                 const booking = admin_mapper_1.AdminMapper.resBookingDetails(getData);
                 return {
                     success: true,
-                    message: 'success fully fetched Data',
+                    message: message_1.MESSAGES.SUCCESS_FULLY_FETCHED_DATA,
                     booking,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'internal error',
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                 };
             }
         });
@@ -335,7 +335,7 @@ let ManagementAdminService = class ManagementAdminService {
             const bookingGrowth = this.calculateGrowth(currentMonth, lastMonth);
             return {
                 success: true,
-                message: 'fetch success fully',
+                message: message_1.MESSAGES.FETCH_SUCCESS_FULLY,
                 data: {
                     stats: {
                         totalBookings,

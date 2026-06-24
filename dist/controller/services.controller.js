@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServiceController = void 0;
+const message_1 = require("../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../config/constants/types");
 const status_code_1 = require("../config/constants/status-code");
@@ -112,7 +113,7 @@ let ServiceController = class ServiceController {
             catch (error) {
                 res.status(500).json({
                     success: false,
-                    message: 'Failed to fetch worker profile',
+                    message: message_1.MESSAGES.FAILED_TO_FETCH_WORKER_PROFILE,
                 });
             }
         });

@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatController = void 0;
+const message_1 = require("../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../config/constants/types");
 const status_code_1 = require("../config/constants/status-code");
@@ -38,7 +39,7 @@ let ChatController = class ChatController {
                 if (!bookingId) {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'Booking ID is missing',
+                        message: message_1.MESSAGES.BOOKING_ID_IS_MISSING,
                     });
                     return;
                 }
@@ -47,7 +48,7 @@ let ChatController = class ChatController {
                 if (!chat) {
                     res.status(status_code_1.STATUS_CODES.NOT_FOUND).json({
                         success: false,
-                        message: 'Chat not found',
+                        message: message_1.MESSAGES.CHAT_NOT_FOUND,
                     });
                     return;
                 }

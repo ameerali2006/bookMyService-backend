@@ -39,7 +39,7 @@ let WorkingDetailsManagement = class WorkingDetailsManagement {
         return __awaiter(this, void 0, void 0, function* () {
             const worker = yield this._workerRepo.findByEmail(email);
             if (!worker)
-                throw new Error("Worker not found");
+                throw new Error(message_1.MESSAGES.WORKER_NOT_FOUND);
             let details = yield this._workingRepo.findByWorkerId(worker._id.toString());
             console.log("details:", details);
             const daysOfWeek = [
@@ -132,7 +132,7 @@ let WorkingDetailsManagement = class WorkingDetailsManagement {
                 if (!workerId) {
                     return {
                         success: false,
-                        message: "Worker is Not Found",
+                        message: message_1.MESSAGES.WORKER_IS_NOT_FOUND,
                         worker: null,
                     };
                 }
@@ -142,12 +142,12 @@ let WorkingDetailsManagement = class WorkingDetailsManagement {
                 if (!workerData) {
                     return {
                         success: false,
-                        message: "Worker is Not Found",
+                        message: message_1.MESSAGES.WORKER_IS_NOT_FOUND,
                         worker: null,
                     };
                 }
                 const worker = worker_mapper_1.WorkerMapper.mapWorkerToProfileDTO(workerData);
-                return { success: true, message: "fetch data successfully", worker };
+                return { success: true, message: message_1.MESSAGES.FETCH_DATA_SUCCESSFULLY, worker };
             }
             catch (_error) {
                 throw new custom_error_1.CustomError(message_1.MESSAGES.BAD_REQUEST, status_code_1.STATUS_CODES.BAD_REQUEST);
@@ -171,14 +171,14 @@ let WorkingDetailsManagement = class WorkingDetailsManagement {
                 if (!updatedWorker) {
                     return {
                         success: false,
-                        message: "Failed to update worker profile",
+                        message: message_1.MESSAGES.FAILED_TO_UPDATE_WORKER_PROFILE,
                         worker: null,
                     };
                 }
                 const workerDTO = worker_mapper_1.WorkerMapper.mapWorkerToProfileDTO(updatedWorker);
                 return {
                     success: true,
-                    message: "Worker profile updated successfully",
+                    message: message_1.MESSAGES.WORKER_PROFILE_UPDATED_SUCCESSFULLY,
                     worker: workerDTO,
                 };
             }
@@ -235,7 +235,7 @@ let WorkingDetailsManagement = class WorkingDetailsManagement {
                 if (!customSlots || !holidays) {
                     return {
                         success: false,
-                        message: "Data not found",
+                        message: message_1.MESSAGES.DATA_NOT_FOUND,
                         customSlots: null,
                         holidays: null,
                     };

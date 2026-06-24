@@ -52,11 +52,11 @@ export class ResetPassword implements IResetPassword {
       if (user.googleId) {
         console.log({
           success: false,
-          message: 'you are login with googleId',
+          message: MESSAGES.YOU_ARE_LOGIN_WITH_GOOGLEID,
         });
         return {
           success: false,
-          message: 'you are login with googleId',
+          message: MESSAGES.YOU_ARE_LOGIN_WITH_GOOGLEID,
         };
       }
       console.log('sjdlfdslkfdlskfslkfd');
@@ -80,7 +80,7 @@ export class ResetPassword implements IResetPassword {
 
       return {
         success: true,
-        message: 'Password reset link sent to email',
+        message: MESSAGES.PASSWORD_RESET_LINK_SENT_TO_EMAIL,
       };
     } catch (error) {
       console.error('Forgot password error:', error);

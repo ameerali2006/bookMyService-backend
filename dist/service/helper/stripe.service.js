@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StripeService = void 0;
+const message_1 = require("../../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const stripe_1 = require("stripe");
 const env_1 = require("../../config/env/env");
@@ -55,7 +56,7 @@ let StripeService = class StripeService {
                 console.log(paymentIntent);
                 return {
                     success: true,
-                    message: 'Successfully Payment created',
+                    message: message_1.MESSAGES.SUCCESSFULLY_PAYMENT_CREATED,
                     paymentIntent,
                 };
             }
@@ -63,7 +64,7 @@ let StripeService = class StripeService {
                 console.error(error);
                 return {
                     success: false,
-                    message: 'internal error',
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                     paymentIntent: null,
                 };
             }

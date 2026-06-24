@@ -75,7 +75,7 @@ let OtpService = class OtpService {
                 }
                 const user = yield repository.findByEmail(otpData.email);
                 if (user) {
-                    throw new custom_error_1.CustomError('Email already exists', status_code_1.STATUS_CODES.CONFLICT);
+                    throw new custom_error_1.CustomError(message_1.MESSAGES.EMAIL_ALREADY_EXISTS, status_code_1.STATUS_CODES.CONFLICT);
                 }
                 const isValid = yield this._hash.compare(String(otpData.otp), data.otp);
                 if (!isValid) {

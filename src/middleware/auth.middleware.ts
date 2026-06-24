@@ -22,7 +22,7 @@ export const verifyAuth = () => async (req: Request, res: Response, next: NextFu
     console.log('**token', token);
     if (!token || !token.access_token) {
       res.status(401).json({
-        message: 'Token expired.',
+        message: MESSAGES.TOKEN_EXPIRED,
       });
       return;
     }
@@ -43,7 +43,7 @@ export const verifyAuth = () => async (req: Request, res: Response, next: NextFu
 
     if (!user || !user._id) {
       res.status(401).json({
-        message: 'Token expired.',
+        message: MESSAGES.TOKEN_EXPIRED,
       });
       return;
     }

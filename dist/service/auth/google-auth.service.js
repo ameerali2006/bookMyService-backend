@@ -41,7 +41,7 @@ let GoogleService = class GoogleService {
                 const payload = yield this._googleAuth.verifyToken(token);
                 if (!payload || !payload.email || !payload.name) {
                     console.log(payload);
-                    throw new custom_error_1.CustomError('Invalid Google Token', 400);
+                    throw new custom_error_1.CustomError(message_1.MESSAGES.INVALID_GOOGLE_TOKEN, 400);
                 }
                 const { email, name, sub, picture, } = payload;
                 let repository;
@@ -52,7 +52,7 @@ let GoogleService = class GoogleService {
                     repository = this._workerRepo;
                 }
                 else {
-                    throw new custom_error_1.CustomError('Invalid Role', 400);
+                    throw new custom_error_1.CustomError(message_1.MESSAGES.INVALID_ROLE, 400);
                 }
                 const user = yield repository.findByEmail(email);
                 if (user) {
@@ -60,7 +60,7 @@ let GoogleService = class GoogleService {
                     const refreshToken = this._jwtService.generateRefreshToken(user._id.toString(), role);
                     return {
                         success: true,
-                        message: 'login successfull',
+                        message: message_1.MESSAGES.LOGIN_SUCCESSFULL,
                         accessToken,
                         refreshToken,
                         user: {
@@ -85,7 +85,7 @@ let GoogleService = class GoogleService {
                     const refreshToken = this._jwtService.generateRefreshToken(newUser._id.toString(), role);
                     return {
                         success: true,
-                        message: 'register successfull',
+                        message: message_1.MESSAGES.REGISTER_SUCCESSFULL,
                         accessToken,
                         refreshToken,
                         user: {
@@ -99,7 +99,7 @@ let GoogleService = class GoogleService {
                 }
                 return {
                     success: true,
-                    message: 'Google user verified',
+                    message: message_1.MESSAGES.GOOGLE_USER_VERIFIED,
                     accessToken: null,
                     refreshToken: null,
                     user: {

@@ -53,11 +53,11 @@ let ResetPassword = class ResetPassword {
                 if (user.googleId) {
                     console.log({
                         success: false,
-                        message: 'you are login with googleId',
+                        message: message_1.MESSAGES.YOU_ARE_LOGIN_WITH_GOOGLEID,
                     });
                     return {
                         success: false,
-                        message: 'you are login with googleId',
+                        message: message_1.MESSAGES.YOU_ARE_LOGIN_WITH_GOOGLEID,
                     };
                 }
                 console.log('sjdlfdslkfdlskfslkfd');
@@ -68,7 +68,7 @@ let ResetPassword = class ResetPassword {
                 yield this._emailService.sendResetEmail(email, 'BookMyService - Reset your password', resetUrl);
                 return {
                     success: true,
-                    message: 'Password reset link sent to email',
+                    message: message_1.MESSAGES.PASSWORD_RESET_LINK_SENT_TO_EMAIL,
                 };
             }
             catch (error) {

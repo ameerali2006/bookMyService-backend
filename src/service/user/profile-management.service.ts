@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import { userInfo } from 'node:os';
 import { fa } from 'zod/v4/locales';
@@ -25,7 +26,7 @@ export class ProfileManagement implements IProfileManagement {
       if (!userId) {
         return {
           success: false,
-          message: 'user is Not fount',
+          message: MESSAGES.USER_IS_NOT_FOUNT,
           user: null,
         };
       }
@@ -34,7 +35,7 @@ export class ProfileManagement implements IProfileManagement {
       if (!userData) {
         return {
           success: false,
-          message: 'User is Not fount',
+          message: MESSAGES.USER_IS_NOT_FOUNT,
           user: null,
         };
       }
@@ -42,13 +43,13 @@ export class ProfileManagement implements IProfileManagement {
       console.log('user service', user);
       return {
         success: true,
-        message: 'user data fetch successfully',
+        message: MESSAGES.USER_DATA_FETCH_SUCCESSFULLY,
         user,
       };
     } catch (error) {
       return {
         success: false,
-        message: 'Bad request',
+        message: MESSAGES.BAD_REQUEST,
         user: null,
       };
     }
@@ -60,52 +61,52 @@ export class ProfileManagement implements IProfileManagement {
   ): Promise<updateUserProfileDetailsResponseDto> {
     try {
       if (!user || Object.keys(user).length === 0) {
-        return { success: false, message: 'User data is missing', user: null };
+        return { success: false, message: MESSAGES.USER_DATA_IS_MISSING, user: null };
       }
 
       if (!userId) {
-        return { success: false, message: 'User ID is missing', user: null };
+        return { success: false, message: MESSAGES.USER_ID_IS_MISSING, user: null };
       }
 
       const userData = await this._userRepo.updateById(userId, user);
 
       if (!userData) {
-        return { success: false, message: 'User not found', user: null };
+        return { success: false, message: MESSAGES.USER_NOT_FOUND, user: null };
       }
 
       const updatedUser = UserMapper.responseuserProfileDetails(userData);
 
       return {
         success: true,
-        message: 'User updated successfully',
+        message: MESSAGES.USER_UPDATED_SUCCESSFULLY,
         user: updatedUser,
       };
     } catch (error) {
       console.error('Error updating user:', error instanceof Error ? error.message : error);
-      return { success: false, message: 'Internal server error', user: null };
+      return { success: false, message: MESSAGES.INTERNAL_SERVER_ERROR, user: null };
     }
   }
 
   async getUserAddress(userId: string): Promise<getUserAddressResponseDto> {
     try {
       if (!userId) {
-        return { success: false, message: 'User ID is missing', addresses: null };
+        return { success: false, message: MESSAGES.USER_ID_IS_MISSING, addresses: null };
       }
       const address = await this._addressRepo.findByUserId(userId);
       console.log(address);
       if (!address || address.length === 0) {
-        return { success: false, message: 'No addresses found', addresses: null };
+        return { success: false, message: MESSAGES.NO_ADDRESSES_FOUND, addresses: null };
       }
       const addresses = UserMapper.toDTOAddressList(address);
       return {
         success: true,
-        message: 'Addresses retrieved successfully',
+        message: MESSAGES.ADDRESSES_RETRIEVED_SUCCESSFULLY,
         addresses,
       };
     } catch (error) {
       return {
         success: false,
-        message: 'Internal server error',
+        message: MESSAGES.INTERNAL_SERVER_ERROR,
         addresses: null,
       };
     }
@@ -114,7 +115,7 @@ export class ProfileManagement implements IProfileManagement {
   async addUserAddress(userId: string, data: AddAddressDto): Promise<addUserAddressResponseDto> {
     try {
       if (!userId || !data) {
-        return { success: false, message: 'somthing is missing', address: null };
+        return { success: false, message: MESSAGES.SOMTHING_IS_MISSING, address: null };
       }
       const userAddress = await this._addressRepo.findByUserId(userId);
       const isPrimary = userAddress.length == 0;
@@ -142,13 +143,13 @@ export class ProfileManagement implements IProfileManagement {
 
       return {
         success: true,
-        message: 'Address added successfully',
+        message: MESSAGES.ADDRESS_ADDED_SUCCESSFULLY,
         address,
       };
     } catch (error) {
       return {
         success: false,
-        message: 'Internal server error',
+        message: MESSAGES.INTERNAL_SERVER_ERROR,
         address: null,
       };
     }
@@ -157,7 +158,7 @@ export class ProfileManagement implements IProfileManagement {
   async setPrimaryAddress(userId: string, setId: string): Promise<responsePart> {
     try {
       if (!userId || !setId) {
-        return { success: false, message: 'Something is missing' };
+        return { success: false, message: MESSAGES.SOMETHING_IS_MISSING };
       }
 
       const existingPrimary = await this._addressRepo.findPrimaryByUserId(userId);
@@ -170,11 +171,11 @@ export class ProfileManagement implements IProfileManagement {
       // Now set the new primary
       await this._addressRepo.updateById(setId, { isPrimary: true });
 
-      return { success: true, message: 'Successfully updated' };
+      return { success: true, message: MESSAGES.SUCCESSFULLY_UPDATED };
     } catch (error) {
       return {
         success: false,
-        message: 'Internal server error',
+        message: MESSAGES.INTERNAL_SERVER_ERROR,
 
       };
     }

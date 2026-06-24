@@ -98,7 +98,7 @@ let WorkerHelperService = class WorkerHelperService {
         return __awaiter(this, void 0, void 0, function* () {
             const worker = yield this.workerRepo.findById(workerId);
             if (!worker) {
-                return { success: false, message: 'worker not fount' };
+                return { success: false, message: message_1.MESSAGES.WORKER_NOT_FOUNT };
             }
             const dashboardData = yield this.bookingRepo.getWorkerDashboardStats(workerId);
             const efficiency = dashboardData.totalJobs
@@ -107,7 +107,7 @@ let WorkerHelperService = class WorkerHelperService {
             const satisfaction = Math.round((dashboardData.avgRating / 5) * 100);
             return {
                 success: true,
-                message: 'dashboardfetch successfully',
+                message: message_1.MESSAGES.DASHBOARDFETCH_SUCCESSFULLY,
                 data: {
                     workerStatus: worker.isVerified,
                     stats: {

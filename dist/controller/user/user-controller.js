@@ -60,7 +60,7 @@ let UserController = class UserController {
                     const errors = parsedData.error.format();
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'Validation failed',
+                        message: message_1.MESSAGES.VALIDATION_FAILED,
                         errors,
                     });
                     throw new custom_error_1.CustomError(message_1.MESSAGES.VALIDATION_ERROR, status_code_1.STATUS_CODES.CONFLICT);
@@ -173,7 +173,7 @@ let UserController = class UserController {
                 if (!bookingId) {
                     res
                         .status(status_code_1.STATUS_CODES.BAD_REQUEST)
-                        .json({ success: false, message: 'ubooking details missing' });
+                        .json({ success: false, message: message_1.MESSAGES.UBOOKING_DETAILS_MISSING });
                 }
                 const response = yield this._bookingDetailsService.bookingDetailData(bookingId);
                 console.log(response);
@@ -230,7 +230,7 @@ let UserController = class UserController {
                 if (!bookingId || !paymentType || !addressId) {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'bookingId, addressId and paymentType are required',
+                        message: message_1.MESSAGES.BOOKINGID_ADDRESSID_AND_PAYMENTTYPE_ARE_,
                     });
                     return;
                 }
@@ -238,7 +238,7 @@ let UserController = class UserController {
                 if (!booking.success || !booking.booking) {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'Booking not found',
+                        message: message_1.MESSAGES.BOOKING_NOT_FOUND,
                     });
                     return;
                 }
@@ -250,7 +250,7 @@ let UserController = class UserController {
                     && bookingData.advancePaymentStatus === 'paid') {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'Advance already paid',
+                        message: message_1.MESSAGES.ADVANCE_ALREADY_PAID,
                     });
                     return;
                 }
@@ -258,7 +258,7 @@ let UserController = class UserController {
                     && bookingData.finalPaymentStatus === 'paid') {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST).json({
                         success: false,
-                        message: 'Final payment already completed',
+                        message: message_1.MESSAGES.FINAL_PAYMENT_ALREADY_COMPLETED,
                     });
                     return;
                 }
@@ -278,7 +278,7 @@ let UserController = class UserController {
                 yield this._bookingDetailsService.updatePaymentStatus(bookingId, addressId, paymentType);
                 res.status(status_code_1.STATUS_CODES.OK).json({
                     success: true,
-                    message: 'Wallet payment successful',
+                    message: message_1.MESSAGES.WALLET_PAYMENT_SUCCESSFUL,
                 });
             }
             catch (error) {

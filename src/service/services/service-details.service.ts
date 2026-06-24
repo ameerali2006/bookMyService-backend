@@ -59,7 +59,7 @@ export class ServiceDetails implements IServiceDetails {
   }> {
     try {
       if (!lat || !lng || !serviceId) {
-        throw new Error("Latitude, longitude and serviceId are required");
+        throw new Error(MESSAGES.LATITUDE_LONGITUDE_AND_SERVICEID_ARE_REQ);
       }
       console.log({
         serviceId,
@@ -82,12 +82,12 @@ export class ServiceDetails implements IServiceDetails {
 
       console.log(data);
       if (!data) {
-        return { success: false, message: "Worker not Found", data: null };
+        return { success: false, message: MESSAGES.WORKER_NOT_FOUND, data: null };
       }
-      return { success: true, message: "Data fetched Successfully", data };
+      return { success: true, message: MESSAGES.DATA_FETCHED_SUCCESSFULLY, data };
     } catch (error) {
       console.error(error);
-      return { success: false, message: "Worker not Found", data: null };
+      return { success: false, message: MESSAGES.WORKER_NOT_FOUND, data: null };
     }
   }
 
@@ -106,7 +106,7 @@ export class ServiceDetails implements IServiceDetails {
         return {
           status: STATUS_CODES.BAD_REQUEST,
           success: false,
-          message: "Latitude and longitude are required",
+          message: MESSAGES.LATITUDE_AND_LONGITUDE_ARE_REQUIRED,
         };
       }
       console.log({ lat, lng, maxDistance });
@@ -122,7 +122,7 @@ export class ServiceDetails implements IServiceDetails {
         return {
           status: STATUS_CODES.OK,
           success: true,
-          message: "No services found nearby",
+          message: MESSAGES.NO_SERVICES_FOUND_NEARBY,
           services: [],
         };
       }
@@ -133,7 +133,7 @@ export class ServiceDetails implements IServiceDetails {
       return {
         status: STATUS_CODES.OK,
         success: true,
-        message: "Nearby services found",
+        message: MESSAGES.NEARBY_SERVICES_FOUND,
         services,
       };
     } catch (error) {
@@ -189,7 +189,7 @@ export class ServiceDetails implements IServiceDetails {
         return {
           status: 404,
           success: false,
-          message: "Working details not found",
+          message: MESSAGES.WORKING_DETAILS_NOT_FOUND,
         };
       }
 
@@ -366,7 +366,7 @@ export class ServiceDetails implements IServiceDetails {
       return {
         status: 200,
         success: true,
-        message: "Availability fetched successfully",
+        message: MESSAGES.AVAILABILITY_FETCHED_SUCCESSFULLY,
         data: { dates: results },
       };
     } catch (err) {
@@ -374,7 +374,7 @@ export class ServiceDetails implements IServiceDetails {
       return {
         status: 500,
         success: false,
-        message: "Failed to fetch availability",
+        message: MESSAGES.FAILED_TO_FETCH_AVAILABILITY,
       };
     }
   }
@@ -390,7 +390,7 @@ export class ServiceDetails implements IServiceDetails {
       if (!worker) {
         return {
           success: false,
-          message: "Worker not found",
+          message: MESSAGES.WORKER_NOT_FOUND,
           data: null,
         };
       }
@@ -409,13 +409,13 @@ export class ServiceDetails implements IServiceDetails {
 
       return {
         success: true,
-        message: "Worker profile fetched successfully",
+        message: MESSAGES.WORKER_PROFILE_FETCHED_SUCCESSFULLY,
         data: response,
       };
     } catch (error) {
       return {
         success: false,
-        message: "Failed to fetch worker profile",
+        message: MESSAGES.FAILED_TO_FETCH_WORKER_PROFILE,
         data: null,
       };
     }

@@ -64,7 +64,7 @@ export class OtpService implements IOtpService {
 
       const user: IUser|IWorker | null = await repository.findByEmail(otpData.email);
       if (user) {
-        throw new CustomError('Email already exists', STATUS_CODES.CONFLICT);
+        throw new CustomError(MESSAGES.EMAIL_ALREADY_EXISTS, STATUS_CODES.CONFLICT);
       }
 
       const isValid = await this._hash.compare(

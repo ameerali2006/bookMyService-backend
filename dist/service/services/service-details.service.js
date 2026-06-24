@@ -42,7 +42,7 @@ let ServiceDetails = class ServiceDetails {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!lat || !lng || !serviceId) {
-                    throw new Error("Latitude, longitude and serviceId are required");
+                    throw new Error(message_1.MESSAGES.LATITUDE_LONGITUDE_AND_SERVICEID_ARE_REQ);
                 }
                 console.log({
                     serviceId,
@@ -56,13 +56,13 @@ let ServiceDetails = class ServiceDetails {
                 const data = yield this._workerAgg.findNearbyWorkersByServiceId(serviceId, lat, lng, search, sort, page, pageSize);
                 console.log(data);
                 if (!data) {
-                    return { success: false, message: "Worker not Found", data: null };
+                    return { success: false, message: message_1.MESSAGES.WORKER_NOT_FOUND, data: null };
                 }
-                return { success: true, message: "Data fetched Successfully", data };
+                return { success: true, message: message_1.MESSAGES.DATA_FETCHED_SUCCESSFULLY, data };
             }
             catch (error) {
                 console.error(error);
-                return { success: false, message: "Worker not Found", data: null };
+                return { success: false, message: message_1.MESSAGES.WORKER_NOT_FOUND, data: null };
             }
         });
     }
@@ -73,7 +73,7 @@ let ServiceDetails = class ServiceDetails {
                     return {
                         status: status_code_1.STATUS_CODES.BAD_REQUEST,
                         success: false,
-                        message: "Latitude and longitude are required",
+                        message: message_1.MESSAGES.LATITUDE_AND_LONGITUDE_ARE_REQUIRED,
                     };
                 }
                 console.log({ lat, lng, maxDistance });
@@ -84,7 +84,7 @@ let ServiceDetails = class ServiceDetails {
                     return {
                         status: status_code_1.STATUS_CODES.OK,
                         success: true,
-                        message: "No services found nearby",
+                        message: message_1.MESSAGES.NO_SERVICES_FOUND_NEARBY,
                         services: [],
                     };
                 }
@@ -92,7 +92,7 @@ let ServiceDetails = class ServiceDetails {
                 return {
                     status: status_code_1.STATUS_CODES.OK,
                     success: true,
-                    message: "Nearby services found",
+                    message: message_1.MESSAGES.NEARBY_SERVICES_FOUND,
                     services,
                 };
             }
@@ -129,7 +129,7 @@ let ServiceDetails = class ServiceDetails {
                     return {
                         status: 404,
                         success: false,
-                        message: "Working details not found",
+                        message: message_1.MESSAGES.WORKING_DETAILS_NOT_FOUND,
                     };
                 }
                 const today = new Date();
@@ -251,7 +251,7 @@ let ServiceDetails = class ServiceDetails {
                 return {
                     status: 200,
                     success: true,
-                    message: "Availability fetched successfully",
+                    message: message_1.MESSAGES.AVAILABILITY_FETCHED_SUCCESSFULLY,
                     data: { dates: results },
                 };
             }
@@ -260,7 +260,7 @@ let ServiceDetails = class ServiceDetails {
                 return {
                     status: 500,
                     success: false,
-                    message: "Failed to fetch availability",
+                    message: message_1.MESSAGES.FAILED_TO_FETCH_AVAILABILITY,
                 };
             }
         });
@@ -272,7 +272,7 @@ let ServiceDetails = class ServiceDetails {
                 if (!worker) {
                     return {
                         success: false,
-                        message: "Worker not found",
+                        message: message_1.MESSAGES.WORKER_NOT_FOUND,
                         data: null,
                     };
                 }
@@ -281,14 +281,14 @@ let ServiceDetails = class ServiceDetails {
                 const response = Object.assign(Object.assign({}, worker.toObject()), { avgRating: ratingSummary.avgRating, totalReviews: ratingSummary.totalReviews, recentReviews: reviews });
                 return {
                     success: true,
-                    message: "Worker profile fetched successfully",
+                    message: message_1.MESSAGES.WORKER_PROFILE_FETCHED_SUCCESSFULLY,
                     data: response,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: "Failed to fetch worker profile",
+                    message: message_1.MESSAGES.FAILED_TO_FETCH_WORKER_PROFILE,
                     data: null,
                 };
             }

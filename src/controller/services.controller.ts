@@ -1,3 +1,4 @@
+import { MESSAGES } from '../config/constants/message';
 import { NextFunction, Request, Response } from 'express';
 import { inject, injectable } from 'tsyringe';
 import { IServiceConroller } from '../interface/controller/services.controller.interface';
@@ -132,7 +133,7 @@ export class ServiceController implements IServiceConroller {
     } catch (error) {
       res.status(500).json({
         success: false,
-        message: 'Failed to fetch worker profile',
+        message: MESSAGES.FAILED_TO_FETCH_WORKER_PROFILE,
       });
     }
   }

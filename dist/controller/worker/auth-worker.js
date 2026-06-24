@@ -127,7 +127,7 @@ let AuthWorkerController = class AuthWorkerController {
                 console.error('Google Auth Controller Error:', error);
                 res.status(status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR).json({
                     success: false,
-                    message: 'Something went wrong during Google authentication',
+                    message: message_1.MESSAGES.SOMETHING_WENT_WRONG_DURING_GOOGLE_AUTHE,
                 });
             }
         });
@@ -217,7 +217,7 @@ let AuthWorkerController = class AuthWorkerController {
                 if (!refreshToken) {
                     console.log('NO REFRESH TOKEN FOUND');
                     res.status(401).json({
-                        message: 'Refresh token missing',
+                        message: message_1.MESSAGES.REFRESH_TOKEN_MISSING,
                     });
                     return;
                 }
@@ -227,14 +227,14 @@ let AuthWorkerController = class AuthWorkerController {
                 (0, cookie_helper_1.updateCookieWithAccessToken)(res, newTokens.accessToken, 'access_token');
                 res.status(200).json({
                     success: true,
-                    message: 'Token refreshed',
+                    message: message_1.MESSAGES.TOKEN_REFRESHED,
                 });
             }
             catch (error) {
                 console.log('REFRESH ERROR:', error);
                 (0, cookie_helper_1.clearAuthCookies)(res, 'access_token', 'refresh_token');
                 res.status(401).json({
-                    message: 'Invalid refresh token',
+                    message: message_1.MESSAGES.INVALID_REFRESH_TOKEN,
                 });
             }
         });

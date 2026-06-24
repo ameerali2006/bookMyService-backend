@@ -39,21 +39,21 @@ let BookingService = class BookingService {
                 if (!userId || !workerId) {
                     return {
                         success: false,
-                        message: "User not Found",
+                        message: message_1.MESSAGES.USER_NOT_FOUND,
                         bookingId: null,
                     };
                 }
                 if (!time || !date || !description) {
                     return {
                         success: false,
-                        message: "Missing required fields (time, date, or description)",
+                        message: message_1.MESSAGES.MISSING_REQUIRED_FIELDS_TIME_DATE_OR_DES,
                         bookingId: null,
                     };
                 }
                 if (isNaN(new Date(date).getTime())) {
                     return {
                         success: false,
-                        message: "Invalid date format",
+                        message: message_1.MESSAGES.INVALID_DATE_FORMAT,
                         bookingId: null,
                     };
                 }
@@ -61,7 +61,7 @@ let BookingService = class BookingService {
                 if (!workerData) {
                     return {
                         success: false,
-                        message: "worker is not found",
+                        message: message_1.MESSAGES.WORKER_IS_NOT_FOUND,
                         bookingId: null,
                     };
                 }
@@ -75,7 +75,7 @@ let BookingService = class BookingService {
                 if (!locked) {
                     return {
                         success: false,
-                        message: "Slot already booked by another user",
+                        message: message_1.MESSAGES.SLOT_ALREADY_BOOKED_BY_ANOTHER_USER,
                         bookingId: null,
                     };
                 }
@@ -92,13 +92,13 @@ let BookingService = class BookingService {
                 if (!newBooking) {
                     return {
                         success: false,
-                        message: "Failed to create booking",
+                        message: message_1.MESSAGES.FAILED_TO_CREATE_BOOKING,
                         bookingId: null,
                     };
                 }
                 return {
                     success: true,
-                    message: "Slot locked for 10 minutes",
+                    message: message_1.MESSAGES.SLOT_LOCKED_FOR_10_MINUTES,
                     bookingId: newBooking._id.toString(),
                 };
             }
@@ -106,7 +106,7 @@ let BookingService = class BookingService {
                 console.log(error);
                 return {
                     success: false,
-                    message: "internal Error",
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                     bookingId: null,
                 };
             }
@@ -118,7 +118,7 @@ let BookingService = class BookingService {
                 if (!bookingId) {
                     return {
                         success: false,
-                        message: "booking details not found",
+                        message: message_1.MESSAGES.BOOKING_DETAILS_NOT_FOUND,
                         details: null,
                     };
                 }
@@ -126,7 +126,7 @@ let BookingService = class BookingService {
                 if (!booking) {
                     return {
                         success: false,
-                        message: "booking details not found",
+                        message: message_1.MESSAGES.BOOKING_DETAILS_NOT_FOUND,
                         details: null,
                     };
                 }
@@ -148,14 +148,14 @@ let BookingService = class BookingService {
                 };
                 return {
                     success: true,
-                    message: "booking details  found",
+                    message: message_1.MESSAGES.BOOKING_DETAILS_FOUND,
                     details: data,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: "internal error",
+                    message: message_1.MESSAGES.INTERNAL_ERROR,
                     details: null,
                 };
             }
@@ -168,14 +168,14 @@ let BookingService = class BookingService {
                 if (!bookingId || !workerId) {
                     return {
                         success: false,
-                        message: "Missing bookingId or workerId",
+                        message: message_1.MESSAGES.MISSING_BOOKINGID_OR_WORKERID,
                     };
                 }
                 // 🧠 Validate input
                 if (!endingTime || !(itemsRequired === null || itemsRequired === void 0 ? void 0 : itemsRequired.length)) {
                     return {
                         success: false,
-                        message: "Ending time and required items are mandatory",
+                        message: message_1.MESSAGES.ENDING_TIME_AND_REQUIRED_ITEMS_ARE_MANDA,
                     };
                 }
                 // 💾 Update the booking
@@ -188,7 +188,7 @@ let BookingService = class BookingService {
                 if (!updatedBooking) {
                     return {
                         success: false,
-                        message: "Booking not found or unauthorized",
+                        message: message_1.MESSAGES.BOOKING_NOT_FOUND_OR_UNAUTHORIZED,
                     };
                 }
                 // 📨 Optional: Send confirmation email to the user
@@ -203,7 +203,7 @@ let BookingService = class BookingService {
                 // }
                 return {
                     success: true,
-                    message: "Worker details updated successfully",
+                    message: message_1.MESSAGES.WORKER_DETAILS_UPDATED_SUCCESSFULLY,
                     booking: updatedBooking,
                 };
             }
@@ -211,7 +211,7 @@ let BookingService = class BookingService {
                 console.error("❌ Error updating worker details:", error);
                 return {
                     success: false,
-                    message: "Internal server error while updating details",
+                    message: message_1.MESSAGES.INTERNAL_SERVER_ERROR_WHILE_UPDATING_DET,
                 };
             }
         });
@@ -222,13 +222,13 @@ let BookingService = class BookingService {
                 if (!bookingId || !paymentType) {
                     return {
                         success: false,
-                        message: "Missing bookingId or paymentType",
+                        message: message_1.MESSAGES.MISSING_BOOKINGID_OR_PAYMENTTYPE,
                         data: null,
                     };
                 }
                 const booking = yield this._bookingRepo.findById(bookingId);
                 if (!booking) {
-                    return { success: false, message: "Booking not found", data: null };
+                    return { success: false, message: message_1.MESSAGES.BOOKING_NOT_FOUND, data: null };
                 }
                 // -------------------------
                 // ADVANCE PAYMENT CHECK
@@ -237,13 +237,13 @@ let BookingService = class BookingService {
                     if (booking.advancePaymentStatus !== "paid") {
                         return {
                             success: false,
-                            message: "Advance payment not completed",
+                            message: message_1.MESSAGES.ADVANCE_PAYMENT_NOT_COMPLETED,
                             data: null,
                         };
                     }
                     return {
                         success: true,
-                        message: "Advance payment verified",
+                        message: message_1.MESSAGES.ADVANCE_PAYMENT_VERIFIED,
                         data: {
                             bookingId,
                             amountPaid: booking.advanceAmount,
@@ -258,13 +258,13 @@ let BookingService = class BookingService {
                     if (booking.finalPaymentStatus !== "paid") {
                         return {
                             success: false,
-                            message: "Final payment not completed",
+                            message: message_1.MESSAGES.FINAL_PAYMENT_NOT_COMPLETED,
                             data: null,
                         };
                     }
                     return {
                         success: true,
-                        message: "Final payment verified",
+                        message: message_1.MESSAGES.FINAL_PAYMENT_VERIFIED,
                         data: {
                             bookingId,
                             amountPaid: booking.totalAmount,
@@ -272,13 +272,13 @@ let BookingService = class BookingService {
                         },
                     };
                 }
-                return { success: false, message: "Invalid payment type", data: null };
+                return { success: false, message: message_1.MESSAGES.INVALID_PAYMENT_TYPE, data: null };
             }
             catch (err) {
                 console.error("Error verifying payment:", err);
                 return {
                     success: false,
-                    message: "Internal server error",
+                    message: message_1.MESSAGES.INTERNAL_SERVER_ERROR,
                     data: null,
                 };
             }
@@ -296,13 +296,13 @@ let BookingService = class BookingService {
             if (booking.workerResponse == "rejected") {
                 return {
                     success: false,
-                    message: "worker already rejected this booking",
+                    message: message_1.MESSAGES.WORKER_ALREADY_REJECTED_THIS_BOOKING,
                 };
             }
             if (!["pending", "confirmed"].includes(booking.status)) {
                 return {
                     success: false,
-                    message: "Only status with pending and conifirmed can cancel",
+                    message: message_1.MESSAGES.ONLY_STATUS_WITH_PENDING_AND_CONIFIRMED_,
                 };
             }
             const updateBooking = yield this._bookingRepo.updateStatus(bookingId, "cancelled");
@@ -314,7 +314,7 @@ let BookingService = class BookingService {
             }
             yield this.notification.createNotification({
                 title: 'booking canceled',
-                message: 'user cancel the booking',
+                message: message_1.MESSAGES.USER_CANCEL_THE_BOOKING,
                 type: 'booking',
                 workerId: booking.workerId._id.toString(),
                 bookingId,

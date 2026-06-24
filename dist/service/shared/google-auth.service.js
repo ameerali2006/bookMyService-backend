@@ -16,6 +16,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GoogleAuthService = void 0;
+const message_1 = require("../../config/constants/message");
 const google_auth_library_1 = require("google-auth-library");
 const tsyringe_1 = require("tsyringe");
 const env_1 = require("../../config/env/env");
@@ -31,7 +32,7 @@ let GoogleAuthService = class GoogleAuthService {
             });
             const payload = ticket.getPayload();
             if (!payload || !payload.email) {
-                throw new Error('Invalid Google token');
+                throw new Error(message_1.MESSAGES.INVALID_GOOGLE_TOKEN);
             }
             return payload;
         });

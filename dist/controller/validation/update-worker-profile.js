@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.workerProfileUpdateSchema = void 0;
+const message_1 = require("../../config/constants/message");
 const zod_1 = require("zod");
 exports.workerProfileUpdateSchema = zod_1.z.object({
     name: zod_1.z
@@ -14,7 +15,7 @@ exports.workerProfileUpdateSchema = zod_1.z.object({
         .optional(),
     experience: zod_1.z
         .enum(['0-1', '2-5', '6-10', '10+'], {
-        message: 'Invalid experience range',
+        message: message_1.MESSAGES.INVALID_EXPERIENCE_RANGE,
     })
         .optional(),
     fees: zod_1.z

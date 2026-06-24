@@ -1,3 +1,4 @@
+import { MESSAGES } from '../../config/constants/message';
 import { inject, injectable } from 'tsyringe';
 import { IReviewService } from '../../interface/service/review.service.Interface';
 import { TYPES } from '../../config/constants/types';
@@ -37,7 +38,7 @@ export class ReviewService implements IReviewService {
       if (!booking) {
         return {
           success: false,
-          message: 'Booking not found',
+          message: MESSAGES.BOOKING_NOT_FOUND,
         };
       }
 
@@ -45,7 +46,7 @@ export class ReviewService implements IReviewService {
       if (booking.userId.toString() !== userId) {
         return {
           success: false,
-          message: 'Unauthorized',
+          message: MESSAGES.UNAUTHORIZED,
         };
       }
 
@@ -53,7 +54,7 @@ export class ReviewService implements IReviewService {
       if (booking.status !== 'completed') {
         return {
           success: false,
-          message: 'You can only review completed bookings',
+          message: MESSAGES.YOU_CAN_ONLY_REVIEW_COMPLETED_BOOKINGS,
         };
       }
 
@@ -63,7 +64,7 @@ export class ReviewService implements IReviewService {
       if (existingReview) {
         return {
           success: false,
-          message: 'Review already submitted',
+          message: MESSAGES.REVIEW_ALREADY_SUBMITTED,
         };
       }
 
@@ -78,7 +79,7 @@ export class ReviewService implements IReviewService {
       if (!review) {
         return {
           success: false,
-          message: 'Review already submitted',
+          message: MESSAGES.REVIEW_ALREADY_SUBMITTED,
         };
       }
 
@@ -88,7 +89,7 @@ export class ReviewService implements IReviewService {
       });
       await this.notification.createNotification({
         title: 'new Review Add',
-        message: `user give ${rating} star for your work`,
+        message: MESSAGES.USER_GIVE_RATING_STAR_FOR_YOUR_WORK,
         type: 'booking',
         workerId: booking.workerId.toString(),
         bookingId:bookingId
@@ -96,7 +97,7 @@ export class ReviewService implements IReviewService {
 
       return {
         success: true,
-        message: 'Review added successfully',
+        message: MESSAGES.REVIEW_ADDED_SUCCESSFULLY,
         review: {
           comment: review.comment,
           rating: review.rating,
@@ -107,7 +108,7 @@ export class ReviewService implements IReviewService {
       console.error(error);
       return {
         success: false,
-        message: 'Failed to add review',
+        message: MESSAGES.FAILED_TO_ADD_REVIEW,
       };
     }
   }
@@ -143,7 +144,7 @@ export class ReviewService implements IReviewService {
 
       return {
         success: true,
-        message: 'Reviews fetched successfully',
+        message: MESSAGES.REVIEWS_FETCHED_SUCCESSFULLY,
         reviews: data,
         total,
       };

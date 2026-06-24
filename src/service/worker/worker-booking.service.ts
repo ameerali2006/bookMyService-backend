@@ -65,7 +65,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       const booking = await this.bookingRepo.findByIdPopulated(bookingId);
 
       if (!booking) {
-        return { success: false, message: 'Booking not found' };
+        return { success: false, message: MESSAGES.BOOKING_NOT_FOUND };
       }
 
       if (!booking.startTime) {
@@ -80,7 +80,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!isTimeGreater(endTime, booking.startTime)) {
         return {
           success: false,
-          message: 'End time must be greater than start time',
+          message: MESSAGES.END_TIME_MUST_BE_GREATER_THAN_START_TIME,
         };
       }
       const workerBooking = await this.bookingRepo.findByWorkerAndDate(
@@ -103,13 +103,13 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (conflict) {
         return {
           success: false,
-          message: 'Time conflict with another approved booking',
+          message: MESSAGES.TIME_CONFLICT_WITH_ANOTHER_APPROVED_BOOK,
         };
       }
       if (additionalItems?.length) {
         for (const item of additionalItems) {
           if (!item.name || typeof item.price !== 'number') {
-            return { success: false, message: 'Invalid additional item' };
+            return { success: false, message: MESSAGES.INVALID_ADDITIONAL_ITEM };
           }
         }
       }
@@ -171,16 +171,16 @@ export class WorkerBookingService implements IWorkerBookingService {
       });
       await this.notification.createNotification({
         title: 'booking Approve',
-        message: 'worker  Approved your booking',
+        message: MESSAGES.WORKER_APPROVED_YOUR_BOOKING,
         type: 'booking',
         userId: booking.userId._id.toString(),
         bookingId:bookingId
       });
 
-      return { success: true, message: 'Service approved successfully' };
+      return { success: true, message: MESSAGES.SERVICE_APPROVED_SUCCESSFULLY };
     } catch (error) {
       console.error(error);
-      return { success: false, message: 'Internal server error' };
+      return { success: false, message: MESSAGES.INTERNAL_SERVER_ERROR };
     }
   }
 
@@ -192,11 +192,11 @@ export class WorkerBookingService implements IWorkerBookingService {
       const booking = await this.bookingRepo.findById(bookingId);
 
       if (!booking) {
-        throw new Error('Booking not found');
+        throw new Error(MESSAGES.BOOKING_NOT_FOUND);
       }
 
       if (booking.workerResponse === 'rejected') {
-        throw new Error('Already rejected');
+        throw new Error(MESSAGES.ALREADY_REJECTED);
       }
 
       let refundAmount = 0;
@@ -217,7 +217,7 @@ export class WorkerBookingService implements IWorkerBookingService {
           role: 'user',
           description: `Refund for rejected service (${booking.serviceId})`,
         });
-        if (!wallet) return { success: false, message: 'user wallet error' };
+        if (!wallet) return { success: false, message: MESSAGES.USER_WALLET_ERROR };
 
         updateBooking.advancePaymentStatus = 'refunded';
       }
@@ -228,7 +228,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       );
 
       if (!updatedBooking) {
-        return { success: false, message: 'user booking updation failed' };
+        return { success: false, message: MESSAGES.USER_BOOKING_UPDATION_FAILED };
       }
 
       const user = await this.userRepo.findById(booking.userId as string);
@@ -244,7 +244,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       }
       await this.notification.createNotification({
         title: 'booking rejected',
-        message: 'worker  rejected your booking',
+        message: MESSAGES.WORKER_REJECTED_YOUR_BOOKING,
         type: 'booking',
         userId: booking.userId.toString(),
         bookingId,
@@ -252,12 +252,12 @@ export class WorkerBookingService implements IWorkerBookingService {
 
       return {
         success: true,
-        message: 'Service rejected successfully',
+        message: MESSAGES.SERVICE_REJECTED_SUCCESSFULLY,
       };
     } catch (error) {
       return {
         success: false,
-        message: 'something went wrong',
+        message: MESSAGES.SOMETHING_WENT_WRONG,
       };
     }
   }
@@ -290,7 +290,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       console.log(finalMapped);
       return {
         success: true,
-        message: 'Requests fetched successfully',
+        message: MESSAGES.REQUESTS_FETCHED_SUCCESSFULLY,
         data: {
           data: finalMapped,
           page: filter.page,
@@ -301,7 +301,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       console.log(error);
       return {
         success: false,
-        message: 'internal error',
+        message: MESSAGES.INTERNAL_ERROR,
       };
     }
   }
@@ -321,7 +321,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!workerId) {
         return {
           success: false,
-          message: 'worker data not font',
+          message: MESSAGES.WORKER_DATA_NOT_FONT,
         };
       }
       status === 'approved' ? 'confirmed' : status;
@@ -336,7 +336,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!items) {
         return {
           success: false,
-          message: 'data not fount',
+          message: MESSAGES.DATA_NOT_FOUNT,
         };
       }
 
@@ -360,7 +360,7 @@ export class WorkerBookingService implements IWorkerBookingService {
 
       return {
         success: true,
-        message: 'data fetch successfully',
+        message: MESSAGES.DATA_FETCH_SUCCESSFULLY,
         today: todayBookings,
         upcoming: upcomingBookings,
         pagination: {
@@ -386,14 +386,14 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!bookingId) {
         return {
           success: false,
-          message: 'booking data missing',
+          message: MESSAGES.BOOKING_DATA_MISSING,
         };
       }
       const booking = await this.bookingRepo.findByIdPopulated(bookingId);
       if (!booking) {
         return {
           success: false,
-          message: 'booking data not fount',
+          message: MESSAGES.BOOKING_DATA_NOT_FOUNT,
         };
       }
       const verification = Boolean(booking.otp);
@@ -405,7 +405,7 @@ export class WorkerBookingService implements IWorkerBookingService {
     } catch (error) {
       return {
         success: false,
-        message: 'Internal Eror',
+        message: MESSAGES.INTERNAL_EROR,
       };
     }
   }
@@ -417,7 +417,7 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!bookingid) {
         return {
           success: false,
-          message: 'booking deatails is not fount ',
+          message: MESSAGES.BOOKING_DEATAILS_IS_NOT_FOUNT,
         };
       }
       const otp = Math.floor(1000 + Math.random() * 9000).toString();
@@ -426,19 +426,19 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!updateBooking) {
         return {
           success: false,
-          message: 'booking details is not fount ',
+          message: MESSAGES.BOOKING_DETAILS_IS_NOT_FOUNT,
         };
       }
       const booking = await this.getWorkerAprrovalpageDetails(bookingid);
       if (!booking.success && !booking.booking) {
         return {
           success: false,
-          message: 'booking details is not fount ',
+          message: MESSAGES.BOOKING_DETAILS_IS_NOT_FOUNT,
         };
       }
       await this.notification.createNotification({
         title: 'worker reached',
-        message: 'worker reached to your location',
+        message: MESSAGES.WORKER_REACHED_TO_YOUR_LOCATION,
         type: 'booking',
         userId: booking.booking?.userId._id.toString(),
         bookingId:bookingid,
@@ -446,14 +446,14 @@ export class WorkerBookingService implements IWorkerBookingService {
 
       return {
         success: true,
-        message: 'successfully generated otp',
+        message: MESSAGES.SUCCESSFULLY_GENERATED_OTP,
         booking: booking.booking,
       };
     } catch (error) {
       console.log(error);
       return {
         success: false,
-        message: 'Internal error',
+        message: MESSAGES.INTERNAL_ERROR,
       };
     }
   }
@@ -463,13 +463,13 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!bookingId) {
         return {
           success: false,
-          message: 'booking detail missing',
+          message: MESSAGES.BOOKING_DETAIL_MISSING,
         };
       }
       if (!otp) {
         return {
           success: true,
-          message: 'validation  not fount ',
+          message: MESSAGES.VALIDATION_NOT_FOUNT,
         };
       }
       const booking = await this.bookingRepo.findById(bookingId);
@@ -477,13 +477,13 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!booking) {
         return {
           success: false,
-          message: 'booking detail missing',
+          message: MESSAGES.BOOKING_DETAIL_MISSING,
         };
       }
       if (booking.otp != otp) {
         return {
           success: false,
-          message: 'worker varification failed',
+          message: MESSAGES.WORKER_VARIFICATION_FAILED,
         };
       }
       const updatebooking = await this.bookingRepo.updateStatusWithOTP(
@@ -493,13 +493,13 @@ export class WorkerBookingService implements IWorkerBookingService {
       if (!updatebooking) {
         return {
           success: false,
-          message: 'worker varification failed',
+          message: MESSAGES.WORKER_VARIFICATION_FAILED,
         };
       }
 
       await this.notification.createNotification({
         title: 'worker verified',
-        message: 'worker successfully verified',
+        message: MESSAGES.WORKER_SUCCESSFULLY_VERIFIED,
         type: 'booking',
         userId: booking.userId.toString(),
         bookingId,
@@ -507,13 +507,13 @@ export class WorkerBookingService implements IWorkerBookingService {
 
       return {
         success: true,
-        message: 'worker successfully verified',
+        message: MESSAGES.WORKER_SUCCESSFULLY_VERIFIED,
       };
     } catch (error) {
       console.error(error);
       return {
         success: false,
-        message: 'internal error',
+        message: MESSAGES.INTERNAL_ERROR,
       };
     }
   }
@@ -526,7 +526,7 @@ export class WorkerBookingService implements IWorkerBookingService {
         return {
           status: STATUS_CODES.BAD_REQUEST,
           success: false,
-          message: 'booking Id is not fount',
+          message: MESSAGES.BOOKING_ID_IS_NOT_FOUNT,
         };
       }
       const updateBooking = await this.bookingRepo.updateStatus(
@@ -537,7 +537,7 @@ export class WorkerBookingService implements IWorkerBookingService {
         return {
           status: STATUS_CODES.BAD_REQUEST,
           success: false,
-          message: 'booking updatetion failed',
+          message: MESSAGES.BOOKING_UPDATETION_FAILED,
         };
       }
       const booking = await this.bookingRepo.findByIdPopulated(bookingId);
@@ -545,12 +545,12 @@ export class WorkerBookingService implements IWorkerBookingService {
         return {
           status: STATUS_CODES.BAD_REQUEST,
           success: false,
-          message: 'booking is not fount',
+          message: MESSAGES.BOOKING_IS_NOT_FOUNT,
         };
       }
       await this.notification.createNotification({
         title: ' work complated',
-        message: ' work is complate',
+        message: MESSAGES.WORK_IS_COMPLATE,
         type: 'booking',
         userId: booking.userId._id.toString(),
         bookingId,
@@ -559,14 +559,14 @@ export class WorkerBookingService implements IWorkerBookingService {
       return {
         status: STATUS_CODES.OK,
         success: true,
-        message: 'successfully updated',
+        message: MESSAGES.SUCCESSFULLY_UPDATED,
         booking: { ...booking.toObject(), verification: false },
       };
     } catch (error) {
       return {
         status: STATUS_CODES.NOT_FOUND,
         success: false,
-        message: 'booking is not fount',
+        message: MESSAGES.BOOKING_IS_NOT_FOUNT,
       };
     }
   }
@@ -605,7 +605,7 @@ export class WorkerBookingService implements IWorkerBookingService {
 
     return {
       success: true,
-      message: 'successfully fetch data',
+      message: MESSAGES.SUCCESSFULLY_FETCH_DATA,
       data: {
         bookings: items.map(WorkerMapper.toAllWorkerBookingDto),
         total,

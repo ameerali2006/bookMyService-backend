@@ -62,7 +62,7 @@ export class UserController implements IUserController {
         const errors = parsedData.error.format();
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'Validation failed',
+          message: MESSAGES.VALIDATION_FAILED,
           errors,
         });
         throw new CustomError(MESSAGES.VALIDATION_ERROR, STATUS_CODES.CONFLICT);
@@ -204,7 +204,7 @@ export class UserController implements IUserController {
       if (!bookingId) {
         res
           .status(STATUS_CODES.BAD_REQUEST)
-          .json({ success: false, message: 'ubooking details missing' });
+          .json({ success: false, message: MESSAGES.UBOOKING_DETAILS_MISSING });
       }
       const response = await this._bookingDetailsService.bookingDetailData(bookingId);
       console.log(response);
@@ -285,7 +285,7 @@ export class UserController implements IUserController {
       if (!bookingId || !paymentType || !addressId) {
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'bookingId, addressId and paymentType are required',
+          message: MESSAGES.BOOKINGID_ADDRESSID_AND_PAYMENTTYPE_ARE_,
         });
         return;
       }
@@ -295,7 +295,7 @@ export class UserController implements IUserController {
       if (!booking.success || !booking.booking) {
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'Booking not found',
+          message: MESSAGES.BOOKING_NOT_FOUND,
         });
         return;
       }
@@ -312,7 +312,7 @@ export class UserController implements IUserController {
       ) {
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'Advance already paid',
+          message: MESSAGES.ADVANCE_ALREADY_PAID,
         });
         return;
       }
@@ -323,7 +323,7 @@ export class UserController implements IUserController {
       ) {
         res.status(STATUS_CODES.BAD_REQUEST).json({
           success: false,
-          message: 'Final payment already completed',
+          message: MESSAGES.FINAL_PAYMENT_ALREADY_COMPLETED,
         });
         return;
       }
@@ -351,7 +351,7 @@ export class UserController implements IUserController {
 
       res.status(STATUS_CODES.OK).json({
         success: true,
-        message: 'Wallet payment successful',
+        message: MESSAGES.WALLET_PAYMENT_SUCCESSFUL,
       });
     } catch (error) {
       next(error);

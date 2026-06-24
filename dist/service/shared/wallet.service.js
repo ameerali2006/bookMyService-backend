@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WalletService = void 0;
+const message_1 = require("../../config/constants/message");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 let WalletService = class WalletService {
@@ -49,7 +50,7 @@ let WalletService = class WalletService {
                 const { userId, role, amount, description, } = data;
                 const wallet = yield this.getOrCreateWallet(userId, role);
                 if (wallet.isFrozen) {
-                    return { success: false, message: 'Wallet is frozen' };
+                    return { success: false, message: message_1.MESSAGES.WALLET_IS_FROZEN };
                 }
                 const balanceBefore = wallet.balance;
                 const balanceAfter = wallet.balance + amount;
@@ -67,10 +68,10 @@ let WalletService = class WalletService {
                     this.walletRepo.updateBalance(wallet._id.toString(), balanceAfter),
                     this.walletTransaction.createTransaction(transactionPayload),
                 ]);
-                return { success: true, message: 'Balance credited successfully' };
+                return { success: true, message: message_1.MESSAGES.BALANCE_CREDITED_SUCCESSFULLY };
             }
             catch (error) {
-                return { success: false, message: 'Something went wrong' };
+                return { success: false, message: message_1.MESSAGES.SOMETHING_WENT_WRONG };
             }
         });
     }
@@ -80,7 +81,7 @@ let WalletService = class WalletService {
             if (!wallet) {
                 return {
                     success: false,
-                    message: 'Wallet not found',
+                    message: message_1.MESSAGES.WALLET_NOT_FOUND,
                     data: {
                         balance: 0,
                         isFrozen: false,
@@ -91,7 +92,7 @@ let WalletService = class WalletService {
             }
             return {
                 success: true,
-                message: 'Wallet data fetched successfully',
+                message: message_1.MESSAGES.WALLET_DATA_FETCHED_SUCCESSFULLY,
                 data: {
                     balance: wallet.balance,
                     isFrozen: wallet.isFrozen,
@@ -130,10 +131,10 @@ let WalletService = class WalletService {
                 const { userId, role, amount, description, type, } = data;
                 const wallet = yield this.getOrCreateWallet(userId, role);
                 if (wallet.isFrozen) {
-                    return { success: false, message: 'Wallet is frozen' };
+                    return { success: false, message: message_1.MESSAGES.WALLET_IS_FROZEN };
                 }
                 if (wallet.balance < amount) {
-                    return { success: false, message: 'Insufficient wallet balance' };
+                    return { success: false, message: message_1.MESSAGES.INSUFFICIENT_WALLET_BALANCE };
                 }
                 const balanceBefore = wallet.balance;
                 const balanceAfter = wallet.balance - amount;
@@ -153,13 +154,13 @@ let WalletService = class WalletService {
                 ]);
                 return {
                     success: true,
-                    message: 'Payment completed successfully',
+                    message: message_1.MESSAGES.PAYMENT_COMPLETED_SUCCESSFULLY,
                 };
             }
             catch (error) {
                 return {
                     success: false,
-                    message: 'Something went wrong',
+                    message: message_1.MESSAGES.SOMETHING_WENT_WRONG,
                 };
             }
         });
