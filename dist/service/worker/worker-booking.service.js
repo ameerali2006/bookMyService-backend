@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.WorkerBookingService = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const time_Intervals_1 = require("../../utils/time&Intervals");
@@ -169,7 +170,7 @@ let WorkerBookingService = class WorkerBookingService {
                     const wallet = yield this.walletService.addBalance({
                         userId: booking.userId,
                         amount: refundAmount,
-                        role: 'user',
+                        role: role_1.Role.USER,
                         description: `Refund for rejected service (${booking.serviceId})`,
                     });
                     if (!wallet)

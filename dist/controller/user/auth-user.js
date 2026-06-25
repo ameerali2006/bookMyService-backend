@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthUserController = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const message_1 = require("../../config/constants/message");
@@ -193,7 +194,7 @@ let AuthUserController = class AuthUserController {
                         message: message_1.MESSAGES.VALIDATION_ERROR,
                     });
                 }
-                const result = yield this._resetPassword.forgotPassword(email, 'user');
+                const result = yield this._resetPassword.forgotPassword(email, role_1.Role.USER);
                 res.status(status_code_1.STATUS_CODES.OK).json(result);
             }
             catch (error) {
@@ -212,7 +213,7 @@ let AuthUserController = class AuthUserController {
                         message: message_1.MESSAGES.VALIDATION_ERROR,
                     });
                 }
-                yield this._resetPassword.resetPassword(token, password, 'user');
+                yield this._resetPassword.resetPassword(token, password, role_1.Role.USER);
                 res.status(status_code_1.STATUS_CODES.OK).json({
                     success: true,
                     message: message_1.MESSAGES.PASSWORD_RESET_SUCCESS,

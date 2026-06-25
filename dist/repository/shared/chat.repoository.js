@@ -19,6 +19,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ChatRepository = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const mongoose_1 = require("mongoose");
 const base_repository_1 = require("./base.repository");
@@ -106,7 +107,7 @@ let ChatRepository = class ChatRepository extends base_repository_1.BaseReposito
                         from: 'users',
                         localField: 'userId',
                         foreignField: '_id',
-                        as: 'user',
+                        as: role_1.Role.USER,
                     },
                 },
                 { $unwind: '$user' },

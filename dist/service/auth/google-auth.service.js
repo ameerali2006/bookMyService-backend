@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GoogleService = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const custom_error_1 = require("../../utils/custom-error");
@@ -45,7 +46,7 @@ let GoogleService = class GoogleService {
                 }
                 const { email, name, sub, picture, } = payload;
                 let repository;
-                if (role == 'user') {
+                if (role == role_1.Role.USER) {
                     repository = this._userRepo;
                 }
                 else if (role == 'worker') {
@@ -73,7 +74,7 @@ let GoogleService = class GoogleService {
                         isNew: false,
                     };
                 }
-                if (role == 'user') {
+                if (role == role_1.Role.USER) {
                     const UserData = {
                         email,
                         name,

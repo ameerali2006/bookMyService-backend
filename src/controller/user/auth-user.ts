@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { Request, Response, NextFunction } from 'express';
 import { injectable, inject } from 'tsyringe';
 import { IAuthController } from '../../interface/controller/auth-user.controller.interface';
@@ -206,7 +207,7 @@ export class AuthUserController implements IAuthController {
           message: MESSAGES.VALIDATION_ERROR,
         });
       }
-      const result = await this._resetPassword.forgotPassword(email, 'user');
+      const result = await this._resetPassword.forgotPassword(email, Role.USER);
 
       res.status(STATUS_CODES.OK).json(result);
     } catch (error) {
@@ -225,7 +226,7 @@ export class AuthUserController implements IAuthController {
         });
       }
 
-      await this._resetPassword.resetPassword(token, password, 'user');
+      await this._resetPassword.resetPassword(token, password, Role.USER);
       res.status(STATUS_CODES.OK).json({
         success: true,
         message: MESSAGES.PASSWORD_RESET_SUCCESS,

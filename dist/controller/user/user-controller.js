@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const status_code_1 = require("../../config/constants/status-code");
@@ -135,7 +136,7 @@ let UserController = class UserController {
             var _a;
             const parsed = change_password_zod_1.changePasswordSchema.parse(req.body);
             const userId = (_a = req.user) === null || _a === void 0 ? void 0 : _a._id;
-            const result = yield this._changePassword.changePassword('user', userId, parsed);
+            const result = yield this._changePassword.changePassword(role_1.Role.USER, userId, parsed);
             if (result.success) {
                 res.status(status_code_1.STATUS_CODES.OK).json(result);
             }
@@ -265,7 +266,7 @@ let UserController = class UserController {
                 // 💰 wallet debit
                 const walletResult = yield this._walletService.debitBalance({
                     userId,
-                    role: 'user',
+                    role: role_1.Role.USER,
                     amount,
                     type: 'ADJUSTMENT',
                     description: `${paymentType} payment for booking ${bookingId}`,

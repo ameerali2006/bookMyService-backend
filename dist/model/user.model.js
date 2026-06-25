@@ -34,6 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserModel = void 0;
+const role_1 = require("../config/constants/role");
 const mongoose_1 = __importStar(require("mongoose"));
 const UserSchema = new mongoose_1.Schema({
     name: {
@@ -77,4 +78,4 @@ const UserSchema = new mongoose_1.Schema({
 }, {
     timestamps: true,
 });
-exports.UserModel = mongoose_1.default.model('User', UserSchema);
+exports.UserModel = mongoose_1.default.model(role_1.CapitalRole.USER, UserSchema);

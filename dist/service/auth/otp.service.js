@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OtpService = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const custom_error_1 = require("../../utils/custom-error");
@@ -64,7 +65,7 @@ let OtpService = class OtpService {
                 const currentTime = new Date();
                 const otpExpiryTime = new Date(data.expireAt);
                 let repository;
-                if (otpData.role == 'user') {
+                if (otpData.role == role_1.Role.USER) {
                     repository = this._userRepo;
                 }
                 else if (otpData.role == 'worker') {

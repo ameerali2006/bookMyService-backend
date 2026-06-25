@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { inject, injectable } from 'tsyringe';
 import {
   IRequestFilters,
@@ -214,7 +215,7 @@ export class WorkerBookingService implements IWorkerBookingService {
         const wallet = await this.walletService.addBalance({
           userId: booking.userId as string,
           amount: refundAmount,
-          role: 'user',
+          role: Role.USER,
           description: `Refund for rejected service (${booking.serviceId})`,
         });
         if (!wallet) return { success: false, message: MESSAGES.USER_WALLET_ERROR };

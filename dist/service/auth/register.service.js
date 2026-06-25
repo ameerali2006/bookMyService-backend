@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegisterService = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const message_1 = require("../../config/constants/message");
@@ -40,7 +41,7 @@ let RegisterService = class RegisterService {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let repository;
-                if (user.role == 'user') {
+                if (user.role == role_1.Role.USER) {
                     repository = this._userRepo;
                 }
                 else if (user.role == 'worker') {
@@ -82,7 +83,7 @@ let RegisterService = class RegisterService {
                     userDbData = yield repository.create(user);
                 }
                 let userData;
-                if (user.role == 'user') {
+                if (user.role == role_1.Role.USER) {
                     userData = user_mapper_1.UserMapper.resposeWorkerDto(userDbData);
                 }
                 else if (user.role == 'worker') {

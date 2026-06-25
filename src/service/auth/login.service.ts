@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { inject, injectable } from 'tsyringe';
 import { LoginDto } from '../../dto/shared/login.dto';
 import { UserDataDTO } from '../../dto/user/auth/user-data.dto';
@@ -39,7 +40,7 @@ export class LoginService implements ILoginService {
       let repository;
       if (user.role == 'admin') {
         repository = this._adminRepo;
-      } else if (user.role == 'user') {
+      } else if (user.role == Role.USER) {
         repository = this._userRepo;
       } else if (user.role == 'worker') {
         repository = this._workerRepo;
@@ -102,7 +103,7 @@ export class LoginService implements ILoginService {
         );
       }
       let data;
-      if (user.role == 'user') {
+      if (user.role == Role.USER) {
         data = UserMapper.resposeWorkerDto(userData as IUser);
       } else if (user.role == 'worker') {
         data = WorkerMapper.responseWorkerDto(userData as IWorker);

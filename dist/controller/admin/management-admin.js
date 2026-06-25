@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ManagementAdmin = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const status_code_1 = require("../../config/constants/status-code");
 const message_1 = require("../../config/constants/message");
@@ -42,7 +43,7 @@ let ManagementAdmin = class ManagementAdmin {
                 const search = req.query.search || '';
                 const sortBy = req.query.sortBy || 'createdAt';
                 const sortOrder = req.query.sortOrder === 'asc' ? 'asc' : 'desc';
-                const data = yield this._adminManagement.getAllUsers('user', page, limit, search, sortBy, sortOrder);
+                const data = yield this._adminManagement.getAllUsers(role_1.Role.USER, page, limit, search, sortBy, sortOrder);
                 console.log(data);
                 res.status(status_code_1.STATUS_CODES.OK).json(Object.assign({ success: true }, data));
             }
@@ -61,7 +62,7 @@ let ManagementAdmin = class ManagementAdmin {
                 const { userId } = req.params;
                 const status = req.body.isActive;
                 console.log(userId, status);
-                const updated = yield this._adminManagement.updateStatus(userId, status, 'user');
+                const updated = yield this._adminManagement.updateStatus(userId, status, role_1.Role.USER);
                 if (!updated) {
                     res.status(status_code_1.STATUS_CODES.BAD_REQUEST || 400).json({
                         success: false,

@@ -1,5 +1,6 @@
 // repository/review.repository.ts
 
+import { Role } from '../../config/constants/role';
 import { FilterQuery, Types, SortOrder } from 'mongoose';
 
 import { IReview } from '../../interface/model/review.model.interface';
@@ -103,7 +104,7 @@ export class ReviewRepository
           from: 'users',
           localField: 'userId',
           foreignField: '_id',
-          as: 'user',
+          as: Role.USER,
         },
       },
 

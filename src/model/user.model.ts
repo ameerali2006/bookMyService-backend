@@ -1,3 +1,4 @@
+import { Role, CapitalRole } from '../config/constants/role';
 import mongoose, { Schema, Document, Types } from 'mongoose';
 import { IUser } from '../interface/model/user.model.interface';
 
@@ -48,4 +49,4 @@ const UserSchema = new Schema<IUser>(
   },
 );
 
-export const UserModel = mongoose.model<IUser>('User', UserSchema);
+export const UserModel = mongoose.model<IUser>(CapitalRole.USER, UserSchema);

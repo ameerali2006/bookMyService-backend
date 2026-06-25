@@ -1,3 +1,4 @@
+import { Role } from '../../../config/constants/role';
 export interface UserRegisterDTO {
   name: string;
   email: string;
@@ -7,7 +8,7 @@ export interface UserRegisterDTO {
 
 }
 export interface UserDataRegisterDto extends UserRegisterDTO{
-  role:'user'
+  role:Role.USER
 }
 export interface userResponse{
   _id:string;

@@ -1,4 +1,5 @@
 // src/repository/implementation/booking.repository.ts
+import { Role } from '../../config/constants/role';
 import { injectable } from "tsyringe";
 import { FilterQuery, Types } from "mongoose";
 import {
@@ -659,7 +660,7 @@ export class BookingRepository
           from: "users",
           localField: "userId",
           foreignField: "_id",
-          as: "user",
+          as: Role.USER,
         },
       },
       {

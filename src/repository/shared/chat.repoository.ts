@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { injectable } from 'tsyringe';
 import { Types } from 'mongoose';
 import { BaseRepository } from './base.repository';
@@ -95,7 +96,7 @@ export class ChatRepository
           from: 'users',
           localField: 'userId',
           foreignField: '_id',
-          as: 'user',
+          as: Role.USER,
         },
       },
       { $unwind: '$user' },

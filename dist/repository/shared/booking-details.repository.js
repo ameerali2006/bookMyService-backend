@@ -20,6 +20,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookingRepository = void 0;
 // src/repository/implementation/booking.repository.ts
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const mongoose_1 = require("mongoose");
 const base_repository_1 = require("./base.repository");
@@ -509,7 +510,7 @@ let BookingRepository = class BookingRepository extends base_repository_1.BaseRe
                         from: "users",
                         localField: "userId",
                         foreignField: "_id",
-                        as: "user",
+                        as: role_1.Role.USER,
                     },
                 },
                 {

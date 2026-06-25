@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { Request, Response, NextFunction } from 'express';
 import { inject, injectable } from 'tsyringe';
 import { success } from 'zod';
@@ -152,7 +153,7 @@ export class UserController implements IUserController {
     const parsed = changePasswordSchema.parse(req.body);
     const userId = (req as CustomRequest).user?._id;
     const result = await this._changePassword.changePassword(
-      'user',
+      Role.USER,
       userId,
       parsed,
     );
@@ -331,7 +332,7 @@ export class UserController implements IUserController {
       // 💰 wallet debit
       const walletResult = await this._walletService.debitBalance({
         userId,
-        role: 'user',
+        role: Role.USER,
         amount,
         type: 'ADJUSTMENT',
         description: `${paymentType} payment for booking ${bookingId}`,

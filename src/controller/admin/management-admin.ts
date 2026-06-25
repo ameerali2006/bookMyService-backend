@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { Request, Response, NextFunction } from 'express';
 import { inject, injectable } from 'tsyringe';
 import { LoginDto } from '../../dto/shared/login.dto';
@@ -36,7 +37,7 @@ export class ManagementAdmin implements IAdminManagementController {
       const sortOrder = (req.query.sortOrder as string) === 'asc' ? 'asc' : 'desc';
 
       const data = await this._adminManagement.getAllUsers(
-        'user',
+        Role.USER,
         page,
         limit,
         search,
@@ -66,7 +67,7 @@ export class ManagementAdmin implements IAdminManagementController {
       const updated = await this._adminManagement.updateStatus(
         userId,
         status,
-        'user',
+        Role.USER,
       );
       if (!updated) {
         res.status(STATUS_CODES.BAD_REQUEST || 400).json({

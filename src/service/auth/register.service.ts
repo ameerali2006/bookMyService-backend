@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { inject, injectable } from 'tsyringe';
 import { UserDataRegisterDto, UserRegisterDTO } from '../../dto/user/auth/user-register.dto';
 import { UserDataDTO } from '../../dto/user/auth/user-data.dto';
@@ -33,7 +34,7 @@ export class RegisterService implements IRegisterService {
     try {
       let repository;
 
-      if (user.role == 'user') {
+      if (user.role == Role.USER) {
         repository = this._userRepo;
       } else if (user.role == 'worker') {
         repository = this._workerRepo;
@@ -79,7 +80,7 @@ export class RegisterService implements IRegisterService {
       }
 
       let userData;
-      if (user.role == 'user') {
+      if (user.role == Role.USER) {
         userData = UserMapper.resposeWorkerDto(userDbData as IUser);
       } else if (user.role == 'worker') {
         userData = WorkerMapper.responseWorkerDto(userDbData as IWorker);

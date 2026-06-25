@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ManagementAdminService = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const admin_mapper_1 = require("../../utils/mapper/admin-mapper");
@@ -50,11 +51,11 @@ let ManagementAdminService = class ManagementAdminService {
                 const sort = {
                     [sortBy]: sortOrder === 'asc' ? 1 : -1,
                 };
-                const { items, total } = role === 'user'
+                const { items, total } = role === role_1.Role.USER
                     ? yield this._userRepo.findAll(filter, skip, limit, sort)
                     : yield this._workerRepo.findAll(filter, skip, limit, sort);
                 let userDataDto;
-                if (role === 'user') {
+                if (role === role_1.Role.USER) {
                     userDataDto = admin_mapper_1.AdminMapper.resUserDetails(items);
                 }
                 else {
@@ -84,7 +85,7 @@ let ManagementAdminService = class ManagementAdminService {
                 if (typeof status !== 'boolean') {
                     throw new custom_error_1.CustomError(message_1.MESSAGES.INVALID_CREDENTIALS || 'isActive must be a boolean', status_code_1.STATUS_CODES.BAD_REQUEST);
                 }
-                const updated = role == 'user'
+                const updated = role == role_1.Role.USER
                     ? yield this._userRepo.updateById(userId, { isBlocked: status })
                     : yield this._workerRepo.updateById(userId, { isBlocked: status });
                 if (!updated) {

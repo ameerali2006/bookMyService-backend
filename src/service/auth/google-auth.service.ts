@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { inject, injectable } from 'tsyringe';
 import { GoogleLoginResponseDTO } from '../../dto/worker/auth/worker-register.dto';
 import { IGoogleService } from '../../interface/service/auth/google.service.interface';
@@ -37,7 +38,7 @@ export class GoogleService implements IGoogleService {
         email, name, sub, picture,
       } = payload;
       let repository;
-      if (role == 'user') {
+      if (role == Role.USER) {
         repository = this._userRepo;
       } else if (role == 'worker') {
         repository = this._workerRepo;
@@ -67,7 +68,7 @@ export class GoogleService implements IGoogleService {
 
         };
       }
-      if (role == 'user') {
+      if (role == Role.USER) {
         const UserData: UserRegisterDTO = {
           email,
           name,

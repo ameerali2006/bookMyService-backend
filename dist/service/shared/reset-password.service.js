@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ResetPassword = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const message_1 = require("../../config/constants/message");
@@ -88,7 +89,7 @@ let ResetPassword = class ResetPassword {
                 }
                 const { email } = payload;
                 let repository;
-                if (role === 'user') {
+                if (role === role_1.Role.USER) {
                     repository = this._authUserRepo;
                 }
                 else if (role === 'worker') {

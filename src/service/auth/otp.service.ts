@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { inject, injectable } from 'tsyringe';
 import { IOtp } from '../../interface/model/otp.model.interface';
 import { IOtpService } from '../../interface/service/auth/otp.service.interface';
@@ -54,7 +55,7 @@ export class OtpService implements IOtpService {
       const currentTime = new Date();
       const otpExpiryTime = new Date(data.expireAt);
       let repository;
-      if (otpData.role == 'user') {
+      if (otpData.role == Role.USER) {
         repository = this._userRepo;
       } else if (otpData.role == 'worker') {
         repository = this._workerRepo;

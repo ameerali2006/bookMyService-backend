@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { inject, injectable } from 'tsyringe';
 import { FilterQuery } from 'mongoose';
 import { IManagementAdminService } from '../../interface/service/management-admin.service.interface';
@@ -64,11 +65,11 @@ export class ManagementAdminService implements IManagementAdminService {
       const sort: Record<string, 1 | -1> = {
         [sortBy]: sortOrder === 'asc' ? 1 : -1,
       };
-      const { items, total } = role === 'user'
+      const { items, total } = role === Role.USER
         ? await this._userRepo.findAll(filter, skip, limit, sort)
         : await this._workerRepo.findAll(filter, skip, limit, sort);
       let userDataDto;
-      if (role === 'user') {
+      if (role === Role.USER) {
         userDataDto = AdminMapper.resUserDetails(items as IUser[]);
       } else {
         userDataDto = AdminMapper.resWorkersDetails(items as IWorker[]);
@@ -109,7 +110,7 @@ export class ManagementAdminService implements IManagementAdminService {
           STATUS_CODES.BAD_REQUEST,
         );
       }
-      const updated = role == 'user'
+      const updated = role == Role.USER
         ? await this._userRepo.updateById(userId, { isBlocked: status })
         : await this._workerRepo.updateById(userId, { isBlocked: status });
       if (!updated) {

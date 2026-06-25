@@ -22,6 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LoginService = void 0;
+const role_1 = require("../../config/constants/role");
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
 const custom_error_1 = require("../../utils/custom-error");
@@ -45,7 +46,7 @@ let LoginService = class LoginService {
                 if (user.role == 'admin') {
                     repository = this._adminRepo;
                 }
-                else if (user.role == 'user') {
+                else if (user.role == role_1.Role.USER) {
                     repository = this._userRepo;
                 }
                 else if (user.role == 'worker') {
@@ -84,7 +85,7 @@ let LoginService = class LoginService {
                     throw new custom_error_1.CustomError(message_1.MESSAGES.BAD_REQUEST, status_code_1.STATUS_CODES.UNAUTHORIZED);
                 }
                 let data;
-                if (user.role == 'user') {
+                if (user.role == role_1.Role.USER) {
                     data = user_mapper_1.UserMapper.resposeWorkerDto(userData);
                 }
                 else if (user.role == 'worker') {

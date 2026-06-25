@@ -1,3 +1,4 @@
+import { Role } from '../../config/constants/role';
 import { inject, injectable } from 'tsyringe';
 import { TYPES } from '../../config/constants/types';
 import { IEmailService } from '../../interface/helpers/email-service.service.interface';
@@ -108,7 +109,7 @@ export class ResetPassword implements IResetPassword {
 
       const { email } = payload;
       let repository;
-      if (role === 'user') {
+      if (role === Role.USER) {
         repository = this._authUserRepo;
       } else if (role === 'worker') {
         repository = this._workerRepo;
