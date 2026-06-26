@@ -13,12 +13,13 @@ const env_1 = require("./config/env/env");
 const worker_route_1 = require("./routes/worker.route");
 const resolver_1 = require("./config/di/resolver");
 const morgon_1 = require("./utils/morgon");
+const apiRoutes_1 = require("./config/constants/apiRoutes");
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)({
     origin: env_1.ENV.FRONTEND_URI,
     credentials: true,
 }));
-app.post('/payment/webhook', express_1.default.raw({ type: 'application/json' }), (req, res, next) => resolver_1.stripeController.handleWebhook(req, res, next));
+app.post(apiRoutes_1.BACKEND_ROUTES.PAYMENT.WEBHOOK, express_1.default.raw({ type: 'application/json' }), (req, res, next) => resolver_1.stripeController.handleWebhook(req, res, next));
 app.use(express_1.default.json());
 app.use((0, cookie_parser_1.default)());
 app.use(morgon_1.morganLogger);

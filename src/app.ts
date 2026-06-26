@@ -8,6 +8,7 @@ import { ENV } from './config/env/env';
 import { WorkerRoute } from './routes/worker.route';
 import { stripeController } from './config/di/resolver';
 import { morganLogger } from './utils/morgon';
+import { BACKEND_ROUTES } from './config/constants/apiRoutes';
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use(
     credentials: true,
   }),
 );
-app.post('/payment/webhook', express.raw({ type: 'application/json' }), (req: Request, res: Response, next: NextFunction) => stripeController.handleWebhook(req, res, next));
+app.post(BACKEND_ROUTES.PAYMENT.WEBHOOK, express.raw({ type: 'application/json' }), (req: Request, res: Response, next: NextFunction) => stripeController.handleWebhook(req, res, next));
 app.use(express.json());
 app.use(cookieParser());
 app.use(morganLogger);

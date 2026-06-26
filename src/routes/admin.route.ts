@@ -8,6 +8,7 @@ import {
   tokenController,
 } from '../config/di/resolver';
 import { authorizeRole, verifyAuth } from '../middleware/auth.middleware';
+import { BACKEND_ROUTES } from '../config/constants/apiRoutes';
 
 export class AdminRoute extends BaseRoute {
   constructor() {
@@ -16,13 +17,13 @@ export class AdminRoute extends BaseRoute {
 
   protected initializeRoutes(): void {
     this.router.post(
-      '/login',
+      BACKEND_ROUTES.ADMIN.LOGIN,
       (req: Request, res: Response, next: NextFunction) => {
         authAdminController.login(req, res, next);
       },
     );
     this.router.post(
-      '/logout',
+      BACKEND_ROUTES.ADMIN.LOGOUT,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -30,7 +31,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/users',
+      BACKEND_ROUTES.ADMIN.USERS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -38,7 +39,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.patch(
-      '/users/:userId/status',
+      BACKEND_ROUTES.ADMIN.UPDATE_USER_STATUS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -46,7 +47,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/workers',
+      BACKEND_ROUTES.ADMIN.WORKERS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -54,7 +55,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.patch(
-      '/workers/:userId/status',
+      BACKEND_ROUTES.ADMIN.UPDATE_WORKER_STATUS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -62,7 +63,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.patch(
-      '/workers/:workerId/unverified',
+      BACKEND_ROUTES.ADMIN.VERIFY_WORKER,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -70,7 +71,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/workers/unverified',
+      BACKEND_ROUTES.ADMIN.UNVERIFIED_WORKERS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -78,7 +79,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/services',
+      BACKEND_ROUTES.ADMIN.SERVICES,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -86,13 +87,13 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/cloudinary-signature',
+      BACKEND_ROUTES.ADMIN.CLOUDINARY_SIGNATURE,
       (req: Request, res: Response, next: NextFunction) => {
         cloudinaryController.getSignature(req, res, next);
       },
     );
     this.router.post(
-      '/services/create',
+      BACKEND_ROUTES.ADMIN.CREATE_SERVICE,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -101,7 +102,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.patch(
-      '/services/:id/status',
+      BACKEND_ROUTES.ADMIN.UPDATE_SERVICE_STATUS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -109,11 +110,11 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.post(
-      '/refresh-token',
+      BACKEND_ROUTES.ADMIN.REFRESH_TOKEN,
       (req: Request, res: Response, next: NextFunction) => authAdminController.handleTokenRefresh(req, res),
     );
     this.router.get(
-      '/bookings',
+      BACKEND_ROUTES.ADMIN.BOOKINGS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -121,7 +122,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/booking/:bookingId',
+      BACKEND_ROUTES.ADMIN.BOOKING_DETAIL,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -129,7 +130,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/wallet/walletData',
+      BACKEND_ROUTES.ADMIN.WALLET_DATA,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -137,7 +138,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/wallet/transactions',
+      BACKEND_ROUTES.ADMIN.TRANSACTIONS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -145,7 +146,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/dashboard',
+      BACKEND_ROUTES.ADMIN.DASHBOARD,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -153,7 +154,7 @@ export class AdminRoute extends BaseRoute {
       },
     );
     this.router.get(
-      '/reviews',
+      BACKEND_ROUTES.ADMIN.REVIEWS,
       verifyAuth(),
       authorizeRole(['admin']),
       (req: Request, res: Response, next: NextFunction) => {
@@ -162,3 +163,4 @@ export class AdminRoute extends BaseRoute {
     );
   }
 }
+

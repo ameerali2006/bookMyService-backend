@@ -16,6 +16,7 @@ import {
 
 } from '../config/di/resolver';
 import { authorizeRole, verifyAuth } from '../middleware/auth.middleware';
+import { BACKEND_ROUTES } from '../config/constants/apiRoutes';
 
 export class UserRoute extends BaseRoute {
   constructor() {
@@ -23,48 +24,48 @@ export class UserRoute extends BaseRoute {
   }
 
   protected initializeRoutes(): void {
-    this.router.post('/register', (req: Request, res: Response, next: NextFunction) => authController.register(req, res, next));
-    this.router.post('/generate-otp', (req: Request, res: Response, next: NextFunction) => authController.generateOtp(req, res, next));
-    this.router.post('/verify-otp', (req: Request, res: Response, next: NextFunction) => authController.verifyOtp(req, res, next));
-    this.router.post('/login', (req: Request, res: Response, next: NextFunction) => authController.login(req, res, next));
-    this.router.post('/google-login', (req: Request, res: Response, next: NextFunction) => {
+    this.router.post(BACKEND_ROUTES.USER.REGISTER, (req: Request, res: Response, next: NextFunction) => authController.register(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.GENERATE_OTP, (req: Request, res: Response, next: NextFunction) => authController.generateOtp(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.VERIFY_OTP, (req: Request, res: Response, next: NextFunction) => authController.verifyOtp(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.LOGIN, (req: Request, res: Response, next: NextFunction) => authController.login(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.GOOGLE_LOGIN, (req: Request, res: Response, next: NextFunction) => {
       console.log('google.login');
       authController.googleLogin(req, res, next);
     });
 
-    this.router.post('/logout', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req:Request, res:Response, next:NextFunction) => {
+    this.router.post(BACKEND_ROUTES.USER.LOGOUT, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req:Request, res:Response, next:NextFunction) => {
       authController.logout(req, res, next);
     });
-    this.router.post('/forgot-password', (req: Request, res: Response, next: NextFunction) => authController.forgotPassword(req, res, next));
-    this.router.post('/reset-password', (req: Request, res: Response, next: NextFunction) => authController.resetPassword(req, res, next));
-    this.router.get('/getService', (req: Request, res: Response, next: NextFunction) => serviceController.getServices(req, res, next));
-    this.router.post('/refresh-token', (req: Request, res: Response, next: NextFunction) => authController.handleTokenRefresh(req, res));
+    this.router.post(BACKEND_ROUTES.USER.FORGOT_PASSWORD, (req: Request, res: Response, next: NextFunction) => authController.forgotPassword(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.RESET_PASSWORD, (req: Request, res: Response, next: NextFunction) => authController.resetPassword(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.GET_SERVICE, (req: Request, res: Response, next: NextFunction) => serviceController.getServices(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.REFRESH_TOKEN, (req: Request, res: Response, next: NextFunction) => authController.handleTokenRefresh(req, res));
     // add verify and auth middle ware
-    this.router.get('/profile/userDetails', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.userProfileDetails(req, res, next));
-    this.router.put('/profile/updateUserDetails', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.updateProfileDetails(req, res, next));
-    this.router.get('/workers/nearby', (req: Request, res: Response, next: NextFunction) => serviceController.getNearByWorkers(req, res, next));
-    this.router.get('/workers/availability', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => serviceController.getWorkerAvailability(req, res, next));
-    this.router.get('/addresses', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.getUserAddresses(req, res, next));
-    this.router.post('/addAddress', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.addUserAddress(req, res, next));
-    this.router.put('/address/setPrimary', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.setPrimaryAddress(req, res, next));
-    this.router.post('/basicBookingDetails', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.setBasicBookingDetails(req, res, next));
-    this.router.get('/getBoookingDetails', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.getBookingDetails(req, res, next));
-    this.router.post('/payment/create-payment-intent', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => stripeController.createPaymentIntent(req, res, next));
-    this.router.put('/profile/changePassword', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.changePassword(req, res, next));
-    this.router.get('/payment/verify', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.verifyPayment(req, res, next));
-    this.router.get('/bookings/ongoing', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.ongoingBookings(req, res, next));
-    this.router.get('/bookings/ongoing/:bookingId', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.bookingDetailData(req, res, next));
-    this.router.get('/profile/walletData', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.getWalletData(req, res, next));
-    this.router.get('/profile/transactions', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.getTransactions(req, res, next));
-    this.router.get('/chat/chatId', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => chatController.getChatId(req, res, next));
-    this.router.get('/chat/chatHistory', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => chatController.getChatHistory(req, res, next));
-    this.router.post('/review/addReview', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => reviewController.addReview(req, res, next));
-    this.router.post('/wallet/payment', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.walletPayment(req, res, next));
-    this.router.get('/workers/workerProfile', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => serviceController.getWorkerProfile(req, res, next));
-    this.router.get('/notifications', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.getNotifications(req, res, next));
-    this.router.patch('/notifications/:id/read', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.markAsRead(req, res, next));
-    this.router.patch('/notifications/read-all', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.markAllRead(req, res, next));
-    this.router.patch('/booking/:bookingId/cancel', verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.cancelBooking (req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.PROFILE_DETAILS, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.userProfileDetails(req, res, next));
+    this.router.put(BACKEND_ROUTES.USER.UPDATE_PROFILE, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.updateProfileDetails(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.NEARBY_WORKERS, (req: Request, res: Response, next: NextFunction) => serviceController.getNearByWorkers(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.WORKER_AVAILABILITY, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => serviceController.getWorkerAvailability(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.ADDRESSES, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.getUserAddresses(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.ADD_ADDRESS, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.addUserAddress(req, res, next));
+    this.router.put(BACKEND_ROUTES.USER.SET_PRIMARY_ADDRESS, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.setPrimaryAddress(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.BASIC_BOOKING, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.setBasicBookingDetails(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.BOOKING_DETAILS, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.getBookingDetails(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.CREATE_PAYMENT_INTENT, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => stripeController.createPaymentIntent(req, res, next));
+    this.router.put(BACKEND_ROUTES.USER.CHANGE_PASSWORD, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.changePassword(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.VERIFY_PAYMENT, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.verifyPayment(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.ONGOING_BOOKINGS, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.ongoingBookings(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.BOOKING_DETAIL, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.bookingDetailData(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.WALLET_DATA, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.getWalletData(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.TRANSACTIONS, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.getTransactions(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.CHAT_ID, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => chatController.getChatId(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.CHAT_HISTORY, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => chatController.getChatHistory(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.ADD_REVIEW, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => reviewController.addReview(req, res, next));
+    this.router.post(BACKEND_ROUTES.USER.WALLET_PAYMENT, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => userController.walletPayment(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.WORKER_PROFILE, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => serviceController.getWorkerProfile(req, res, next));
+    this.router.get(BACKEND_ROUTES.USER.NOTIFICATIONS, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.getNotifications(req, res, next));
+    this.router.patch(BACKEND_ROUTES.USER.MARK_NOTIFICATION_READ, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.markAsRead(req, res, next));
+    this.router.patch(BACKEND_ROUTES.USER.MARK_ALL_NOTIFICATION_READ, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => notificationController.markAllRead(req, res, next));
+    this.router.patch(BACKEND_ROUTES.USER.CANCEL_BOOKING, verifyAuth(), blockStatusMiddleware.checkStatus as RequestHandler, (req: Request, res: Response, next: NextFunction) => bookingController.cancelBooking (req, res, next));
   
   }
 }
