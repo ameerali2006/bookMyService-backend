@@ -260,8 +260,8 @@ export class ManagementAdminService implements IManagementAdminService {
     try {
       console.log("data ividda inddu",data)
       const existing = await this._serviceRepo.findByCategory(data.category);
-
-      if (existing) {
+      console.log(existing)
+      if (existing.length!==0) {
         return {success:true, message: MESSAGES.SERVICE_ALREADY_EXISTS };
       }
 

@@ -189,7 +189,8 @@ let ManagementAdminService = class ManagementAdminService {
             try {
                 console.log("data ividda inddu", data);
                 const existing = yield this._serviceRepo.findByCategory(data.category);
-                if (existing) {
+                console.log(existing);
+                if (existing.length !== 0) {
                     return { success: true, message: message_1.MESSAGES.SERVICE_ALREADY_EXISTS };
                 }
                 const newService = yield this._serviceRepo.create(data);
