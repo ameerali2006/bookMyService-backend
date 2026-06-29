@@ -45,7 +45,10 @@ let ResetPassword = class ResetPassword {
                 const repository = role === 'user' ? this._authUserRepo : this._workerRepo;
                 const user = yield repository.findOne({ email });
                 if (!user) {
-                    throw new custom_error_1.CustomError(message_1.MESSAGES.INVALID_CREDENTIALS, status_code_1.STATUS_CODES.FORBIDDEN);
+                    return {
+                        success: false,
+                        message: message_1.MESSAGES.INVALID_CREDENTIALS,
+                    };
                 }
                 if (!user._id) {
                     throw new custom_error_1.CustomError('User ID missing', status_code_1.STATUS_CODES.INTERNAL_SERVER_ERROR);

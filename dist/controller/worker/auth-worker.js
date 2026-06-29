@@ -174,11 +174,8 @@ let AuthWorkerController = class AuthWorkerController {
                         message: message_1.MESSAGES.VALIDATION_ERROR,
                     });
                 }
-                yield this._resetPassword.forgotPassword(email, 'worker');
-                res.status(status_code_1.STATUS_CODES.OK).json({
-                    success: true,
-                    message: message_1.MESSAGES.EMAIL_VERIFICATION_SENT,
-                });
+                const result = yield this._resetPassword.forgotPassword(email, 'worker');
+                res.status(status_code_1.STATUS_CODES.OK).json(result);
             }
             catch (error) {
                 next(error);

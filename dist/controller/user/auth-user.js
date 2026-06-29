@@ -195,6 +195,7 @@ let AuthUserController = class AuthUserController {
                     });
                 }
                 const result = yield this._resetPassword.forgotPassword(email, role_1.Role.USER);
+                console.log(result);
                 res.status(status_code_1.STATUS_CODES.OK).json(result);
             }
             catch (error) {

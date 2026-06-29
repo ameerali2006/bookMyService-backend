@@ -208,7 +208,7 @@ export class AuthUserController implements IAuthController {
         });
       }
       const result = await this._resetPassword.forgotPassword(email, Role.USER);
-
+      console.log(result)
       res.status(STATUS_CODES.OK).json(result);
     } catch (error) {
       next(error);

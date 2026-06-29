@@ -173,12 +173,9 @@ export class AuthWorkerController implements IWorkerAuthController {
           message: MESSAGES.VALIDATION_ERROR,
         });
       }
-      await this._resetPassword.forgotPassword(email, 'worker');
+      const result=await this._resetPassword.forgotPassword(email, 'worker');
 
-      res.status(STATUS_CODES.OK).json({
-        success: true,
-        message: MESSAGES.EMAIL_VERIFICATION_SENT,
-      });
+      res.status(STATUS_CODES.OK).json(result);
     } catch (error) {
       next(error);
     }

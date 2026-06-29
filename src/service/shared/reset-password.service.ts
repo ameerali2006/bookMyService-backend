@@ -37,10 +37,10 @@ export class ResetPassword implements IResetPassword {
       const user = await repository.findOne({ email });
 
       if (!user) {
-        throw new CustomError(
-          MESSAGES.INVALID_CREDENTIALS,
-          STATUS_CODES.FORBIDDEN,
-        );
+        return {
+          success: false,
+          message: MESSAGES.INVALID_CREDENTIALS,
+        };
       }
 
       if (!user._id) {
