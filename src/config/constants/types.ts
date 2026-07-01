@@ -61,5 +61,6 @@ export const TYPES = {
   AddressRepository: Symbol.for('AddressRepository'),
   BookingService: Symbol.for('BookingService'),
   StripeService: Symbol.for('StripeService'),
-
+  WorkerEarningsRepository: Symbol.for('WorkerEarningsRepository'),
+  WorkerEarningsService: Symbol.for('WorkerEarningsService'),
 };

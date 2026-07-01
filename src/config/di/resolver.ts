@@ -39,6 +39,8 @@ import { IWorkerController } from '../../interface/controller/worker-controller.
 import { WorkerController } from '../../controller/worker/worker-controller.controller';
 import { IReviewController } from '../../interface/controller/review.controller.interface';
 import { ReviewController } from '../../controller/review.controller';
+import { IWorkerEarningsController } from '../../interface/controller/worker-earnings.controller.interface';
+import { WorkerEarningsController } from '../../controller/worker/worker-earnings.controller';
 import { io, onlineUsers } from '../socketServer';
 import { NotificationController } from '../../controller/notification.controller';
 import { INotificationController } from '../../interface/controller/notification.controller.interface';
@@ -66,3 +68,4 @@ export const notificationController = container.resolve<INotificationController>
 export const chatController = container.resolve<IChatController>(ChatController);
 export const workerController = container.resolve<IWorkerController>(WorkerController);
 export const reviewController = container.resolve<IReviewController>(ReviewController);
+export const workerEarningsController = container.resolve<IWorkerEarningsController>(WorkerEarningsController);

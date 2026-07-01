@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ServiceRegistery = void 0;
 const tsyringe_1 = require("tsyringe");
 const types_1 = require("../../config/constants/types");
+const worker_earnings_service_1 = require("../../service/worker/worker-earnings.service");
 const hash_service_1 = require("../../service/helper/hash.service");
 const email_service_service_1 = require("../../service/helper/email-service.service");
 const jwt_auth_service_1 = require("../../service/helper/jwt-auth.service");
@@ -73,6 +74,7 @@ class ServiceRegistery {
         tsyringe_1.container.register(types_1.TYPES.ReviewService, { useClass: review_service_1.ReviewService });
         tsyringe_1.container.register(types_1.TYPES.NotificationService, { useClass: notification_service_1.NotificationService });
         tsyringe_1.container.register(types_1.TYPES.WorkerPayoutService, { useClass: worker_payout_service_1.WorkerPayoutService });
+        tsyringe_1.container.register(types_1.TYPES.WorkerEarningsService, { useClass: worker_earnings_service_1.WorkerEarningsService });
     }
 }
 exports.ServiceRegistery = ServiceRegistery;

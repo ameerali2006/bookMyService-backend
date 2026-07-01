@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.reviewController = exports.workerController = exports.chatController = exports.notificationController = exports.chatSocketHandler = exports.bookingSocketHandler = exports.workerbookingController = exports.stripeController = exports.bookingController = exports.userController = exports.workingDetailsController = exports.tokenController = exports.serviceController = exports.managementAdminController = exports.cloudinaryController = exports.authWorkerController = exports.authAdminController = exports.authController = exports.bookingSocket = exports.blockStatusMiddleware = void 0;
+exports.workerEarningsController = exports.reviewController = exports.workerController = exports.chatController = exports.notificationController = exports.chatSocketHandler = exports.bookingSocketHandler = exports.workerbookingController = exports.stripeController = exports.bookingController = exports.userController = exports.workingDetailsController = exports.tokenController = exports.serviceController = exports.managementAdminController = exports.cloudinaryController = exports.authWorkerController = exports.authAdminController = exports.authController = exports.bookingSocket = exports.blockStatusMiddleware = void 0;
 const tsyringe_1 = require("tsyringe");
 const index_1 = require("./index");
 const auth_user_1 = require("../../controller/user/auth-user");
@@ -22,6 +22,7 @@ const chat_socket_service_1 = require("../../service/helper/chat-socket.service"
 const chat_controller_1 = require("../../controller/chat.controller");
 const worker_controller_controller_1 = require("../../controller/worker/worker-controller.controller");
 const review_controller_1 = require("../../controller/review.controller");
+const worker_earnings_controller_1 = require("../../controller/worker/worker-earnings.controller");
 const notification_controller_1 = require("../../controller/notification.controller");
 index_1.DependencyInjection.registerAll();
 exports.blockStatusMiddleware = tsyringe_1.container.resolve(block_status_middleware_1.BlockStatusMiddleware);
@@ -44,3 +45,4 @@ exports.notificationController = tsyringe_1.container.resolve(notification_contr
 exports.chatController = tsyringe_1.container.resolve(chat_controller_1.ChatController);
 exports.workerController = tsyringe_1.container.resolve(worker_controller_controller_1.WorkerController);
 exports.reviewController = tsyringe_1.container.resolve(review_controller_1.ReviewController);
+exports.workerEarningsController = tsyringe_1.container.resolve(worker_earnings_controller_1.WorkerEarningsController);

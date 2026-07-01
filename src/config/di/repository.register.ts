@@ -34,6 +34,8 @@ import { IReviewRepository } from '../../interface/repository/review.repository.
 import { ReviewRepository } from '../../repository/shared/review.repository';
 import { INotificationRepository } from '../../interface/repository/notification.repository.interface';
 import { NotificationRepository } from '../../repository/shared/notification.repository';
+import { IWorkerEarningsRepository } from '../../interface/repository/worker-earnings.repository.interface';
+import { WorkerEarningsRepository } from '../../repository/worker/worker-earnings.repository';
 
 export class RepositoryRegistery {
   static registerRepository():void {
@@ -54,5 +56,6 @@ export class RepositoryRegistery {
     container.register<IMessageRepository>(TYPES.MessageRepository, { useClass: MessageRepository });
     container.register<INotificationRepository>(TYPES.NotificationRepository, { useClass: NotificationRepository });
     container.register<IReviewRepository>(TYPES.ReviewRepository, { useClass: ReviewRepository });
+    container.register<IWorkerEarningsRepository>(TYPES.WorkerEarningsRepository, { useClass: WorkerEarningsRepository });
   }
 }

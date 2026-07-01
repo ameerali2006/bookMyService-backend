@@ -49,6 +49,9 @@ class WorkerRoute extends base_route_1.BaseRoute {
         this.router.get(apiRoutes_1.BACKEND_ROUTES.WORKER.NOTIFICATIONS, (0, auth_middleware_1.verifyAuth)(), (0, auth_middleware_1.authorizeRole)(['worker']), (req, res, next) => resolver_1.notificationController.getNotifications(req, res, next));
         this.router.patch(apiRoutes_1.BACKEND_ROUTES.WORKER.MARK_NOTIFICATION_READ, (0, auth_middleware_1.verifyAuth)(), (0, auth_middleware_1.authorizeRole)(['worker']), (req, res, next) => resolver_1.notificationController.markAsRead(req, res, next));
         this.router.patch(apiRoutes_1.BACKEND_ROUTES.WORKER.MARK_ALL_NOTIFICATION_READ, (0, auth_middleware_1.verifyAuth)(), (0, auth_middleware_1.authorizeRole)(['worker']), (req, res, next) => resolver_1.notificationController.markAllRead(req, res, next));
+        this.router.get(apiRoutes_1.BACKEND_ROUTES.WORKER.EARNINGS_SUMMARY, (0, auth_middleware_1.verifyAuth)(), (0, auth_middleware_1.authorizeRole)(['worker']), (req, res, next) => resolver_1.workerEarningsController.getSummary(req, res, next));
+        this.router.get(apiRoutes_1.BACKEND_ROUTES.WORKER.EARNINGS_LIST, (0, auth_middleware_1.verifyAuth)(), (0, auth_middleware_1.authorizeRole)(['worker']), (req, res, next) => resolver_1.workerEarningsController.getList(req, res, next));
+        this.router.get(apiRoutes_1.BACKEND_ROUTES.WORKER.EARNINGS_EXPORT, (0, auth_middleware_1.verifyAuth)(), (0, auth_middleware_1.authorizeRole)(['worker']), (req, res, next) => resolver_1.workerEarningsController.exportPdf(req, res, next));
     }
 }
 exports.WorkerRoute = WorkerRoute;

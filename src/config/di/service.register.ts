@@ -1,6 +1,8 @@
 import { container } from 'tsyringe';
 
 import { TYPES } from '../../config/constants/types';
+import { IWorkerEarningsService } from '../../interface/service/worker/worker-earnings.service.interface';
+import { WorkerEarningsService } from '../../service/worker/worker-earnings.service';
 
 import { HashService } from '../../service/helper/hash.service';
 import { IHashService } from '../../interface/helpers/hash.interface';
@@ -115,5 +117,6 @@ export class ServiceRegistery {
     container.register<IReviewService>(TYPES.ReviewService, { useClass: ReviewService });
     container.register<INotificationService>(TYPES.NotificationService, { useClass: NotificationService });
     container.register<IWorkerPayoutService>(TYPES.WorkerPayoutService, { useClass: WorkerPayoutService });
+    container.register<IWorkerEarningsService>(TYPES.WorkerEarningsService, { useClass: WorkerEarningsService });
   }
 }

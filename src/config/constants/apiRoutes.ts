@@ -74,6 +74,9 @@ export const BACKEND_ROUTES = {
     NOTIFICATIONS: '/notifications',
     MARK_NOTIFICATION_READ: '/notifications/:id/read',
     MARK_ALL_NOTIFICATION_READ: '/notifications/read-all',
+    EARNINGS_SUMMARY: '/earnings/summary',
+    EARNINGS_LIST: '/earnings',
+    EARNINGS_EXPORT: '/earnings/export',
   },
   ADMIN: {
     LOGIN: '/login',

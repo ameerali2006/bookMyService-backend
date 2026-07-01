@@ -19,6 +19,7 @@ const chat_repoository_1 = require("../../repository/shared/chat.repoository");
 const message_repository_1 = require("../../repository/shared/message.repository");
 const review_repository_1 = require("../../repository/shared/review.repository");
 const notification_repository_1 = require("../../repository/shared/notification.repository");
+const worker_earnings_repository_1 = require("../../repository/worker/worker-earnings.repository");
 class RepositoryRegistery {
     static registerRepository() {
         tsyringe_1.container.register(types_1.TYPES.AuthUserRepository, { useClass: user_repository_1.UserRepository });
@@ -37,6 +38,7 @@ class RepositoryRegistery {
         tsyringe_1.container.register(types_1.TYPES.MessageRepository, { useClass: message_repository_1.MessageRepository });
         tsyringe_1.container.register(types_1.TYPES.NotificationRepository, { useClass: notification_repository_1.NotificationRepository });
         tsyringe_1.container.register(types_1.TYPES.ReviewRepository, { useClass: review_repository_1.ReviewRepository });
+        tsyringe_1.container.register(types_1.TYPES.WorkerEarningsRepository, { useClass: worker_earnings_repository_1.WorkerEarningsRepository });
     }
 }
 exports.RepositoryRegistery = RepositoryRegistery;

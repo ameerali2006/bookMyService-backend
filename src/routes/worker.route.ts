@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { BaseRoute } from './base.route';
 import {
-  authWorkerController, bookingController, chatController, cloudinaryController, notificationController, tokenController, workerbookingController, workerController, workingDetailsController,
+  authWorkerController, bookingController, chatController, cloudinaryController, notificationController, tokenController, workerbookingController, workerController, workingDetailsController, workerEarningsController,
 } from '../config/di/resolver';
 import { authorizeRole, verifyAuth } from '../middleware/auth.middleware';
 import { BACKEND_ROUTES } from '../config/constants/apiRoutes';
@@ -51,5 +51,8 @@ export class WorkerRoute extends BaseRoute {
     this.router.get(BACKEND_ROUTES.WORKER.NOTIFICATIONS, verifyAuth(), authorizeRole(['worker']), (req: Request, res: Response, next: NextFunction) => notificationController.getNotifications(req, res, next));
     this.router.patch(BACKEND_ROUTES.WORKER.MARK_NOTIFICATION_READ, verifyAuth(), authorizeRole(['worker']), (req: Request, res: Response, next: NextFunction) => notificationController.markAsRead(req, res, next));
     this.router.patch(BACKEND_ROUTES.WORKER.MARK_ALL_NOTIFICATION_READ, verifyAuth(), authorizeRole(['worker']), (req: Request, res: Response, next: NextFunction) => notificationController.markAllRead(req, res, next));
+    this.router.get(BACKEND_ROUTES.WORKER.EARNINGS_SUMMARY, verifyAuth(), authorizeRole(['worker']), (req: Request, res: Response, next: NextFunction) => workerEarningsController.getSummary(req, res, next));
+    this.router.get(BACKEND_ROUTES.WORKER.EARNINGS_LIST, verifyAuth(), authorizeRole(['worker']), (req: Request, res: Response, next: NextFunction) => workerEarningsController.getList(req, res, next));
+    this.router.get(BACKEND_ROUTES.WORKER.EARNINGS_EXPORT, verifyAuth(), authorizeRole(['worker']), (req: Request, res: Response, next: NextFunction) => workerEarningsController.exportPdf(req, res, next));
   }
 }
